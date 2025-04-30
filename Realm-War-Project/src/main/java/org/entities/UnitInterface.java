@@ -1,7 +1,7 @@
 package org.entities;
 
 public interface UnitInterface {
-    public void getHit();
+    public void getHit(Unit unit);
     public void attack();
     public void move();
     public void defend();

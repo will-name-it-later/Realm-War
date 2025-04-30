@@ -16,7 +16,6 @@ public abstract class Unit {
     public double getMovementRange() {
         return MOVEMENT_RANGE;
     }
-
     public double getAttackPower() {
         return ATTACK_POWER;
     }
@@ -36,4 +35,6 @@ public abstract class Unit {
     public int getUnitSpace() {
         return UNIT_SPACE;
     }
+
+    public abstract void getHit(Unit unit);
 }

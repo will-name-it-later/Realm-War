@@ -1,7 +1,7 @@
 package org.entities;
 
 public class Knight extends Unit implements UnitInterface {
-    private final double HIT_POINT = 1;
+    private double HIT_POINT = 1;
     private final double MOVEMENT_RANGE = 2;
     private final double ATTACK_POWER = 3;
     private final double ATTACK_RANGE = 4;
@@ -22,5 +22,7 @@ public class Knight extends Unit implements UnitInterface {
 
     public void attack() {}
 
-    public void getHit(){}
+    public void getHit(Unit unit){
+        HIT_POINT -= unit.getAttackPower();
+    }
 }
