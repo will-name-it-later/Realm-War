@@ -1,29 +1,31 @@
 package org.entities;
 
+import org.util.Position;
 public class Spearman extends Unit implements UnitInterface {
-    private double HIT_POINT = 1;
+    private double HIT_POINT = 35;
     private final double MOVEMENT_RANGE = 2;
-    private final double ATTACK_POWER = 3;
-    private final double ATTACK_RANGE = 4;
-    private final double PAYMENT = 5;
-    private final double RATION = 6;
-    private final int UNIT_SPACE = 7;
+    private final double ATTACK_POWER = 8;
+    private final double ATTACK_RANGE = 6;
+    private final double PAYMENT = 7;
+    private final double RATION = 3;
+    private final int UNIT_SPACE = 1;
 
-    public void getHit(Unit unit) {
-        HIT_POINT -= unit.getAttackPower();
+    public Spearman(Position position, int kingdomID) {
+        super(position, kingdomID);
     }
 
-    public void attack(){}
-
     public void move(){}
-
-    public void defend(){}
-
     public void consumeFood(){}
-
     public void consumeGold(){};
 
-    public void fillSpace(){};
+    @Override
+    public boolean canMerge(Unit otherUnit){
+        return (otherUnit instanceof Spearman) && otherUnit.getKingdomID() == this.getKingdomID();
+    }
 
-    public void levelUp(){};
+    @Override
+    public Unit merge(Unit otherUnit) {
+        if(canMerge(otherUnit)) return new Swordsman(this.getPosition(), this.getKingdomID());
+        else throw new IllegalArgumentException("Can't merge other unit");
+    }
 }
