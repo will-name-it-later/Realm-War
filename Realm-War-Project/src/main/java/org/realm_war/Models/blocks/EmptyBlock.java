@@ -1,6 +1,37 @@
 package org.realm_war.Models.blocks;
 
+import org.realm_war.Models.Position;
+
 public class EmptyBlock extends Block {
-    /* It is buildable, and can be absorbed by Kingdoms.
-    *  When it absorbed, the Kingdom can do something on it.  */
+    public EmptyBlock(Position position) {
+        super(position);
+    }
+
+    @Override
+    public boolean canBuildStructure() {
+        return isAbsorbed();
+    }
+
+    @Override
+    public int getResourceItem (String resourceType) {
+        if (isAbsorbed()) {
+            int getResourceItem;
+
+            // EmptyBlock can provide gold but can't provide food.
+
+            if (resourceType.equalsIgnoreCase("GOLD")) {
+                getResourceItem = 1;
+            }
+            else if (resourceType.equalsIgnoreCase("FOOD")) {
+                getResourceItem = 0;
+            }
+            else {
+                getResourceItem = 0;
+            }
+            return getResourceItem;
+        }
+        else {
+            return 0;
+        }
+    }
 }
