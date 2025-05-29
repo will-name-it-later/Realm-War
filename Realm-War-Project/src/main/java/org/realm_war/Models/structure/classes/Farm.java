@@ -1,6 +1,6 @@
-package structure.classes;
+package org.realm_war.Models.structure.classes;
 
-import structure.interfaces.FoodProduction;
+import org.realm_war.Models.structure.interfaces.FoodProduction;
 
 public class Farm extends Structure implements FoodProduction {
     private int foodAmount;

@@ -1,6 +1,6 @@
-package structure.classes;
+package org.realm_war.Models.structure.classes;
 
-import structure.interfaces.GoldProduction;
+import org.realm_war.Models.structure.interfaces.GoldProduction;
 
 public class Market extends Structure implements GoldProduction {
     private int goldAmount;

@@ -1,4 +1,4 @@
-package org.entities;
+package org.realm_war.Models.Units;
 
 public class Knight extends Unit implements UnitInterface {
     private final double HIT_POINT = 1;

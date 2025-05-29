@@ -1,4 +1,4 @@
-package structure.classes;
+package org.realm_war.Models.structure.classes;
 
 public class Tower extends Structure {
 

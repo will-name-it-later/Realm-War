@@ -117,7 +117,7 @@ Your mission? **Domainate Your Opponent's Kingdom Before They Dominate Yours!**
 - BUILDING COST (examlpe: 5 GOLD)
 - LEVEL UP COST (examlpe: 5 GOLD -> 10 GOLD)
 
-### **3. Units**
+### **3. org.realm_war.Models.Units**
 - each **UNIT** has a **HIT POINT** of __n__ **HEALTH**
 - each **UNIT** has a **MOVEMENT RANGE** of __n__ **BLOCKS**
 - each **UNIT** has an **ATTACK POWER** of __n__ **DAMAGE**

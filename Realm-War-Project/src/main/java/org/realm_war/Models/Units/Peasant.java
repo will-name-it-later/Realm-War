@@ -1,6 +1,6 @@
-package org.entities;
+package org.realm_war.Models.Units;
 
-public class Swordsman extends Unit implements UnitInterface{
+public class Peasant extends Unit implements UnitInterface{
     private final double HIT_POINT = 1;
     private final double MOVEMENT_RANGE = 2;
     private final double ATTACK_POWER = 3;

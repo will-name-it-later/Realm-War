@@ -1,6 +1,6 @@
-package structure.classes;
+package org.realm_war.Models.structure.classes;
 
-import structure.interfaces.UnitProductions;
+import org.realm_war.Models.structure.interfaces.UnitProductions;
 
 public class Barrack extends Structure implements UnitProductions {
     private int unitSpace;
