@@ -24,9 +24,9 @@ public class Tower extends Structure {
 
     /**
      * Determines if a unit can pass this tower based on its level.
-     * Level 1 blocks only peasants
-     * Level 2 blocks peasants and spearmen
-     * Level 3 blocks up to cavalry (as an example)
+     * Level 1 org.realm_war.Models.blocks only peasants
+     * Level 2 org.realm_war.Models.blocks peasants and spearmen
+     * Level 3 org.realm_war.Models.blocks up to cavalry (as an example)
      */
 
     //public boolean canBlock(Unit unit) {

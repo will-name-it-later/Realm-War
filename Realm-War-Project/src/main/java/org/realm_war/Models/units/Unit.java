@@ -1,4 +1,4 @@
-package org.realm_war.Models.Units;
+package org.realm_war.Models.units;
 
 public abstract class Unit {
     private double HIT_POINT;

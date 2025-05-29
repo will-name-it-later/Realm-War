@@ -1,4 +1,4 @@
-package org.realm_war.Models.Units;
+package org.realm_war.Models.units;
 
 public interface UnitInterface {
     public void getHit();
