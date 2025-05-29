@@ -1,35 +1,48 @@
 package org.realm_war.Models.structure.classes;
 
-import org.realm_war.Models.structure.interfaces.GoldProduction;
 
-public class Market extends Structure implements GoldProduction {
-    private int goldAmount;
+import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
+import org.realm_war.Models.blocks.Block;
 
-    public Market(int buildCost) {
-        this.level = 1;
-        this.maxLevel = 3;
-        this.durability = 50;
-        this.maintenanceCost = 5;
-        this.levelUpCost = 5;
-        this.goldAmount = 5;
-        this.buildingCost = buildCost;
+public class Market extends Structure {
+    private int goldProduction;
+
+    public Market(int goldProduction, int maxLevel, int initialDurability, int maintenanceCost, Position position, Block baseBlock, int kingdomId) {
+        super(maxLevel, initialDurability, maintenanceCost, position, baseBlock, kingdomId);
+        this.goldProduction = goldProduction;
+    }
+
+    public int getGoldProduction() {
+        return goldProduction;
+    }
+
+    @Override
+    public int getMaintenanceCost() {
+        return getLevel() * maintenanceCost;
+    }
+
+    @Override
+    public void performTurnAction(Realm realm) {
+        int goldProduced = goldProduction;
+        realm.addGold(goldProduced);
+    }
+
+    public int produceGoldPerTurn() {
+        return getLevel() * goldProduction;
+    }
+
+    @Override
+    public boolean canLevelUp() {
+        return (getLevel() < getMaxLevel());
     }
 
     @Override
     public void levelUp() {
-        if (level < maxLevel) {
-            level++;
-            durability += 10;         // Each level adds durability
-            goldAmount += 5;         // Each level adds more gold
-            levelUpCost += 5;         // Cost increases by 5 each level
-        } else {
-            System.out.println("Market is already at max level.");
+        if (!canLevelUp()){
+            throw new IllegalStateException("Market is already in max level");
         }
-    }
-
-
-    @Override
-    public int produceGoldPerTurn() {
-        return goldAmount;
+        setLevel(getLevel()+1);
+        goldProduction += 10 * getLevel();
     }
 }

@@ -3,17 +3,17 @@ package org.realm_war.Models.units;
 import org.realm_war.Models.Position;
 
 public abstract class Unit {
-    private double HIT_POINT;
-    private double MOVEMENT_RANGE;
-    private double ATTACK_POWER;
-    private double ATTACK_RANGE;
-    private double PAYMENT;
-    private double RATION;
+    private int HIT_POINT;
+    private int MOVEMENT_RANGE;
+    private int ATTACK_POWER;
+    private int ATTACK_RANGE;
+    private int PAYMENT;
+    private int RATION;
     private int UNIT_SPACE;
     private Position position;
     private String realm;
 
-    public Unit(double HIT_POINT, double MOVEMENT_RANGE, double ATTACK_POWER, double ATTACK_RANGE, double PAYMENT, double RATION, int UNIT_SPACE, Position position, String realm) {
+    public Unit(int HIT_POINT, int MOVEMENT_RANGE, int ATTACK_POWER, int ATTACK_RANGE, int PAYMENT, int RATION, int UNIT_SPACE, Position position, String realm) {
         this.HIT_POINT = HIT_POINT;
         this.MOVEMENT_RANGE = MOVEMENT_RANGE;
         this.ATTACK_POWER = ATTACK_POWER;
@@ -25,27 +25,27 @@ public abstract class Unit {
         this.realm = realm;
     }
 
-    public double getHitPoint() {
+    public int getHitPoint() {
         return HIT_POINT;
     }
 
-    public double getMovementRange() {
+    public int getMovementRange() {
         return MOVEMENT_RANGE;
     }
 
-    public double getAttackPower() {
+    public int getAttackPower() {
         return ATTACK_POWER;
     }
 
-    public double getAttackRange() {
+    public int getAttackRange() {
         return ATTACK_RANGE;
     }
 
-    public double getPayment() {
+    public int getPayment() {
         return PAYMENT;
     }
 
-    public double getRation() {
+    public int getRation() {
         return RATION;
     }
 
