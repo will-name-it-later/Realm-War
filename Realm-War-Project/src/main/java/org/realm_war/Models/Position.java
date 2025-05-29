@@ -7,6 +7,13 @@ public class Position {
         this.x = x;
         this.y = y;
     }
+
+    public double distanceTo(Position other) {
+        int dx = this.getX() - other.getX();
+        int dy = this.getY() - other.getY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     public int getX() {
         return x;
     }
