@@ -1,27 +1,22 @@
 package org.realm_war.Models.units;
 
-public class Swordsman extends Unit implements UnitInterface{
-    private final double HIT_POINT = 1;
-    private final double MOVEMENT_RANGE = 2;
-    private final double ATTACK_POWER = 3;
-    private final double ATTACK_RANGE = 4;
-    private final double PAYMENT = 5;
-    private final double RATION = 6;
-    private final int UNIT_SPACE = 7;
+import org.realm_war.Models.Position;
 
-    public void getHit() {}
+public class Swordsman extends Unit{
 
-    public void attack(){}
+    public Swordsman(Position position, String realm) {
+        super(98, 2, 24, 1, 11, 4, 1, position, realm);
+    }
 
-    public void move(){}
+    @Override
+    public boolean canMerge(Unit otherUnit) {
+        return otherUnit instanceof Swordsman && otherUnit.getPosition().equals(getPosition());
+    }
 
-    public void defend(){}
-
-    public void consumeFood(){}
-
-    public void consumeGold(){};
-
-    public void fillSpace(){};
-
-    public void levelUp(){};
+    @Override
+    public Unit merge(Unit otherUnit) {
+        if(canMerge(otherUnit)) {
+            throw new IllegalArgumentException("Unable to Merge Units!");
+        }else return new Knight(this.getPosition(), this.getRealm());
+    }
 }

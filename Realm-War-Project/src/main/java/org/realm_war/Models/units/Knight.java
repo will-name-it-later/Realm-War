@@ -1,26 +1,19 @@
 package org.realm_war.Models.units;
 
-public class Knight extends Unit implements UnitInterface {
-    private final double HIT_POINT = 1;
-    private final double MOVEMENT_RANGE = 2;
-    private final double ATTACK_POWER = 3;
-    private final double ATTACK_RANGE = 4;
-    private final double PAYMENT = 5;
-    private final double RATION = 6;
-    private final int UNIT_SPACE = 7;
-    private int level;
+import org.realm_war.Models.Position;
 
-    public void consumeFood() {}
+public class Knight extends Unit {
+    public Knight(Position position, String realm) {
+        super(125, 3, 32, 1, 15, 5, 2, position, realm);
+    }
 
-    public void consumeGold(){}
+    @Override
+    public boolean canMerge(Unit otherUnit) {
+        return false;
+    }
 
-    public void fillSpace(){}
-
-    public void move() {}
-
-    public void defend() {}
-
-    public void attack() {}
-
-    public void getHit(){}
+    @Override
+    public Unit merge(Unit otherUnit) {
+        throw new UnsupportedOperationException("Knights have the highest ranks, they can't be merged!");
+    }
 }
