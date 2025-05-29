@@ -41,21 +41,21 @@ public class Tower extends Structure {
 
     @Override
     public void performTurnAction(Realm realm) {
-        // List<Unit> allUnits = GameState.getAllUnits(); // <- You must have this method
-        // Position myPosition = this.getPosition();
-        // int attackRange = 3;
-        // int attackPower = 10;
+        List<Unit> allUnits = GameState.getAllUnits();
+        Position myPosition = this.getPosition();
+        int attackRange = 3;
+        int attackPower = 10;
 
-        // for (Unit unit : allUnits) {
-        //     if (!unit.getRealm().equals(GameState.getRealmNameByKingdomId(this.getKingdomId()))) {
-        //         double distance = myPosition.distanceTo(unit.getPosition());
-        //         if (distance <= attackRange) {
-        //             unit.takeDamage(attackPower);
-        //             System.out.println("Tower at " + myPosition + " attacked unit at " + unit.getPosition());
-        //             break; // Attack one unit per turn
-        //         }
-        //     }
-        // }
+        for (Unit unit : allUnits) {
+            if (!unit.getRealm().equals(GameState.getRealmByKingdomID(String.valueOf(this.getKingdomId())))) {
+                double distance = myPosition.distanceTo(unit.getPosition());
+                if (distance <= attackRange) {
+                    unit.takeDamage(attackPower);
+                    System.out.println("Tower at " + myPosition + " attacked unit at " + unit.getPosition());
+                    break; // Attack one unit per turn
+                }
+            }
+        }
     }
     
     public int getAttackPower() {

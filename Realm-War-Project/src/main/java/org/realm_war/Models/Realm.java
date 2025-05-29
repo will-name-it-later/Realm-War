@@ -82,7 +82,7 @@ public class Realm {
         this.food += amount;
     }
 
-    private String getName() {
+    public String getName() {
         return name;
     }
 
@@ -90,7 +90,7 @@ public class Realm {
         return structures;
     }
 
-    private List<Unit> getUnits() {
+    List<Unit> getUnits() {
         return units;
     }
 
