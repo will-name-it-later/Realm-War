@@ -1,6 +1,41 @@
 package org.realm_war.Models.blocks;
 
+import org.realm_war.Models.Position;
+
 public class ForestBlock extends Block {
-    /* It's same as the EmptyBlock but the difference is in the battles.
-    *  It has some advantages for Units that start their attack or defence from it. */
+    public ForestBlock (Position position) {
+        super(position);
+    }
+
+    @Override
+    public boolean canBuildStructure() {
+        return isAbsorbed();
+    }
+
+    @Override
+    public int getResourceItem (String resourceType) {
+        if (isAbsorbed()) {
+            int getResourceItem;
+
+            // ForestBlock can't provide gold but provides more food.
+
+            if (resourceType.equalsIgnoreCase("GOLD")) {
+                getResourceItem = 0;
+            }
+            else if (resourceType.equalsIgnoreCase("FOOD")) {
+                getResourceItem = 2;
+            }
+            else {
+                getResourceItem = 0;
+            }
+            return getResourceItem;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public double getAttackBonus() {
+        return 1.3; // ForestBlock gives 30% attack bonus.
+    }
 }
