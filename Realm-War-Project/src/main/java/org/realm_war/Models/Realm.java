@@ -41,7 +41,6 @@ public class Realm {
             gold -= s.getMaintenanceCost();
         }
 
-        // todo after Block package is completed
         for (Block b : possessedBlocks){
             gold += b.getResourceItem("gold");
             food += b.getResourceItem("food");
