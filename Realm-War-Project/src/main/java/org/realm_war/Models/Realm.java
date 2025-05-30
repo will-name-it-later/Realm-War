@@ -13,28 +13,28 @@ import org.realm_war.Models.units.Unit;
 public class Realm {
     private int gold;
     private final String name;
+    private TownHall townHall;
     private int food;
     private List<Structure> structures;
     private List<Unit> units;
     private List<Block> possessedBlocks;
+    private int allUnitSpace;
+    private int usedUnitSpace;
 
-    public Realm(String name) {
+    public Realm(String name, TownHall townHall) {
         this.name = name;
         structures = new ArrayList<>();
         units = new ArrayList<>();
         possessedBlocks = new ArrayList<>();
+        this.townHall = townHall;
+        this.allUnitSpace = townHall.getUnitSpace();
+        this.gold = 25;
+        this.food = 25;
     }
 
     public void updateResources(){
         for (Structure s : structures){
-            if (s instanceof TownHall){
-                this.gold += ((TownHall) s).produceGoldPerTurn();
-                this.food += ((TownHall) s).produceFoodPerTurn();
-            } else if (s instanceof Farm) {
-                this.food += ((Farm) s).produceFoodPerTurn();
-            }else if(s instanceof Market){
-                this.gold += ((Market) s).produceGoldPerTurn();
-            }
+            s.performTurnAction(this);
         }
 
         for (Structure s : structures){
@@ -42,10 +42,10 @@ public class Realm {
         }
 
         // todo after Block package is completed
-        /*
-         * for (Block b : possessedBlocks){
-         * }
-         */
+        for (Block b : possessedBlocks){
+            gold += b.getResourceItem("gold");
+            food += b.getResourceItem("food");
+        }
 
         for (Unit u : units){
             gold -= u.getPayment();
@@ -53,16 +53,35 @@ public class Realm {
         }
     }
 
+    public boolean canBuildStructure(Structure s){
+        if (s.getMaintenanceCost() > this.gold) {
+            return false;
+        }
+        if (!this.possessedBlocks.contains(s.getBaseBlock())) {
+            return false;
+        }
+        return true;
+    }
+
     public void addStructure(Structure s){
-        structures.add(s);
+        if (canBuildStructure(s)){
+            structures.add(s);
+            gold -= s.getMaintenanceCost();
+            possessedBlocks.remove(s.getBaseBlock());
+        }else throw new IllegalArgumentException("Can't build structure here!");
     }
 
     public void addUnit(Unit u){
+        if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
+            throw new IllegalArgumentException("insufficient space!");
+        }
         units.add(u);
+        usedUnitSpace += u.getUnitSpace();
     }
 
 
-    public void addPossessedBlock(Block b){
+    public void PossessBlock(Block b){
+        b.setAbsorbed(true, this.name);
         possessedBlocks.add(b);
     }
 
