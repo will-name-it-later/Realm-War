@@ -82,7 +82,7 @@ public class Realm {
         possessedBlocks.add(b);
     }
 
-    private int getGold() {
+    public int getGold() {
         return gold;
     }
 

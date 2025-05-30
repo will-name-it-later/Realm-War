@@ -131,7 +131,7 @@ public class GameState {
         }
     }
 
-    //Interation Helpers
+    //Interaction Helpers
     public Structure getStructureAt(Position pos){
        return mapGrid[pos.getX()][pos.getY()].getStructure();
     }
