@@ -59,5 +59,6 @@ public class Barrack extends Structure{
             Unit newUnit = produceUnit();
             realm.addUnit(newUnit);
         }
+        turnsSinceLastProduction++;
     }
 }

@@ -13,7 +13,7 @@ public class Position {
         int dy = this.getY() - other.getY();
         return Math.sqrt(dx * dx + dy * dy);
     }
-
+1
     public int getX() {
         return x;
     }
