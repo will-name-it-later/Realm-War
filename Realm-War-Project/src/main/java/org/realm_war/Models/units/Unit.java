@@ -26,13 +26,8 @@ public abstract class Unit {
     }
 
     public void takeDamage(int damage) {
-    HIT_POINT -= damage;
-    if (HIT_POINT <= 0) {
-        // handle unit death, possibly via Realm or GameCtrl
-        HIT_POINT = 0;
-        System.out.println("Unit has been destroyed.");
+        HIT_POINT -= damage;
     }
-}
 
     public int getHitPoint() {
         return HIT_POINT;
@@ -77,4 +72,6 @@ public abstract class Unit {
     public abstract boolean canMerge(Unit otherUnit);
 
     public abstract Unit merge(Unit otherUnit);
+
+    public abstract boolean canAttackUnit(Unit unit);
 }

@@ -25,7 +25,7 @@ public class Realm {
         units = new ArrayList<>();
         possessedBlocks = new ArrayList<>();
         this.townHall = townHall;
-        this.allUnitSpace = townHall.getUnitSpace();
+        this.allUnitSpace = 5;
         this.gold = 25;
         this.food = 25;
     }

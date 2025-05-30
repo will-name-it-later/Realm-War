@@ -16,4 +16,9 @@ public class Knight extends Unit {
     public Unit merge(Unit otherUnit) {
         throw new UnsupportedOperationException("Knights have the highest ranks, they can't be merged!");
     }
+
+    @Override
+    public boolean canAttackUnit(Unit unit) {
+        return !(unit instanceof Knight); //knights can attack and kill all units except themselves
+    }
 }

@@ -11,7 +11,7 @@ public class Position {
     public double distanceTo(Position other) {
         int dx = this.getX() - other.getX();
         int dy = this.getY() - other.getY();
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.max(Math.abs(dx), Math.abs(dy));
     }
 
     public int getX() {
