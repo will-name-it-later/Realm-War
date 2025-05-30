@@ -51,4 +51,8 @@ public abstract class Block {
     public boolean hasUnit() {
         return unit != null;
     }
+
+    public boolean isOccupied() {
+        return unit != null || structure != null;
+    }
 }
