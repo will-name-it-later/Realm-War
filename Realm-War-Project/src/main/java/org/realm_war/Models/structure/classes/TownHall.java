@@ -28,9 +28,8 @@ public class TownHall extends Structure implements UnitSpaceProvider {
 
     @Override
     public void performTurnAction(Realm realm) {
-        // Resource production is handled in Realm.updateResources(),
-        // so nothing needed here unless you're moving that logic into the structure
-        // itself.
+        realm.addGold(produceGoldPerTurn());
+        realm.addFood(produceFoodPerTurn());
     }
 
     @Override
