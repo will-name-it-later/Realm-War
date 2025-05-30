@@ -38,4 +38,7 @@ public abstract class Structure {
     public Position getPosition() { return position; }
     public Block getBaseBlock() { return baseBlock; }
     public int getKingdomId() { return kingdomId; }
+    public boolean isDestroyed(){
+        return durability <= 0;
+    }
 }

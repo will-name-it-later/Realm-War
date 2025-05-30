@@ -104,7 +104,7 @@ public class Realm {
         return name;
     }
 
-    private List<Structure> getStructures() {
+    public List<Structure> getStructures() {
         return structures;
     }
 
