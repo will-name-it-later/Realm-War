@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.realm_war.Models.blocks.Block;
-import org.realm_war.Models.structure.classes.Farm;
-import org.realm_war.Models.structure.classes.Market;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
