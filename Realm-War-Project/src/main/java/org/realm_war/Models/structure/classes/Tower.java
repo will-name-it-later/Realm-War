@@ -10,13 +10,12 @@ import org.realm_war.Models.units.Unit;
 
 public class Tower extends Structure {
     private int attackRange = 3;
-    private int attackDamage = 10;
+    private int attackPower;
 
     private static final int[] ATTACK_POWER_BY_LEVEL = {10, 15, 20};
     private static final int[] BUILDING_COST_BY_LEVEL = {10, 20, 30};
     private static final int[] DURABILITY_BY_LEVEL = {100, 150, 200};
     
-    private int attackPower;
 
     public Tower(Position position, Block baseBlock, int kingdomId) {
         super(3, DURABILITY_BY_LEVEL[0], 10, position, baseBlock, kingdomId);
@@ -43,8 +42,6 @@ public class Tower extends Structure {
     public void performTurnAction(Realm realm) {
         List<Unit> allUnits = GameState.getAllUnits();
         Position myPosition = this.getPosition();
-        int attackRange = 3;
-        int attackPower = 10;
 
         for (Unit unit : allUnits) {
             if (!unit.getRealm().equals(GameState.getRealmByKingdomID(String.valueOf(this.getKingdomId())))) {
