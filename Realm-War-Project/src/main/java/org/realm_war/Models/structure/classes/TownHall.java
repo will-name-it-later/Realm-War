@@ -3,8 +3,9 @@ package org.realm_war.Models.structure.classes;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.structure.interfaces.UnitSpaceProvider;
 
-public class TownHall extends Structure {
+public class TownHall extends Structure implements UnitSpaceProvider {
     private int goldProductionPerLevel;
     private int foodProductionPerLevel;
 
@@ -30,6 +31,12 @@ public class TownHall extends Structure {
         // Resource production is handled in Realm.updateResources(),
         // so nothing needed here unless you're moving that logic into the structure
         // itself.
+    }
+
+    @Override
+    public int getUnitSpace() {
+        // Example: each level gives 5 unit space
+        return this.getLevel() * 5;
     }
 
     @Override
