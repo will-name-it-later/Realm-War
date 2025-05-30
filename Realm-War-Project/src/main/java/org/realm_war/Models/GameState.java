@@ -16,6 +16,7 @@ public class GameState {
     private int currentTurn = 1;
     private Player currentPlayer;
     private List<Player> players;
+    private boolean running;
     private boolean isGameOver;
     private int gridSize = Constants.getMapSize();
     private Block[][] mapGrid = new Block[gridSize][gridSize];
@@ -56,6 +57,14 @@ public class GameState {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
     public boolean isGameOver() {
         int realmsWithTownHall = 0;
