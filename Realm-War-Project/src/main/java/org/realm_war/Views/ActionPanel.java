@@ -1,5 +1,8 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.GameCtrl;
+import org.realm_war.Models.GameState;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,13 +11,15 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ActionPanel extends JPanel implements ActionListener {
+    private GameCtrl gameCtrl;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
     private JButton moveBtn;
     private JButton attackBtn;
 
-    public ActionPanel() {
+    public ActionPanel(GameCtrl gameCtrl) {
+        this.gameCtrl = gameCtrl;
         nextTurnBtn = createButton("next");
         recruitBtn = createButton("recruit");
         buildBtn = createButton("build");
@@ -35,8 +40,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         JButton button = null;
         try {
             ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
-            Image scaledInstance = icon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(scaledInstance);
+            icon = new ImageIcon(icon.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH));
             button = new JButton(icon);
             button.setBackground(new Color(255, 255, 255));
             button.setBorder(BorderFactory.createEmptyBorder(5, 50, 5, 50));
@@ -46,37 +50,25 @@ public class ActionPanel extends JPanel implements ActionListener {
             button.setActionCommand(OPERATION);
             button.addActionListener(this);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return button;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout());
-        frame.add(new ActionPanel(), BorderLayout.SOUTH);
-        frame.setVisible(true);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        System.out.println(command);
-        if("next".equals(command)) {
-            //todo
-
-        }else if("recruit".equals(command)) {
-            //todo
-        }else if("build".equals(command)) {
-            //todo
-        }else if("move".equals(command)) {
-            //todo
+        if ("next".equals(command)) {
+            gameCtrl.getGameState().nextTurn();
+        } else if ("recruit".equals(command)) {
+            //todo: open recruit panel
+        } else if ("build".equals(command)) {
+            //todo: open build panel
+        } else if ("move".equals(command)) {
+            //todo: move a unit to selected position
         } else if ("attack".equals(command)) {
-            //todo
+            //todo: attack to selected position
         }
     }
 }
