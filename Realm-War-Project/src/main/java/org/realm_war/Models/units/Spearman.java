@@ -18,9 +18,4 @@ public class Spearman extends Unit {
             throw new IllegalArgumentException("Unable to Merge Units!");
         }else return new Swordsman(this.getPosition(), this.getRealm());
     }
-
-    @Override
-    public boolean canAttackUnit(Unit unit) {
-        return (unit instanceof Peasant);
-    }
 }

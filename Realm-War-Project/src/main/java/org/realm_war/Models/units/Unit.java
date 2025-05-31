@@ -73,5 +73,7 @@ public abstract class Unit {
 
     public abstract Unit merge(Unit otherUnit);
 
-    public abstract boolean canAttackUnit(Unit unit);
+    public boolean canAttackUnit(Unit unit){
+        return HIT_POINT > unit.getHitPoint();
+    };
 }

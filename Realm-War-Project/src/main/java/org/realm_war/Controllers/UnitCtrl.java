@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnitCtrl {
-    private List<Unit> units;
+    private final List<Unit> units;
 
     public UnitCtrl() {
         units = new ArrayList<Unit>();
