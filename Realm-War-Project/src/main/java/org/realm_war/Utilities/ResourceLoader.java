@@ -5,9 +5,6 @@ import java.awt.Image;
 import java.io.*;
 import java.util.*;
 
-/**
- * Loads images and configuration files from a local folder under src/main/java/org/realm_war/Utilities/assets/
- */
 public class ResourceLoader {
 
     private static final Map<String, Image> imageCache = new HashMap<>();
