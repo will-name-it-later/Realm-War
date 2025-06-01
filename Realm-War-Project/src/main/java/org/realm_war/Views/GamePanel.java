@@ -2,6 +2,7 @@ package org.realm_war.Views;
 
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
@@ -40,10 +41,30 @@ public class GamePanel extends JPanel {
                     blockButton.setBackground(Color.PINK);  // fallback color
                 }
 
+                if (block instanceof VoidBlock) {
+                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/assets/close.png"));
+                    blockButton.setIcon(icon);
+                    blockButton.setDisabledIcon(icon); // Optional, ensures icon stays visible when disabled
+
+                    blockButton.setEnabled(false); // Disable clicking
+                } else {
+                    int finalRow = row;
+                    int finalCol = col;
+                    blockButton.addActionListener(e -> {
+                        // Handle clicks for non-void blocks
+                        System.out.println("Clicked block at (" + finalRow + ", " + finalCol + ")");
+                    });
+                }
+
+
                 btnGrid[row][col] = blockButton;
                 add(blockButton);
             }
         }
     }
 
+    public void handleBlockClick(int row , int col){
+        Block block = mapGrid[row][col];
+        System.out.println("The positoin :" + block.getPosition().getX() + " "+block.getPosition().getY());
+    }
 }
