@@ -134,6 +134,18 @@ public class GameState {
         }
     }
 
+    //Call this after initializing the grid
+    public static void forestPlacer(){
+        Random rand = new Random();
+        for (int i = 80 ; i > 0; i--){
+            int row = rand.nextInt(Constants.getMapSize());
+            int col = rand.nextInt(Constants.getMapSize());
+            if(mapGrid[row][col] instanceof EmptyBlock){
+               mapGrid[row][col] = new ForestBlock(new Position(row, col));
+            }
+        }
+    }
+
     public static Block[][] getMapGrid(){
         return mapGrid;
     }
