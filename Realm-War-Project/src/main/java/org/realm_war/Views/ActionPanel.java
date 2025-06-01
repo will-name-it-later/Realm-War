@@ -77,6 +77,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         frame.setResizable(false);
         frame.setLayout(new BorderLayout());
         frame.add(new ActionPanel(null, frame), BorderLayout.SOUTH);
+        GameState.mapInitializer();
         frame.add(new GamePanel() ,BorderLayout.CENTER);
         frame.setVisible(true);
     }

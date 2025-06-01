@@ -92,14 +92,16 @@ public class GameState {
     }
 
     //Map Management
-    public void mapInitializer() {
-        //fill the grid with
+    public static void mapInitializer() {
+        mapGrid = new Block[gridSize][gridSize];  // ✅ initialize the array
+
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 mapGrid[i][j] = new EmptyBlock(new Position(i, j));
             }
         }
-        // Optionally fill borders with VoidBlocks
+
+        // Fill borders with VoidBlocks
         for (int i = 0; i < gridSize; i++) {
             mapGrid[i][0] = new VoidBlock(new Position(i, 0));
             mapGrid[i][gridSize - 1] = new VoidBlock(new Position(i, gridSize - 1));
@@ -109,6 +111,7 @@ public class GameState {
             mapGrid[gridSize - 1][j] = new VoidBlock(new Position(gridSize - 1, j));
         }
     }
+
 
     public void updateMap(List<Realm> realms) {
         for (int i = 0; i < gridSize; i++) {
