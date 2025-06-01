@@ -1,14 +1,11 @@
 package org.realm_war.Views;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class InfoPanel extends JFrame{
-    private String kingdomName;
-    private String unitType;
-    private String structure;
-    private JPanel infoWindow;
+import org.realm_war.Models.GameState;
+import org.realm_war.Models.Realm;
 
-    public InfoPanel(){
-        this.infoWindow = new JPanel();
-    }
+public class InfoPanel extends JPanel{
+
 }
