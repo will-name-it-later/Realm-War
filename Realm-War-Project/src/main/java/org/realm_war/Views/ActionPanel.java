@@ -72,10 +72,12 @@ public class ActionPanel extends JPanel implements ActionListener {
     public static void main(String[] args) {
         JFrame frame = new JFrame("ActionPanel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 700);
+        frame.setSize(1050, 1050);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         frame.setLayout(new BorderLayout());
         frame.add(new ActionPanel(null, frame), BorderLayout.SOUTH);
+        frame.add(new GamePanel() ,BorderLayout.CENTER);
         frame.setVisible(true);
     }
 

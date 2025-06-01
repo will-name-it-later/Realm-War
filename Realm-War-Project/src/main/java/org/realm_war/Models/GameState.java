@@ -18,8 +18,8 @@ public class GameState {
     private List<Player> players;
     private boolean running;
     private boolean isGameOver;
-    private int gridSize = Constants.getMapSize();
-    private Block[][] mapGrid = new Block[gridSize][gridSize];
+    private static int gridSize = Constants.getMapSize();
+    private static Block[][] mapGrid = new Block[gridSize][gridSize];
 
     private static List<Realm> realms = new ArrayList<>();
 
@@ -129,6 +129,10 @@ public class GameState {
                 mapGrid[pos.getX()][pos.getY()].setUnit(u);
             }
         }
+    }
+
+    public static Block[][] getMapGrid(){
+        return mapGrid;
     }
 
     //Interaction Helpers
