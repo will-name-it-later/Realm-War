@@ -16,6 +16,7 @@ import org.realm_war.Utilities.Constants;
 public class GameState {
     //Track game progress
     private int currentTurn = 1;
+    private int turns = 1;
     private Player currentPlayer;
     private List<Player> players;
     private boolean running;
@@ -37,7 +38,7 @@ public class GameState {
         realms.add(realm);
     }
 
-    public static Realm getRealmByKingdomID(String RealmID) {
+    public static Realm getRealmByRealmID(String RealmID) {
         for (Realm realm : realms) {
             if (realm.getName().equals(RealmID)) {
                 return realm;
@@ -53,8 +54,11 @@ public class GameState {
     //Turn management
     public void nextTurn() {
         if (players.isEmpty()) return;
-        this.currentTurn += 1;
-        this.currentPlayer = players.get((currentTurn - 1) % players.size());
+        this.currentTurn = (currentTurn - 1) % players.size();
+        if (currentTurn == 0) {
+            turns++;
+        }
+        this.currentPlayer = players.get(currentTurn);
     }
 
     public Player getCurrentPlayer() {
@@ -153,6 +157,10 @@ public class GameState {
     }
 
     //Interaction Helpers
+    public int getCurrentTurn() { return currentTurn; }
+    public List<Realm> getRealms() { return realms; }
+    public int getTurnNumber() { return turns; }
+    public Realm getCurrentRealm() { return realms.get(currentTurn); }
     public Structure getStructureAt(Position pos){
        return mapGrid[pos.getX()][pos.getY()].getStructure();
     }
