@@ -31,5 +31,16 @@ public class InfoPanel extends JPanel{
 
         add(Box.createVerticalGlue());
     }
+
+    public void updateInfo(GameState gameState) {
+        Realm currentRealm = gameState.getCurrentRealm();
+
+        playerLabel.setText("Player: " + gameState.getCurrentTurn());
+        goldLabel.setText("Gold: " + currentRealm.getGold());
+        foodLabel.setText("Food: " + currentRealm.getFood());
+        unitSpaceLabel.setText("Unit Space: " + currentRealm.getUsedUnitSpace() +
+                "/" + currentRealm.getAllUnitSpace());
+        turnLabel.setText("Turn: " + gameState.getTurnNumber());
+    }
 }
 

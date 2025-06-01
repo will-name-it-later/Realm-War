@@ -90,7 +90,7 @@ public class Realm {
         this.gold += amount;
     }
 
-    private int getFood() {
+    public int getFood() {
         return food;
     }
 
@@ -106,11 +106,19 @@ public class Realm {
         return structures;
     }
 
-    List<Unit> getUnits() {
+    public List<Unit> getUnits() {
         return units;
     }
 
-    private List<Block> getPossessedBlocks() {
+    public int getUsedUnitSpace() {
+        return usedUnitSpace;
+    }
+
+    public int getAllUnitSpace() {
+        return allUnitSpace;
+    }
+
+    public List<Block> getPossessedBlocks() {
         return possessedBlocks;
     }
 
