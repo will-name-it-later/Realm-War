@@ -2,6 +2,8 @@ package org.realm_war.Models.blocks;
 
 import org.realm_war.Models.Position;
 
+import java.awt.*;
+
 public class ForestBlock extends Block {
     public ForestBlock (Position position) {
         super(position);
@@ -34,8 +36,12 @@ public class ForestBlock extends Block {
             return 0;
         }
     }
-
     public double getAttackBonus() {
         return 1.3; // ForestBlock gives 30% attack bonus.
     }
+    @Override
+    public Color getColor() {
+        return new Color(0, 99, 31);
+    }
+
 }

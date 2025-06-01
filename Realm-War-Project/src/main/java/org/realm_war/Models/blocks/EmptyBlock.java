@@ -2,6 +2,8 @@ package org.realm_war.Models.blocks;
 
 import org.realm_war.Models.Position;
 
+import java.awt.*;
+
 public class EmptyBlock extends Block {
     public EmptyBlock(Position position) {
         super(position);
@@ -33,5 +35,9 @@ public class EmptyBlock extends Block {
         else {
             return 0;
         }
+    }
+    @Override
+    public Color getColor() {
+        return new Color(251, 255, 145);
     }
 }

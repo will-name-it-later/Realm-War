@@ -4,6 +4,8 @@ import org.realm_war.Models.Position;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.units.Unit;
 
+import java.awt.*;
+
 public abstract class Block {
     private Position position;
     private Unit unit;
@@ -18,6 +20,8 @@ public abstract class Block {
 
     public abstract boolean canBuildStructure();
     public abstract int getResourceItem(String resourceType);
+
+    public abstract Color getColor();
 
     public Position getPosition() { return position; }
     public boolean isAbsorbed() { return isAbsorbed; }
