@@ -2,9 +2,11 @@ package org.realm_war.Models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
+import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
