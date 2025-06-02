@@ -45,7 +45,7 @@ public class GamePanel extends JPanel {
                 }
 
                 if (block instanceof VoidBlock) {
-                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/assets/close.png"));
+                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/close.png"));
                     blockButton.setIcon(icon);
                     blockButton.setDisabledIcon(icon); // Optional, ensures icon stays visible when disabled
 

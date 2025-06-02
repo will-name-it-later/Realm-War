@@ -17,11 +17,11 @@ public class MenuPanel extends JPanel implements ActionListener {
 
     public MenuPanel(GameState gameState) {
         this.gameState = gameState;
-        addPlayerBtn = createButton("addPlayer");
-        startGameBtn = createButton("startGame");
-        exitGameBtn = createButton("exitGame");
-        playAgainBtn = createButton("playAgain");
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 10));
+        addPlayerBtn = createButton("add player");
+        startGameBtn = createButton("start game");
+        exitGameBtn = createButton("exit game");
+        playAgainBtn = createButton("play again");
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         add(addPlayerBtn);
         add(startGameBtn);
         add(exitGameBtn);
@@ -32,9 +32,10 @@ public class MenuPanel extends JPanel implements ActionListener {
         JButton b = new JButton(text);
         b.setFocusPainted(false);
         b.setFocusable(false);
-        b.setBackground(new Color(216, 169, 146));
-        b.setPreferredSize(new Dimension(50, 30));
-        b.setBorder(BorderFactory.createLineBorder(new Color(30, 20, 19), 1));
+        b.setBackground(new Color(95, 136, 255));
+        b.setForeground(Color.WHITE);
+        b.setPreferredSize(new Dimension(100, 30));
+        b.setFont(new Font("SansSerif", Font.PLAIN, 13));
         b.addActionListener(this);
         return b;
     }
@@ -43,18 +44,18 @@ public class MenuPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         switch (action) {
-            case "addPlayer":
-                JOptionPane.showInputDialog(gameState, "Please enter the name of the player");
+            case "add player":
+                JOptionPane.showInputDialog("please enter the name of the player", null);
                 //todo:add player and its realm to the game
                 break;
-            case "startGame":
+            case "start game":
                 gameState.setRunning(true);
                 setEnabled(false);
                 break;
-            case "exitGame":
+            case "exit game":
                 gameState.setRunning(false);
                 break;
-            case "playAgain":
+            case "play again":
                 //todo:logic to play the game again
                 break;
         }

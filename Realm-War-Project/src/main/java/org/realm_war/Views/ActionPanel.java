@@ -1,16 +1,10 @@
 package org.realm_war.Views;
 
-import org.realm_war.Controllers.GameCtrl;
-import org.realm_war.Models.GameState;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.spi.AbstractInterruptibleChannel;
-import java.util.Objects;
 
 public class ActionPanel extends JPanel implements ActionListener {
     JFrame frame;
@@ -39,7 +33,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
     private JButton createButton(String OPERATION) {
-        String path = "/org/realm_war/Utilities/assets/" + OPERATION + ".png";
+        String path = "/org/realm_war/Utilities/Resources/" + OPERATION + ".png";
         URL iconUrl = getClass().getResource(path);
 
         if (iconUrl == null) {

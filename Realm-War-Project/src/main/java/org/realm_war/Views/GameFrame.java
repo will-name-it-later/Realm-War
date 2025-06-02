@@ -9,11 +9,13 @@ public class GameFrame extends JFrame {
     private GamePanel gamePanel;
     private InfoPanel infoPanel;
     private ActionPanel actionPanel;
+    private MenuPanel menuPanel;
 
     public GameFrame() {
         gamePanel = new GamePanel();
         infoPanel = new InfoPanel();
         actionPanel = new ActionPanel(this);
+        menuPanel = new MenuPanel(new GameState());
         setSize(1050, 1050);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Realm War - a Medieval Strategy Game");
@@ -23,6 +25,7 @@ public class GameFrame extends JFrame {
         add(gamePanel, BorderLayout.CENTER);
         add(infoPanel, BorderLayout.EAST);
         add(actionPanel, BorderLayout.SOUTH);
+        add(menuPanel, BorderLayout.NORTH);
         setVisible(true);
     }
 }
