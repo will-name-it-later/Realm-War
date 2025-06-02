@@ -3,11 +3,7 @@ package org.realm_war.Controllers;
 import org.realm_war.Models.GameState;
 
 public class GameCtrl {
-    private GameState gameState;
-
-    public GameCtrl(GameState gameState) {
-        this.gameState = gameState;
-    }
+    GameState gameState;
 
     public void startGame(){
         gameState.setRunning(true);
