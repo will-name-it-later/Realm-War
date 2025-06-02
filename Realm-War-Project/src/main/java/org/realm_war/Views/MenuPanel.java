@@ -2,6 +2,7 @@ package org.realm_war.Views;
 
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Player;
+import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -37,10 +38,10 @@ public class MenuPanel extends JPanel implements ActionListener {
         JButton b = new JButton(text);
         b.setFocusPainted(false);
         b.setFocusable(false);
-        b.setBackground(new Color(95, 136, 255));
-        b.setForeground(Color.WHITE);
-        b.setPreferredSize(new Dimension(100, 30));
-        b.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        b.setBackground(Constants.clr_2);
+        b.setForeground(Constants.clr_1);
+        b.setPreferredSize(new Dimension(140, 30));
+        b.setFont(new Font("SansSerif", Font.BOLD, 15));
         b.addActionListener(this);
         return b;
     }

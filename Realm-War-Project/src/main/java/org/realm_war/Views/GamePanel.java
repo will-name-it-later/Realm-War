@@ -44,7 +44,7 @@ public class GamePanel extends JPanel {
                         blockButton.setBackground(Color.BLACK);
                     }
                 } else {
-                    blockButton.setBackground(Color.PINK);  // fallback color
+                    blockButton.setBackground(Constants.clr_3);  // fallback color
                 }
 
                 if (block instanceof VoidBlock) {
