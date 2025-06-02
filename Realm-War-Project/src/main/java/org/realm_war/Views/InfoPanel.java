@@ -14,7 +14,7 @@ public class InfoPanel extends JPanel{
     private JLabel turnLabel;
 
     public InfoPanel() {
-        setPreferredSize(new Dimension(300, 700));
+        setPreferredSize(new Dimension(150, 150));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         playerLabel = new JLabel("Player: ");
@@ -24,9 +24,13 @@ public class InfoPanel extends JPanel{
         turnLabel = new JLabel("Turn: ");
 
         add(playerLabel);
+        add(Box.createVerticalStrut(10));
         add(goldLabel);
+        add(Box.createVerticalStrut(10));
         add(foodLabel);
+        add(Box.createVerticalStrut(10));
         add(unitSpaceLabel);
+        add(Box.createVerticalStrut(10));
         add(turnLabel);
 
         add(Box.createVerticalGlue());

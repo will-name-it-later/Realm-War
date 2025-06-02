@@ -13,16 +13,14 @@ import java.nio.channels.spi.AbstractInterruptibleChannel;
 import java.util.Objects;
 
 public class ActionPanel extends JPanel implements ActionListener {
-    private GameCtrl gameCtrl;
-    private JFrame frame;
+    JFrame frame;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
     private JButton moveBtn;
     private JButton attackBtn;
 
-    public ActionPanel(GameCtrl gameCtrl, JFrame frame) {
-        this.gameCtrl = gameCtrl;
+    public ActionPanel(JFrame frame) {
         this.frame = frame;
         nextTurnBtn = createButton("next");
         recruitBtn = createButton("recruit");
@@ -76,9 +74,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setLayout(new BorderLayout());
-        frame.add(new ActionPanel(null, frame), BorderLayout.SOUTH);
-        GameState.mapInitializer();
-        GameState.forestPlacer();
+        frame.add(new ActionPanel(frame), BorderLayout.SOUTH);
         frame.add(new GamePanel() ,BorderLayout.CENTER);
         frame.setVisible(true);
     }
@@ -108,7 +104,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     public JPanel recruitPanel(){
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(120, 100));
+        panel.setPreferredSize(new Dimension(150, 150));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
         JButton peasantBtn = createButton("peasant");
         JButton spearmanBtn = createButton("spearman");

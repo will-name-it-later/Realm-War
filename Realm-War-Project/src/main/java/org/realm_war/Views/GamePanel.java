@@ -20,10 +20,13 @@ public class GamePanel extends JPanel {
         this.cols = Constants.getMapSize();
         this.btnGrid = new JButton[rows][cols];
 
+        GameState.mapInitializer();
+        GameState.forestPlacer();
         // Ensure mapGrid is initialized
         mapGrid = GameState.getMapGrid();
 
         setLayout(new GridLayout(rows, cols));
+        setPreferredSize(new Dimension(900, 900));
         initializeGrid();
     }
 
