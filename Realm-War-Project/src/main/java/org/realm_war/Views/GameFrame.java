@@ -14,10 +14,10 @@ public class GameFrame extends JFrame {
 
     public GameFrame() {
         gameState = new GameState();
-        gamePanel = new GamePanel(gameState);           // shared
+        gamePanel = new GamePanel(gameState);
         infoPanel = new InfoPanel();
         actionPanel = new ActionPanel(this);
-        menuPanel = new MenuPanel(gameState, gamePanel); // ✅ shared
+        menuPanel = new MenuPanel(gameState, gamePanel);
 
         setSize(1050, 1050);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
