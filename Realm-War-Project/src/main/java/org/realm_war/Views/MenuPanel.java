@@ -57,8 +57,9 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void addPlayersToList() {
-        if (gameState.getPlayers().size() >= 2) {
-            JOptionPane.showMessageDialog(null, "Maximum 2 players allowed.");
+        if (gameState.getPlayers().size() >= 4) {
+            addPlayerBtn.setEnabled(false);
+            JOptionPane.showMessageDialog(null, "Maximum 4 players allowed.");
             return;
         }
 
@@ -69,10 +70,9 @@ public class MenuPanel extends JPanel implements ActionListener {
 
             JOptionPane.showMessageDialog(null, "Player added: " + name);
 
-            if (gameState.getPlayers().size() == 2) {
-                addPlayerBtn.setEnabled(false);
+            if (gameState.getPlayers().size() >= 2) {
                 startGameBtn.setEnabled(true);
-            }
+            }if (gameState.getPlayers().size() == 4)  addPlayerBtn.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(null, "Name cannot be empty.");
         }
@@ -90,10 +90,11 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void exitGame(){
-        gameState.setRunning(true);
+        gameState.setRunning(false);
+        System.exit(0);
         setEnabled(false);
     }
     public void playAgain(){
-
+        //todo : play again
     }
 }

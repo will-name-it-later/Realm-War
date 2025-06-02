@@ -1,5 +1,12 @@
 package org.realm_war.Views;
 
+import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
+import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.blocks.VoidBlock;
+import org.realm_war.Models.structure.classes.*;
+import org.realm_war.Models.units.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,14 +15,16 @@ import java.net.URL;
 
 public class ActionPanel extends JPanel implements ActionListener {
     private GameFrame frame;
+    private GamePanel gamePanel;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
     private JButton moveBtn;
     private JButton attackBtn;
 
-    public ActionPanel(GameFrame frame) {
+    public ActionPanel(GameFrame frame, GamePanel gamePanel) {
         this.frame = frame;
+        this.gamePanel = gamePanel;
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
@@ -115,34 +124,92 @@ public class ActionPanel extends JPanel implements ActionListener {
         JButton farmBtn = createSideButton("farm");
         JButton barrackBtn = createSideButton("barrack");
         JButton towerBtn = createSideButton("tower");
-        JButton townhallBtn = createSideButton("townhall");
+        JButton townHallBtn = createSideButton("market");
         panel.add(farmBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(barrackBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(towerBtn);
         panel.add(Box.createVerticalStrut(10));
-        panel.add(townhallBtn);
+        panel.add(townHallBtn);
 
         return panel;
+    }
+
+    public void nextTurn() {
+        //todo : implement logic for moving to next player
+    }
+
+    public void updateUnit(Unit unit) {
+        //todo : update the units and the grid at GamePanel
+    }
+
+    public void updateStructure(Structure structure) {
+        //todo : update the structures and the grid at GamePanel
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if ("next".equals(command)) {
-            //todo: next turn
-        } else if ("recruit".equals(command)) {
-            JPanel panel = createRecruitPanel();
-            frame.updateSidePanel(panel);
-        } else if ("build".equals(command)) {
-            JPanel panel = createBuildPanel();
-            frame.updateSidePanel(panel);
-        } else if ("move".equals(command)) {
-            //todo: move a unit to selected position
-        } else if ("attack".equals(command)) {
-            //todo: attack to selected position
-        } else if ("peasant".equals(command)) {
+        switch (command) {
+            case "next" -> nextTurn();
+            case "recruit" -> {
+                JPanel panel = createRecruitPanel();
+                frame.updateSidePanel(panel);
+            }
+            case "build" -> {
+                JPanel panel = createBuildPanel();
+                frame.updateSidePanel(panel);
+            }
+            case "peasant" -> {
+                //todo : get the position selected and the realm from GamePanel
+                Position pos = new Position(1, 1);//sample position
+                String realmName = "my realm";//sample realm name
+                updateUnit(new Peasant(pos, realmName));
+            }
+            case "spearman" -> {
+                //same for this part and the following ones
+                Position pos = new Position(1, 1);
+                String realmName = "my realm";
+                updateUnit(new Spearman(pos, realmName));
+            }
+            case "swordsman" -> {
+                Position pos = new Position(1, 1);
+                String realmName = "my realm";
+                updateUnit(new Swordsman(pos, realmName));
+            }
+            case "knight" -> {
+                Position pos = new Position(1, 1);
+                String realmName = "my realm";
+                updateUnit(new Knight(pos, realmName));
+            }
+            case "farm" -> {
+                //todo : get position selected and the realm from GamePanel
+                Position pos = new Position(1, 1);
+                //todo : get the base block of this position
+                Block block = new VoidBlock(pos);//sample base block
+                int realmID = 1001;//sample ID
+                updateStructure(new Farm(pos, block, realmID));
+            }
+            case "barrack" -> {
+                Position pos = new Position(1, 1);
+                Block block = new VoidBlock(pos);
+                int realmID = 1002;
+                updateStructure(new Barrack(pos, block, realmID));
+            }
+            case "tower" -> {
+                Position pos = new Position(1, 1);
+                Block block = new VoidBlock(pos);
+                int realmID = 1003;
+                updateStructure(new Tower(pos, block, realmID));
+            }
+            case "market" -> {
+                Position pos = new Position(1, 1);
+                Block block = new VoidBlock(pos);
+                int realmID = 1004;
+                //todo: constructor for Market.java should be fixed
+                updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
+            }
         }
     }
 }
