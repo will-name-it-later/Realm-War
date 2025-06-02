@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class ActionPanel extends JPanel implements ActionListener {
-    JFrame frame;
+    private JFrame frame;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
@@ -60,42 +60,26 @@ public class ActionPanel extends JPanel implements ActionListener {
         return button;
     }
 
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("ActionPanel");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(950, 950);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setLayout(new BorderLayout());
-        frame.add(new ActionPanel(frame), BorderLayout.SOUTH);
-        frame.add(new GamePanel() ,BorderLayout.CENTER);
-        frame.setVisible(true);
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if ("next".equals(command)) {
             //todo: next turn
         } else if ("recruit".equals(command)) {
-            JPanel panel = recruitPanel();
-            frame.add(panel, BorderLayout.EAST);
-            frame.revalidate();
-            frame.repaint();
+            createRecruitPanel();
         } else if ("build".equals(command)) {
-            JPanel panel = buildPanel();
-            frame.add(panel, BorderLayout.EAST);
-            frame.revalidate();
-            frame.repaint();
+            createBuildPanel();
         } else if ("move".equals(command)) {
             //todo: move a unit to selected position
         } else if ("attack".equals(command)) {
             //todo: attack to selected position
-        } else if ("peasant".equals(command)) {}
+        } else if ("peasant".equals(command)) {
+        }
     }
 
-    public JPanel recruitPanel(){
+    public void createRecruitPanel() {
+        Component component = ((BorderLayout)frame.getContentPane().getLayout()).getLayoutComponent(BorderLayout.EAST);
+        clearEastPanel();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setPreferredSize(new Dimension(150, 150));
@@ -111,13 +95,16 @@ public class ActionPanel extends JPanel implements ActionListener {
         panel.add(swordsmanBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(knightBtn);
-        return panel;
+        frame.add(panel, BorderLayout.EAST);
+        frame.revalidate();
+        frame.repaint();
     }
 
-    public JPanel buildPanel(){
+    public void createBuildPanel() {
+        clearEastPanel();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setPreferredSize(new Dimension(120, 100));
+        panel.setPreferredSize(new Dimension(150, 150));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
         JButton farmBtn = createButton("farm");
         JButton barrackBtn = createButton("barrack");
@@ -130,6 +117,14 @@ public class ActionPanel extends JPanel implements ActionListener {
         panel.add(towerBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(townhallBtn);
-        return panel;
+        frame.add(panel, BorderLayout.EAST);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    public void clearEastPanel() {
+        Component eastPanel = ((BorderLayout) frame.getContentPane().getLayout()).getLayoutComponent(BorderLayout.EAST);
+        if (eastPanel != null) frame.remove(eastPanel);
     }
 }
+
