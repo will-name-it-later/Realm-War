@@ -33,6 +33,10 @@ public class GameFrame extends JFrame {
         add(actionPanel, BorderLayout.SOUTH);
         add(menuPanel, BorderLayout.NORTH);
 
+        JOptionPane.showMessageDialog(null, "Welcome to Realm War!\n" +
+                "Please add players (at least 2) with 'Add player' button.\n" +
+                "After that press 'Start game' button to go through the game.\n" +
+                "Good Luck!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
         setVisible(true);
     }
 
