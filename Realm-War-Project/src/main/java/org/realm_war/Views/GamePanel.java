@@ -132,7 +132,7 @@ public class GamePanel extends JPanel {
             case "Farm" -> "/org/realm_war/Utilities/Resources/farm.png";
             case "Tower" -> "/org/realm_war/Utilities/Resources/tower.png";
             case "Market" -> "/org/realm_war/Utilities/Resources/market.png";
-            default -> null;
+            default -> "/org/realm_war/Utilities/Resources/empty.png";
         };
 
         if (path == null) return null;
