@@ -1,6 +1,8 @@
 package org.realm_war.Views;
 
 import org.realm_war.Models.GameState;
+import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.TownHall;
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel {
     private JButton[][] btnGrid;
     private Block[][] mapGrid;
     private final Dimension blockSize = new Dimension(45, 45);
+    Position selectedPos;
+    Realm selectedRealm; //todo : get selected Realm
 
     public GamePanel(GameState gameState) {
         this.rows = Constants.getMapSize();
@@ -78,5 +82,18 @@ public class GamePanel extends JPanel {
 
     public void handleBlockClick(int row , int col){
         System.out.println("Clicked block at (" + row + ", " + col + ")");
+        selectedPos = mapGrid[row][col].getPosition();
+    }
+
+    public Position getSelectedPosition() {
+        return selectedPos;
+    }
+
+    public String getSelectedRealm(){
+        return selectedRealm.getName();
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

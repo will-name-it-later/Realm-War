@@ -148,6 +148,24 @@ public class ActionPanel extends JPanel implements ActionListener {
         //todo : update the structures and the grid at GamePanel
     }
 
+    public void moveUnit(Position pos) {
+        Unit u = gamePanel.getGameState().getUnitAt(pos);
+        JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
+        Position destination = gamePanel.getSelectedPosition();
+        u.setPosition(destination);
+    }
+
+    public void attackUnit(Position pos) {
+        Unit u = gamePanel.getGameState().getUnitAt(pos);
+        JOptionPane.showMessageDialog(frame, "Please select your target");//todo : a label should be indicated beneath the game panel
+        Position target = gamePanel.getSelectedPosition();
+        if (u.canAttackUnit(gamePanel.getGameState().getUnitAt(target))) {
+            //todo : game control should be implemented in game panel so a unit can be omitted from the map
+            //gamePanel.removeUnitAt(target) for example
+        }
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -162,53 +180,59 @@ public class ActionPanel extends JPanel implements ActionListener {
                 frame.updateSidePanel(panel);
             }
             case "peasant" -> {
-                //todo : get the position selected and the realm from GamePanel
-                Position pos = new Position(1, 1);//sample position
-                String realmName = "my realm";//sample realm name
-                updateUnit(new Peasant(pos, realmName));
+                Position pos = gamePanel.getSelectedPosition();
+                String name = gamePanel.getSelectedRealm();
+                updateUnit(new Peasant(pos, name));
             }
             case "spearman" -> {
-                //same for this part and the following ones
-                Position pos = new Position(1, 1);
-                String realmName = "my realm";
-                updateUnit(new Spearman(pos, realmName));
+                Position pos = gamePanel.getSelectedPosition();
+                String name = gamePanel.getSelectedRealm();
+                updateUnit(new Spearman(pos, name));
             }
             case "swordsman" -> {
-                Position pos = new Position(1, 1);
-                String realmName = "my realm";
-                updateUnit(new Swordsman(pos, realmName));
+                Position pos = gamePanel.getSelectedPosition();
+                String name = gamePanel.getSelectedRealm();
+                updateUnit(new Swordsman(pos, name));
             }
             case "knight" -> {
-                Position pos = new Position(1, 1);
-                String realmName = "my realm";
-                updateUnit(new Knight(pos, realmName));
+                Position pos = gamePanel.getSelectedPosition();
+                String name = gamePanel.getSelectedRealm();
+                updateUnit(new Knight(pos, name));
             }
             case "farm" -> {
-                //todo : get position selected and the realm from GamePanel
-                Position pos = new Position(1, 1);
+                Position pos = gamePanel.getSelectedPosition();
+                String name = gamePanel.getSelectedRealm();
                 //todo : get the base block of this position
                 Block block = new VoidBlock(pos);//sample base block
-                int realmID = 1001;//sample ID
+                int realmID = 1001;//todo : ID XOR  Name should be used
                 updateStructure(new Farm(pos, block, realmID));
             }
             case "barrack" -> {
-                Position pos = new Position(1, 1);
+                Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1002;
                 updateStructure(new Barrack(pos, block, realmID));
             }
             case "tower" -> {
-                Position pos = new Position(1, 1);
+                Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1003;
                 updateStructure(new Tower(pos, block, realmID));
             }
             case "market" -> {
-                Position pos = new Position(1, 1);
+                Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1004;
                 //todo: constructor for Market.java should be fixed
                 updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
+            }
+            case "move" -> {
+                Position pos = gamePanel.getSelectedPosition();
+                moveUnit(pos);
+            }
+            case "attack" -> {
+                Position pos = gamePanel.getSelectedPosition();
+                attackUnit(pos);
             }
         }
     }
