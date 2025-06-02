@@ -93,11 +93,15 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void exitGame(){
-        gameState.setRunning(false);
-        System.exit(0);
-        setEnabled(false);
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to exit the game?","Exit Game",
+                JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            gameState.setRunning(false);
+            System.exit(0);
+            setEnabled(false);
+        }
     }
     public void playAgain(){
-        //todo : play again
     }
 }
