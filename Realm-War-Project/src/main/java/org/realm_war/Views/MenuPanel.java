@@ -3,6 +3,7 @@ package org.realm_war.Views;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Player;
 import org.realm_war.Utilities.Constants;
+import org.realm_war.Utilities.Resources.RoundedBorder;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,6 +42,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         b.setBackground(Constants.clr_2);
         b.setForeground(Constants.clr_1);
         b.setPreferredSize(new Dimension(140, 30));
+        b.setBorder(new RoundedBorder(10));
         b.setFont(new Font("SansSerif", Font.BOLD, 15));
         b.addActionListener(this);
         return b;
