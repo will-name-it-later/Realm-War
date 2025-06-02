@@ -19,8 +19,8 @@ public class GamePanel extends JPanel {
     private JButton[][] btnGrid;
     private Block[][] mapGrid;
     private final Dimension blockSize = new Dimension(45, 45);
-    Position selectedPos;
-    Realm selectedRealm; //todo : get selected Realm
+    private Position selectedPos;
+    private Realm selectedRealm; //todo : get selected Realm
 
     public GamePanel(GameState gameState) {
         this.rows = Constants.getMapSize();
@@ -94,7 +94,11 @@ public class GamePanel extends JPanel {
         return selectedPos;
     }
 
-    public String getSelectedRealm(){
+    public Realm getSelectedRealm(){
+        return selectedRealm;
+    }
+
+    public String getSelectedRealmName(){
         return selectedRealm.getName();
     }
 

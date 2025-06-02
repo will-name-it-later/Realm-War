@@ -192,8 +192,8 @@ public class GameState {
             List<Unit> units = realm.getUnits();
 
             for (Structure s : structures){
-               Position pos = s.getPosition();
-               mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
+                Position pos = s.getPosition();
+                mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
             }
             for (Unit u : units){
                 Position pos = u.getPosition();
@@ -209,7 +209,7 @@ public class GameState {
             int row = rand.nextInt(Constants.getMapSize());
             int col = rand.nextInt(Constants.getMapSize());
             if(mapGrid[row][col] instanceof EmptyBlock){
-               mapGrid[row][col] = new ForestBlock(new Position(row, col));
+                mapGrid[row][col] = new ForestBlock(new Position(row, col));
             }
         }
     }

@@ -180,27 +180,27 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "peasant" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealm();
+                String name = gamePanel.getSelectedRealmName();
                 updateUnit(new Peasant(pos, name));
             }
             case "spearman" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealm();
+                String name = gamePanel.getSelectedRealmName();
                 updateUnit(new Spearman(pos, name));
             }
             case "swordsman" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealm();
+                String name = gamePanel.getSelectedRealmName();
                 updateUnit(new Swordsman(pos, name));
             }
             case "knight" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealm();
+                String name = gamePanel.getSelectedRealmName();
                 updateUnit(new Knight(pos, name));
             }
             case "farm" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealm();
+                String name = gamePanel.getSelectedRealmName();
                 Block block = gameState.getBlockAt(pos);//sample base block
                 int realmID = 1001;//todo : ID XOR  Name should be used
                 gamePanel.updateStructure(new Farm(pos, block, realmID));
