@@ -24,8 +24,7 @@ public class MenuPanel extends JPanel implements ActionListener {
     JButton exitGameBtn;
     JButton playAgainBtn;
 
-    public MenuPanel(GameFrame gameFrame, GameState gameState, GamePanel gamePanel) {
-        this.gameFrame = gameFrame;
+    public MenuPanel(GameState gameState, GamePanel gamePanel) {
         this.gameState = gameState;
         this.gamePanel = gamePanel;
         addPlayerBtn = createButton("Add Player");
