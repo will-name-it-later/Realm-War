@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
     Position selectedPos;
     Realm selectedRealm; //todo : get selected Realm
 
-    public GamePanel(GameState gameState) {
+    public GamePanel(GameFrame gameFrame ,GameState gameState) {
         this.rows = Constants.getMapSize();
         this.cols = Constants.getMapSize();
         this.btnGrid = new JButton[rows][cols];

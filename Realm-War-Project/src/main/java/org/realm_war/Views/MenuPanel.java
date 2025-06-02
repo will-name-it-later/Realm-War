@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.GameCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Player;
 import org.realm_war.Utilities.Constants;
@@ -10,16 +11,21 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class MenuPanel extends JPanel implements ActionListener {
+    GameFrame gameFrame;
     GameState gameState;
     GamePanel gamePanel;
+    GameCtrl gameCtrl;
     JButton addPlayerBtn;
     JButton startGameBtn;
     JButton exitGameBtn;
     JButton playAgainBtn;
 
-    public MenuPanel(GameState gameState, GamePanel gamePanel) {
+    public MenuPanel(GameFrame gameFrame, GameState gameState, GamePanel gamePanel) {
+        this.gameFrame = gameFrame;
         this.gameState = gameState;
         this.gamePanel = gamePanel;
         addPlayerBtn = createButton("Add Player");
@@ -103,5 +109,36 @@ public class MenuPanel extends JPanel implements ActionListener {
         }
     }
     public void playAgain(){
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to play again?","Play Again",
+                JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            restartApplication();
+        }
+    }
+
+    private void restartApplication() {
+        try {
+            String javaBin = System.getProperty("java.home") + "/bin/java";
+            String classpath = System.getProperty("java.class.path");
+
+            String mainClass = "org.realm_war.Launcher";
+
+            ProcessBuilder pb = new ProcessBuilder(
+                    javaBin, "-cp", classpath, mainClass
+            );
+            pb.inheritIO();
+            pb.start();
+
+            System.exit(0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Failed to restart the game.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 }
