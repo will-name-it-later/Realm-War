@@ -5,6 +5,7 @@ import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
+import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Utilities.Constants;
 
@@ -45,18 +46,22 @@ public class GamePanel extends JPanel {
                 if (block != null) {
                     blockButton.setBackground(block.getColor());
                     if (block.getStructure() instanceof TownHall){
-                        blockButton.setBackground(Color.BLACK);
+                        ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
+                        Image image = icon.getImage(); // Get the Image from the ImageIcon
+                        Image scaledImage = image.getScaledInstance(45, 45, Image.SCALE_SMOOTH); // Resize
+                        ImageIcon resizedIcon = new ImageIcon(scaledImage); // Wrap back into ImageIcon
+                        blockButton.setIcon(resizedIcon);
                     }
                 } else {
                     blockButton.setBackground(Constants.clr_3);  // fallback color
                 }
 
-                if (block instanceof VoidBlock) {
-                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/close.png"));
-                    blockButton.setIcon(icon);
-                    blockButton.setDisabledIcon(icon); // Optional, ensures icon stays visible when disabled
 
-                    blockButton.setEnabled(false); // Disable clicking
+                if (block instanceof VoidBlock) {
+                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/ban.jpg"));
+                    Image scaled = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+                    blockButton.setIcon(new ImageIcon(scaled));
+                    blockButton.setEnabled(false);
                 } else {
                     int finalRow = row;
                     int finalCol = col;
@@ -95,5 +100,45 @@ public class GamePanel extends JPanel {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public void updateStructure(Structure s) {
+        Position pos = s.getPosition();
+        int x = pos.getX();
+        int y = pos.getY();
+
+        // Update model (game state)
+        Block baseBlock = s.getBaseBlock();
+        GameState.getMapGrid()[x][y] = baseBlock;
+        baseBlock.setStructure(s);
+
+        // Update UI
+        JButton button = btnGrid[x][y];
+        if (button != null) {
+            // Update background color based on block (optional)
+            button.setBackground(baseBlock.getColor());
+
+            // Set appropriate structure icon
+            ImageIcon icon = getIconForStructure(s);
+            button.setIcon(icon);
+        }
+    }
+
+
+    public ImageIcon getIconForStructure(Structure s) {
+        String path = switch (s.getClass().getSimpleName()) {
+            case "TownHall" -> "/org/realm_war/Utilities/Resources/townhall.png";
+            case "Barrack" -> "/org/realm_war/Utilities/Resources/barrack.png";
+            case "Farm" -> "/org/realm_war/Utilities/Resources/farm.png";
+            case "Tower" -> "/org/realm_war/Utilities/Resources/tower.png";
+            case "Market" -> "/org/realm_war/Utilities/Resources/market.png";
+            default -> null;
+        };
+
+        if (path == null) return null;
+
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        Image img = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
     }
 }

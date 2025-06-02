@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
@@ -15,6 +16,7 @@ import java.net.URL;
 
 public class ActionPanel extends JPanel implements ActionListener {
     private GameFrame frame;
+    private GameState gameState;
     private GamePanel gamePanel;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
@@ -25,6 +27,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     public ActionPanel(GameFrame frame, GamePanel gamePanel) {
         this.frame = frame;
         this.gamePanel = gamePanel;
+        this.gameState = new GameState();
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
@@ -144,10 +147,6 @@ public class ActionPanel extends JPanel implements ActionListener {
         //todo : update the units and the grid at GamePanel
     }
 
-    public void updateStructure(Structure structure) {
-        //todo : update the structures and the grid at GamePanel
-    }
-
     public void moveUnit(Position pos) {
         Unit u = gamePanel.getGameState().getUnitAt(pos);
         JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
@@ -202,29 +201,27 @@ public class ActionPanel extends JPanel implements ActionListener {
             case "farm" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 String name = gamePanel.getSelectedRealm();
-                //todo : get the base block of this position
-                Block block = new VoidBlock(pos);//sample base block
+                Block block = gameState.getBlockAt(pos);//sample base block
                 int realmID = 1001;//todo : ID XOR  Name should be used
-                updateStructure(new Farm(pos, block, realmID));
+                gamePanel.updateStructure(new Farm(pos, block, realmID));
             }
             case "barrack" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1002;
-                updateStructure(new Barrack(pos, block, realmID));
+                gamePanel.updateStructure(new Barrack(pos, block, realmID));
             }
             case "tower" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1003;
-                updateStructure(new Tower(pos, block, realmID));
+                gamePanel.updateStructure(new Tower(pos, block, realmID));
             }
             case "market" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                Block block = new VoidBlock(pos);
+                Block block = gameState.getBlockAt(pos);
                 int realmID = 1004;
-                //todo: constructor for Market.java should be fixed
-                updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
+                gamePanel.updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
             }
             case "move" -> {
                 Position pos = gamePanel.getSelectedPosition();
