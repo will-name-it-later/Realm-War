@@ -19,12 +19,12 @@ public class Realm {
     private int allUnitSpace;
     private int usedUnitSpace;
 
-    public Realm(String name, TownHall townHall) {
+    public Realm(String name) {
         this.name = name;
         structures = new ArrayList<>();
         units = new ArrayList<>();
         possessedBlocks = new ArrayList<>();
-        this.townHall = townHall;
+        this.townHall = null;
         this.allUnitSpace = 5;
         this.gold = 25;
         this.food = 25;
@@ -80,6 +80,10 @@ public class Realm {
     public void PossessBlock(Block b){
         b.setAbsorbed(true, this.name);
         possessedBlocks.add(b);
+    }
+
+    public void setTownHall(TownHall t){
+        this.townHall = t;
     }
 
     public int getGold() {

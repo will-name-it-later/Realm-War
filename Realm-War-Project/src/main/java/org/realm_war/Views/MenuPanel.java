@@ -11,17 +11,21 @@ import java.awt.event.ActionListener;
 
 public class MenuPanel extends JPanel implements ActionListener {
     GameState gameState;
+    GamePanel gamePanel;
     JButton addPlayerBtn;
     JButton startGameBtn;
     JButton exitGameBtn;
     JButton playAgainBtn;
 
-    public MenuPanel(GameState gameState) {
+    public MenuPanel(GameState gameState, GamePanel gamePanel) {
         this.gameState = gameState;
-        addPlayerBtn = createButton("add player");
-        startGameBtn = createButton("start game");
-        exitGameBtn = createButton("exit game");
-        playAgainBtn = createButton("play again");
+        this.gamePanel = gamePanel;
+        addPlayerBtn = createButton("Add Player");
+        startGameBtn = createButton("Start Game");
+        startGameBtn.setEnabled(false); // disabled until two players added
+        exitGameBtn = createButton("Exit Game");
+        playAgainBtn = createButton("Play Again");
+
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         add(addPlayerBtn);
         add(startGameBtn);
@@ -45,38 +49,51 @@ public class MenuPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
         switch (action) {
-            case "add player":
-                if (gameState.getPlayers().size() >= 2) {
-                    JOptionPane.showMessageDialog(null, "Maximum 2 players allowed.");
-                    return;
-                }
-
-                String name = JOptionPane.showInputDialog("Enter Player " + (gameState.getPlayers().size() + 1) + " name:");
-                if (name != null && !name.trim().isEmpty()) {
-                    Player player = new Player(name.trim(), 0);
-                    gameState.getPlayers().add(player);
-
-                    JOptionPane.showMessageDialog(null, "Player added: " + name);
-
-                    // Optional: disable button after 2 players
-                    if (gameState.getPlayers().size() == 2) {
-                        addPlayerBtn.setEnabled(false);
-                        startGameBtn.setEnabled(true); // if you have a Start Game button
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Name cannot be empty.");
-                }
-                break;
-            case "start game":
-                gameState.setRunning(true);
-                setEnabled(false);
-                break;
-            case "exit game":
-                gameState.setRunning(false);
-                break;
-            case "play again":
-                //todo:logic to play the game again
-                break;
+            case "Add Player" -> addPlayersToList();
+            case "Start Game" -> startGame();
+            case "Exit Game" -> exitGame();
+            case "Play Again" -> playAgain();
         }
+    }
+
+    public void addPlayersToList() {
+        if (gameState.getPlayers().size() >= 2) {
+            JOptionPane.showMessageDialog(null, "Maximum 2 players allowed.");
+            return;
+        }
+
+        String name = JOptionPane.showInputDialog("Enter Player " + (gameState.getPlayers().size() + 1) + " name:");
+        if (name != null && !name.trim().isEmpty()) {
+            Player player = new Player(name.trim(), 0);
+            gameState.addPlayer(player);
+
+            JOptionPane.showMessageDialog(null, "Player added: " + name);
+
+            if (gameState.getPlayers().size() == 2) {
+                addPlayerBtn.setEnabled(false);
+                startGameBtn.setEnabled(true);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Name cannot be empty.");
+        }
+    }
+
+    public void startGame() {
+        if (gameState.getPlayers().size() < 2) {
+            JOptionPane.showMessageDialog(null, "Please add two players before starting the game.");
+            return;
+        }
+        gameState.setupGame(); // Initialize map, forests, town halls etc.
+        gamePanel.refresh();   // <- update the visual grid
+        gameState.setRunning(true);
+        setEnabled(false); // disable menu panel during game
+    }
+
+    public void exitGame(){
+        gameState.setRunning(true);
+        setEnabled(false);
+    }
+    public void playAgain(){
+
     }
 }

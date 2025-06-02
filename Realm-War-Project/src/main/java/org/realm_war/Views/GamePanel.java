@@ -3,6 +3,7 @@ package org.realm_war.Views;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
+import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
@@ -11,18 +12,17 @@ import java.awt.*;
 public class GamePanel extends JPanel {
     private int rows;
     private int cols;
+    private GameState gameState;
     private JButton[][] btnGrid;
     private Block[][] mapGrid;
     private final Dimension blockSize = new Dimension(45, 45);
 
-    public GamePanel() {
+    public GamePanel(GameState gameState) {
         this.rows = Constants.getMapSize();
         this.cols = Constants.getMapSize();
         this.btnGrid = new JButton[rows][cols];
+        this.gameState = gameState;
 
-        GameState.mapInitializer();
-        GameState.forestPlacer();
-        // Ensure mapGrid is initialized
         mapGrid = GameState.getMapGrid();
 
         setLayout(new GridLayout(rows, cols));
@@ -40,6 +40,9 @@ public class GamePanel extends JPanel {
                 Block block = mapGrid[row][col];
                 if (block != null) {
                     blockButton.setBackground(block.getColor());
+                    if (block.getStructure() instanceof TownHall){
+                        blockButton.setBackground(Color.BLACK);
+                    }
                 } else {
                     blockButton.setBackground(Color.PINK);  // fallback color
                 }
@@ -63,6 +66,14 @@ public class GamePanel extends JPanel {
                 add(blockButton);
             }
         }
+    }
+
+    public void refresh() {
+        this.mapGrid = gameState.getMapGrid(); // reload after setupGame()
+        removeAll();
+        initializeGrid();
+        revalidate();
+        repaint();
     }
 
     public void handleBlockClick(int row , int col){

@@ -13,6 +13,8 @@ import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 
+import static java.lang.Integer.parseInt;
+
 public class GameState {
     //Track game progress
     private int currentTurn = 1;
@@ -119,6 +121,65 @@ public class GameState {
         }
     }
 
+    public void initializeTownHalls() {
+        Random rand = new Random();
+
+        Position[] positions = {
+                new Position(1, 1),
+                new Position(gridSize - 2, gridSize - 2)
+        };
+
+        for (int i = 0; i < 2; i++) {
+            Realm realm = realms.get(i);
+            Position pos = positions[i];
+
+            // Example values — adjust as needed
+            int goldProduction = 10;
+            int foodProduction = 5;
+            int maxLevel = 5;
+            int durability = 100;
+            int maintenance = 2;
+            int kingdomId = rand.nextInt(1000);
+
+            Block baseBlock = new EmptyBlock(pos);
+            TownHall townHall = new TownHall(
+                    goldProduction, foodProduction,
+                    maxLevel, durability, maintenance,
+                    pos, baseBlock, kingdomId
+            );
+
+            mapGrid[pos.getX()][pos.getY()] = baseBlock;
+            mapGrid[pos.getX()][pos.getY()].setStructure(townHall);
+
+            realm.setTownHall(townHall);
+            realm.getStructures().add(townHall);
+        }
+    }
+
+    public void setupGame() {
+        // Initialize the grid
+        mapInitializer();
+
+        // Place forests
+        forestPlacer();
+
+        // Create Realms for each Player and add them to the realm list
+        realms.clear();  // Clear any previous realms if restarting
+        for (Player player : players) {
+            Realm realm = new Realm(player.getName());
+            addRealm(realm);
+        }
+
+        // Place two Town Halls (one per realm)
+        initializeTownHalls();
+
+        // Set current player and turn info
+        currentTurn = 0;
+        turns = 1;
+        if (!players.isEmpty()) {
+            currentPlayer = players.get(0);
+        }
+    }
 
     public void updateMap(List<Realm> realms) {
         for (int i = 0; i < gridSize; i++) {
@@ -168,6 +229,7 @@ public class GameState {
     public Structure getStructureAt(Position pos){
        return mapGrid[pos.getX()][pos.getY()].getStructure();
     }
+
     public Unit getUnitAt(Position pos){
         return mapGrid[pos.getX()][pos.getY()].getUnit();
     }
