@@ -18,7 +18,7 @@ public class GameState {
     private int currentTurn = 1;
     private int turns = 1;
     private Player currentPlayer;
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
     private boolean running;
     private boolean isGameOver;
     private static int gridSize = Constants.getMapSize();
@@ -54,7 +54,7 @@ public class GameState {
     //Turn management
     public void nextTurn() {
         if (players.isEmpty()) return;
-        this.currentTurn = (currentTurn - 1) % players.size();
+        this.currentTurn = (currentTurn + 1) % players.size();
         if (currentTurn == 0) {
             turns++;
         }
@@ -72,6 +72,7 @@ public class GameState {
     public void setRunning(boolean running) {
         this.running = running;
     }
+
     public boolean isGameOver() {
         int realmsWithTownHall = 0;
         for (Realm realm : realms) {
@@ -152,15 +153,18 @@ public class GameState {
         }
     }
 
-    public static Block[][] getMapGrid(){
-        return mapGrid;
-    }
-
-    //Interaction Helpers
+    public static Block[][] getMapGrid() { return mapGrid; }
     public int getCurrentTurn() { return currentTurn; }
     public List<Realm> getRealms() { return realms; }
     public int getTurnNumber() { return turns; }
     public Realm getCurrentRealm() { return realms.get(currentTurn); }
+    public List<Player> getPlayers (){ return players; }
+
+    public void addPlayer(Player newPlayer){
+        this.players.add(newPlayer);
+    }
+
+    //Interaction Helpers
     public Structure getStructureAt(Position pos){
        return mapGrid[pos.getX()][pos.getY()].getStructure();
     }

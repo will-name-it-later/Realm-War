@@ -1,6 +1,7 @@
 package org.realm_war.Views;
 
 import org.realm_war.Models.GameState;
+import org.realm_war.Models.Player;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -45,8 +46,26 @@ public class MenuPanel extends JPanel implements ActionListener {
         String action = e.getActionCommand();
         switch (action) {
             case "add player":
-                JOptionPane.showInputDialog("please enter the name of the player", null);
-                //todo:add player and its realm to the game
+                if (gameState.getPlayers().size() >= 2) {
+                    JOptionPane.showMessageDialog(null, "Maximum 2 players allowed.");
+                    return;
+                }
+
+                String name = JOptionPane.showInputDialog("Enter Player " + (gameState.getPlayers().size() + 1) + " name:");
+                if (name != null && !name.trim().isEmpty()) {
+                    Player player = new Player(name.trim(), 0);
+                    gameState.getPlayers().add(player);
+
+                    JOptionPane.showMessageDialog(null, "Player added: " + name);
+
+                    // Optional: disable button after 2 players
+                    if (gameState.getPlayers().size() == 2) {
+                        addPlayerBtn.setEnabled(false);
+                        startGameBtn.setEnabled(true); // if you have a Start Game button
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Name cannot be empty.");
+                }
                 break;
             case "start game":
                 gameState.setRunning(true);

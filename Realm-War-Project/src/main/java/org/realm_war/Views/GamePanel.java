@@ -54,8 +54,7 @@ public class GamePanel extends JPanel {
                     int finalRow = row;
                     int finalCol = col;
                     blockButton.addActionListener(e -> {
-                        // Handle clicks for non-void blocks
-                        System.out.println("Clicked block at (" + finalRow + ", " + finalCol + ")");
+                        handleBlockClick(finalRow, finalCol);
                     });
                 }
 
@@ -67,7 +66,6 @@ public class GamePanel extends JPanel {
     }
 
     public void handleBlockClick(int row , int col){
-        Block block = mapGrid[row][col];
-        System.out.println("The positoin :" + block.getPosition().getX() + " "+block.getPosition().getY());
+        System.out.println("Clicked block at (" + row + ", " + col + ")");
     }
 }
