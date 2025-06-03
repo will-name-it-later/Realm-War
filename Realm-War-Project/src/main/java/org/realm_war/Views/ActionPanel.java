@@ -194,14 +194,45 @@ public class ActionPanel extends JPanel implements ActionListener {
          */
     }
 
-    public void attackUnit(Position pos) {
-        Unit u = gameState.getUnitAt(pos);
+    public void attackUnit() {
+        Unit attacker = unitCtrl.getSelectedUnit();
+        Block targetBlock = unitCtrl.getTargetBlock();
+
+        if (attacker == null || targetBlock == null || targetBlock.getUnit() == null) {
+            JOptionPane.showMessageDialog(this, "Select a unit and a valid enemy to attack.");
+            return;
+        }
+
+        Unit defender = targetBlock.getUnit();
+
+        if (attacker.getOwner().equals(defender.getOwner())) {
+            JOptionPane.showMessageDialog(this, "You cannot attack your own units.");
+            return;
+        }
+
+        if (attacker.canAttack(defender)) {
+            unitCtrl.attackUnit(attacker, defender);
+
+            if (defender.getHitPoint() <= 0) {
+                targetBlock.setUnit(null);
+                JOptionPane.showMessageDialog(this, "Enemy unit defeated!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Attack successful. Enemy has " + defender.getHitPoint() + " HP left.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Target is out of attack range.");
+        }
+
+        /*
+        Unit u = gameState.getUnitAt();
         JOptionPane.showMessageDialog(frame, "Please select your target");//todo : a label should be indicated beneath the game panel
         Position target = gamePanel.getSelectedPosition();
         if (u.canAttackUnit(gameState.getUnitAt(target))) {
             //todo : game control should be implemented in game panel so a unit can be omitted from the map
             //gamePanel.removeUnitAt(target) for example
         }
+
+         */
     }
 
 
@@ -267,8 +298,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                 moveUnit();
             }
             case "attack" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                attackUnit(pos);
+                //Position pos = gamePanel.getSelectedPosition();
+                attackUnit();
             }
         }
     }
