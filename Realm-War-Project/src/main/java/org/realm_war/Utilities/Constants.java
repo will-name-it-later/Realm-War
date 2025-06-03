@@ -9,6 +9,9 @@ public class Constants {
     public static final Color clr_2 = new Color(201,196,190);
     public static final Color clr_3 = new Color(207,204,204);
 
+    public static final Font regular_font = new Font("Arial", Font.PLAIN, 20);
+    public static final Font bold_font = new Font("Arial", Font.BOLD, 20);
+
     public static int getMapSize(){
         return mapSize;
     }
