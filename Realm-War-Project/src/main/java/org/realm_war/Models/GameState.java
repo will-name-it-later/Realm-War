@@ -126,10 +126,12 @@ public class GameState {
 
         Position[] positions = {
                 new Position(1, 1),
-                new Position(gridSize - 2, gridSize - 2)
+                new Position(gridSize - 2, gridSize - 2),
+                new Position(1, gridSize - 2),
+                new Position(gridSize - 2, 1),
         };
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < players.size(); i++) {
             Realm realm = realms.get(i);
             Position pos = positions[i];
 
@@ -160,8 +162,8 @@ public class GameState {
         // Initialize the grid
         mapInitializer();
 
-        // Place forests
-        forestPlacer();
+        // Place forests & void blocks
+        blockPlacer();
 
         // Create Realms for each Player and add them to the realm list
         realms.clear();  // Clear any previous realms if restarting
@@ -187,15 +189,15 @@ public class GameState {
                 mapGrid[i][j] = new EmptyBlock(new Position(i, j));
             }
         }
-        for (Realm realm : realms){
+        for (Realm realm : realms) {
             List<Structure> structures = realm.getStructures();
             List<Unit> units = realm.getUnits();
 
-            for (Structure s : structures){
+            for (Structure s : structures) {
                 Position pos = s.getPosition();
                 mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
             }
-            for (Unit u : units){
+            for (Unit u : units) {
                 Position pos = u.getPosition();
                 mapGrid[pos.getX()][pos.getY()].setUnit(u);
             }
@@ -203,40 +205,60 @@ public class GameState {
     }
 
     //Call this after initializing the grid
-    public static void forestPlacer(){
-        Random rand = new Random();
-        for (int i = 80 ; i > 0; i--){
-            int row = rand.nextInt(Constants.getMapSize());
-            int col = rand.nextInt(Constants.getMapSize());
-            if(mapGrid[row][col] instanceof EmptyBlock){
-                mapGrid[row][col] = new ForestBlock(new Position(row, col));
+    public static void blockPlacer() {
+        for (Block[] blocks : mapGrid) {
+            for (Block block : blocks) {
+                if (Math.random() < 0.15) {
+                    mapGrid[block.getPosition().getX()][block.getPosition().getY()] = new VoidBlock(block.getPosition());
+                } else if (Math.random() >= 0.15 && Math.random() < 0.3) {
+                    mapGrid[block.getPosition().getX()][block.getPosition().getY()] = new ForestBlock(block.getPosition());
+                }
             }
         }
     }
 
-    public static Block[][] getMapGrid() { return mapGrid; }
-    public int getCurrentTurn() { return currentTurn; }
-    public List<Realm> getRealms() { return realms; }
-    public int getTurnNumber() { return turns; }
-    public Realm getCurrentRealm() { return realms.get(currentTurn); }
-    public List<Player> getPlayers (){ return players; }
+    public static Block[][] getMapGrid() {
+        return mapGrid;
+    }
 
-    public void addPlayer(Player newPlayer){
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public List<Realm> getRealms() {
+        return realms;
+    }
+
+    public int getTurnNumber() {
+        return turns;
+    }
+
+    public Realm getCurrentRealm() {
+        return realms.get(currentTurn);
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer(Player newPlayer) {
         this.players.add(newPlayer);
     }
 
     //Interaction Helpers
-    public Structure getStructureAt(Position pos){
-       return mapGrid[pos.getX()][pos.getY()].getStructure();
+    public Structure getStructureAt(Position pos) {
+        return mapGrid[pos.getX()][pos.getY()].getStructure();
     }
 
-    public Unit getUnitAt(Position pos){
+    public Unit getUnitAt(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getUnit();
     }
-    public Block getBlockAt(Position pos){
+
+    public Block getBlockAt(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock();
     }
-    public boolean isOccupied(Position pos){
+
+    public boolean isOccupied(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
 

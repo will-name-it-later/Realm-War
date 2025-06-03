@@ -7,12 +7,9 @@ import org.realm_war.Utilities.Constants;
 import org.realm_war.Utilities.Resources.RoundedBorder;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class MenuPanel extends JPanel implements ActionListener {
     GameFrame gameFrame;

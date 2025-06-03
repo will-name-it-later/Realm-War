@@ -45,7 +45,7 @@ public class GamePanel extends JPanel {
                 Block block = mapGrid[row][col];
                 if (block != null) {
                     blockButton.setBackground(block.getColor());
-                    if (block.getStructure() instanceof TownHall){
+                    if (block.getStructure() instanceof TownHall) {
                         ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
                         Image image = icon.getImage(); // Get the Image from the ImageIcon
                         Image scaledImage = image.getScaledInstance(45, 45, Image.SCALE_SMOOTH); // Resize
@@ -85,7 +85,7 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
-    public void handleBlockClick(int row , int col){
+    public void handleBlockClick(int row, int col) {
         System.out.println("Clicked block at (" + row + ", " + col + ")");
         selectedPos = mapGrid[row][col].getPosition();
     }
@@ -94,11 +94,11 @@ public class GamePanel extends JPanel {
         return selectedPos;
     }
 
-    public Realm getSelectedRealm(){
+    public Realm getSelectedRealm() {
         return selectedRealm;
     }
 
-    public String getSelectedRealmName(){
+    public String getSelectedRealmName() {
         return selectedRealm.getName();
     }
 

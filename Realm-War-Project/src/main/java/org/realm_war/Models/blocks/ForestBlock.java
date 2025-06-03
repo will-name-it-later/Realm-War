@@ -41,7 +41,7 @@ public class ForestBlock extends Block {
     }
     @Override
     public Color getColor() {
-        return new Color(0, 99, 31);
+        return new Color(38, 124, 54);
     }
 
 }

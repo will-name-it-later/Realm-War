@@ -2,7 +2,6 @@ package org.realm_war.Views;
 
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
-import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.*;
