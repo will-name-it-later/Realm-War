@@ -1,5 +1,6 @@
 package org.realm_war.Models;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,13 @@ public class GameState {
     private boolean isGameOver;
     private static int gridSize = Constants.getMapSize();
     private static Block[][] mapGrid = new Block[gridSize][gridSize];
+
+    private Color[] realmColors = new Color[] {
+            new Color(183, 65, 14),   // Rust
+            new Color(205, 133, 63),  // Peru
+            new Color(218, 165, 32),  // Goldenrod
+            new Color(85, 107, 47)    // Dark Moss Green
+    };
 
     private static List<Realm> realms = new ArrayList<>();
 
@@ -136,7 +144,6 @@ public class GameState {
             Realm realm = realms.get(i);
             Position pos = positions[i];
 
-            // Example values — adjust as needed
             int goldProduction = 10;
             int foodProduction = 5;
             int maxLevel = 5;
@@ -144,20 +151,35 @@ public class GameState {
             int maintenance = 2;
             int kingdomId = HelperMethods.idGenerator();
 
-            Block baseBlock = new EmptyBlock(pos);
+            Block baseBlock = new EmptyBlock(pos); // or StructureBlock
+            baseBlock.setStructure(null); // optionally null first
+
             TownHall townHall = new TownHall(
                     goldProduction, foodProduction,
                     maxLevel, durability, maintenance,
                     pos, baseBlock, kingdomId
             );
 
+            baseBlock.setStructure(townHall);
+            baseBlock.setOwnerID(kingdomId);
             mapGrid[pos.getX()][pos.getY()] = baseBlock;
-            mapGrid[pos.getX()][pos.getY()].setStructure(townHall);
+
+            // Claim surrounding territory
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dy = -2; dy <= 2; dy++) {
+                    int nx = pos.getX() + dx;
+                    int ny = pos.getY() + dy;
+                    if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
+                        mapGrid[nx][ny].setOwnerID(kingdomId);
+                    }
+                }
+            }
 
             realm.setTownHall(townHall);
             realm.getStructures().add(townHall);
         }
     }
+
 
     public void setupGame() {
         // Initialize the grid
@@ -169,7 +191,7 @@ public class GameState {
         // Create Realms for each Player and add them to the realm list
         realms.clear();  // Clear any previous realms if restarting
         for (Player player : players) {
-            Realm realm = new Realm(HelperMethods.idGenerator());
+            Realm realm = new Realm(HelperMethods.idGenerator(), );
             addRealm(realm);
         }
 
@@ -257,6 +279,10 @@ public class GameState {
         return mapGrid[pos.getX()][pos.getY()].getUnit();
     }
 
+    public Color[] getRealmColors() {
+        return realmColors;
+    }
+
     public Block getBlockAt(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock();
     }
@@ -264,4 +290,5 @@ public class GameState {
     public boolean isOccupied(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
+
 }
