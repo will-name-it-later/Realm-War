@@ -208,9 +208,9 @@ public class GameState {
     public static void blockPlacer() {
         for (Block[] blocks : mapGrid) {
             for (Block block : blocks) {
-                if (Math.random() < 0.15) {
+                if (Math.random() < 0.1) {
                     mapGrid[block.getPosition().getX()][block.getPosition().getY()] = new VoidBlock(block.getPosition());
-                } else if (Math.random() >= 0.15 && Math.random() < 0.3) {
+                } else if (Math.random() >= 0.1 && Math.random() < 0.3) {
                     mapGrid[block.getPosition().getX()][block.getPosition().getY()] = new ForestBlock(block.getPosition());
                 }
             }
