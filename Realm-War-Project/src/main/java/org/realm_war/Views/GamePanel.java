@@ -45,7 +45,7 @@ public class GamePanel extends JPanel {
                 // Defensive check in case mapGrid isn't fully initialized
                 Block block = mapGrid[row][col];
                 if (block != null) {
-                    blockButton.setBackground(block.getRealmID(gameState.getRealms()) != null ? block.getRealmID(gameState.getRealms()).getRealmColor() : Color.LIGHT_GRAY);
+                    blockButton.setBackground(block.getRealmID(gameState.getRealms()) != null ? block.getRealmID(gameState.getRealms()).getRealmColor() : block.getColor());
                     if (block.getStructure() instanceof TownHall) {
                         ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
                         Image image = icon.getImage(); // Get the Image from the ImageIcon
