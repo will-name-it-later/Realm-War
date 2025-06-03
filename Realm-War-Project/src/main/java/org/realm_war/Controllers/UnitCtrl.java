@@ -1,6 +1,10 @@
 package org.realm_war.Controllers;
 
+import org.realm_war.Models.GameState;
+import org.realm_war.Models.Player;
 import org.realm_war.Models.Position;
+import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.units.Unit;
 
 import java.util.ArrayList;
@@ -9,15 +13,53 @@ import java.util.List;
 public class UnitCtrl {
     private final List<Unit> units;
 
+    private GameState gameState = new GameState();
+
     public UnitCtrl() {
         units = new ArrayList<Unit>();
+    }
+
+    public Unit getSelectedUnit() {
+        return gameState.getSelectedUnit();
+    }
+
+    public Block getTargetBlock() {
+        return gameState.getTargetBlock();
     }
 
     public void addUnit(Unit unit) {
         units.add(unit);
     }
 
-    public void moveUnit(Unit unit, int x, int y) {
+    public boolean isPlayerTurn(Player player) {
+        return gameState.getCurrentPlayer().equals(player);
+    }
+
+    public void moveUnitToBlock(Unit unit, Block targetBlock) {
+        Block currentBlock = gameState.getBlockAt(unit.getPosition());
+        if (currentBlock != null) {
+            currentBlock.setUnit(null);
+        }
+        targetBlock.setUnit(unit);
+        unit.setX(targetBlock.getX());
+        unit.setY(targetBlock.getY());
+    }
+
+    public void attackUnit(Unit attacker, Unit defender) {
+        int attackPower = attacker.getAttackPower();
+
+        Block attackerBlock = gameState.getBlockAt(attacker.getPosition());
+        Block defenderBlock = gameState.getBlockAt(defender.getPosition());
+
+        if (attackerBlock instanceof ForestBlock) attackPower += 2;
+        if (defenderBlock instanceof ForestBlock) attackPower -= 1;
+
+        defender.takeDamage(attackPower);
+    }
+
+    //todo: We don't need the methods that I commented. They can be deleted.
+
+    /* public void moveUnit(Unit unit, int x, int y) {
         Position pos = new Position(x, y);
         if (pos.distanceTo(unit.getPosition()) > unit.getMovementRange()) {
             throw new IllegalArgumentException("Position is out of range for this unit!");
@@ -56,6 +98,8 @@ public class UnitCtrl {
         }
         throw new UnsupportedOperationException("Can not get any enemy unit at this position!");
     }
+
+     */
 
     public void removeUnit(Unit unit) {
         units.remove(unit);

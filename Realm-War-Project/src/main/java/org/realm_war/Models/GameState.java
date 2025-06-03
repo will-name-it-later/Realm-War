@@ -19,14 +19,15 @@ import static java.lang.Integer.parseInt;
 
 public class GameState {
     //Track game progress
-    private int currentTurn = 1;
+    private int currentTurn = 0;
     private int turns = 1;
-    private Player currentPlayer;
     private List<Player> players = new ArrayList<>();
     private boolean running;
     private boolean isGameOver;
     private static int gridSize = Constants.getMapSize();
     private static Block[][] mapGrid = new Block[gridSize][gridSize];
+    private Unit selectedUnit;
+    private Block targetBlock;
 
     private Color[] realmColors = new Color[] {
             new Color(183, 65, 14),   // Rust
@@ -69,14 +70,13 @@ public class GameState {
         if (currentTurn == 0) {
             turns++;
         }
-        this.currentPlayer = players.get(currentTurn);
         for (Realm realm : realms) {
             realm.updateResources();
         }
     }
 
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return players.get(currentTurn);
     }
 
     public boolean isRunning() {
@@ -218,9 +218,6 @@ public class GameState {
         // Set current player and turn info
         currentTurn = 0;
         turns = 1;
-        if (!players.isEmpty()) {
-            currentPlayer = players.get(0);
-        }
     }
 
     public void updateMap(List<Realm> realms) {
@@ -287,6 +284,22 @@ public class GameState {
         this.players.add(newPlayer);
     }
 
+    public Unit getSelectedUnit() {
+        return selectedUnit;
+    }
+
+    public Block getTargetBlock() {
+        return targetBlock;
+    }
+
+    public void setSelectedUnit(Unit unit) {
+        this.selectedUnit = unit;
+    }
+
+    public void setTargetBlock(Block block) {
+        this.targetBlock = block;
+    }
+
     //Interaction Helpers
     public Structure getStructureAt(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure();
@@ -301,7 +314,10 @@ public class GameState {
     }
 
     public Block getBlockAt(Position pos) {
-        return mapGrid[pos.getX()][pos.getY()];
+        int x = pos.getX();
+        int y = pos.getY();
+        if (x < 0 || y < 0 || x >= mapGrid.length || y >= mapGrid[0].length) return null;
+        return mapGrid[x][y];
     }
 
     public boolean isOccupied(Position pos) {

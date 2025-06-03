@@ -28,6 +28,8 @@ public abstract class Block {
     public abstract Color getColor();
 
     public Position getPosition() { return position; }
+    public int getX() { return position.getX(); }
+    public int getY() { return position.getY(); }
     public boolean isAbsorbed() { return isAbsorbed; }
 
     public Realm getRealmID(List<Realm> realms) {
@@ -65,6 +67,10 @@ public abstract class Block {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public boolean isWalkable() {
+        return !(this instanceof VoidBlock);
     }
 
     public boolean hasUnit() {

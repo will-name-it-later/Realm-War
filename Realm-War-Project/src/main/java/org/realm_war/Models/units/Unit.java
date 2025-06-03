@@ -1,6 +1,8 @@
 package org.realm_war.Models.units;
 
+import org.realm_war.Models.Player;
 import org.realm_war.Models.Position;
+import org.realm_war.Models.blocks.Block;
 
 public abstract class Unit {
     private int HIT_POINT;
@@ -12,6 +14,7 @@ public abstract class Unit {
     private int UNIT_SPACE;
     private Position position;
     private int realmID;
+    private Player owner;
 
     public Unit(int HIT_POINT, int MOVEMENT_RANGE, int ATTACK_POWER, int ATTACK_RANGE, int PAYMENT, int RATION, int UNIT_SPACE, Position position, int realmID) {
         this.HIT_POINT = HIT_POINT;
@@ -25,8 +28,17 @@ public abstract class Unit {
         this.realmID = realmID;
     }
 
+    public boolean canMoveTo(Block block) {
+        return position.distanceTo(block.getPosition()) <= MOVEMENT_RANGE &&
+                block.isWalkable() && block.getUnit() == null;
+    }
+
+    public boolean canAttack(Unit target) {
+        return position.distanceTo(target.getPosition()) <= ATTACK_RANGE;
+    }
+
     public void takeDamage(int damage) {
-        HIT_POINT -= damage;
+        HIT_POINT = Math.max(0, HIT_POINT-damage);
     }
 
     public int getHitPoint() {
@@ -63,6 +75,26 @@ public abstract class Unit {
 
     public Position getPosition() {
         return position;
+    }
+
+    public int getX() {
+        return position.getX();
+    }
+
+    public int getY() {
+        return position.getY();
+    }
+
+    public void setX(int x) {
+        position.setX(x);
+    }
+
+    public void setY(int y) {
+        position.setY(y);
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
     public void setPosition(Position position) {

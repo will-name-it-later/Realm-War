@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.blocks.Block;
@@ -17,6 +18,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     private GameFrame frame;
     private GameState gameState;
     private GamePanel gamePanel;
+    private UnitCtrl unitCtrl;
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
@@ -27,6 +29,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         this.frame = frame;
         this.gamePanel = gamePanel;
         this.gameState = new GameState();
+        this.unitCtrl = new UnitCtrl();
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
@@ -143,11 +146,52 @@ public class ActionPanel extends JPanel implements ActionListener {
         gamePanel.refresh();
     }
 
-    public void moveUnit(Position pos) {
+    /* private void handleClick() {
+        GameState gameState = new GameState();
+        Unit unitOnBlock = block.getUnit();
+
+        if (unitOnBlock != null && unitOnBlock.getOwner().equals(gameState.getCurrentPlayer())) {
+            // Player clicked on one of their own units
+            gameState.setSelectedUnit(unitOnBlock);
+            gameState.setTargetBlock(null); // Clear old target
+            System.out.println("Selected unit at: " + block.getPosition().getX() + "," + block.getPosition().getY());
+        } else {
+            // Player clicked on a destination or enemy
+            gameState.setTargetBlock(block);
+            System.out.println("Selected target block at: " + block.getPosition().getX() + "," + block.getPosition().getY());
+        }
+    }
+
+     */
+
+    public void moveUnit() {
+        Unit selectedUnit = unitCtrl.getSelectedUnit();
+        Block targetBlock = unitCtrl.getTargetBlock();
+
+        if (selectedUnit == null || targetBlock == null) {
+            JOptionPane.showMessageDialog(this, "Please select both a unit and a destination.");
+            return;
+        }
+
+        if (!unitCtrl.isPlayerTurn(selectedUnit.getOwner())) {
+            JOptionPane.showMessageDialog(this, "It's not your turn.");
+            return;
+        }
+
+        if (selectedUnit.canMoveTo(targetBlock)) {
+            unitCtrl.moveUnitToBlock(selectedUnit, targetBlock);
+            JOptionPane.showMessageDialog(this, "Unit moved successfully.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid move: target is out of range or blocked.");
+        }
+
+        /*
         Unit u = gameState.getUnitAt(pos);
         JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
         Position destination = gamePanel.getSelectedPosition();
         u.setPosition(destination);
+
+         */
     }
 
     public void attackUnit(Position pos) {
@@ -219,8 +263,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                 gamePanel.updateStructure(new Market(pos, block, ID));
             }
             case "move" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                moveUnit(pos);
+                //Position pos = gamePanel.getSelectedPosition();
+                moveUnit();
             }
             case "attack" -> {
                 Position pos = gamePanel.getSelectedPosition();
