@@ -1,5 +1,6 @@
 package org.realm_war.Models;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class Realm {
     private List<Block> possessedBlocks;
     private int allUnitSpace;
     private int usedUnitSpace;
+
+    private Color realmColor;
 
     public Realm(int ID) {
         this.ID = ID;
@@ -82,8 +85,15 @@ public class Realm {
         possessedBlocks.add(b);
     }
 
+    public Color getRealmColor (){
+        return realmColor;
+    }
+
     public void setTownHall(TownHall t){
         this.townHall = t;
+    }
+    public void setRealmColor(Color c){
+        this.realmColor=c;
     }
 
     public int getGold() {

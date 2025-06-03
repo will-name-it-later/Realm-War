@@ -1,11 +1,6 @@
 package org.realm_war.Views;
 
-import org.realm_war.Controllers.GameCtrl;
-import org.realm_war.Controllers.PlayerCtrl;
-import org.realm_war.Controllers.StructureCtrl;
-import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
-import org.realm_war.Models.Player;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
@@ -50,7 +45,7 @@ public class GamePanel extends JPanel {
                 // Defensive check in case mapGrid isn't fully initialized
                 Block block = mapGrid[row][col];
                 if (block != null) {
-                    blockButton.setBackground(block.getColor());
+                    blockButton.setBackground(block.getRealmID(gameState.getRealms()) != null ? block.getRealmID(gameState.getRealms()).getRealmColor() : Color.LIGHT_GRAY);
                     if (block.getStructure() instanceof TownHall) {
                         ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
                         Image image = icon.getImage(); // Get the Image from the ImageIcon

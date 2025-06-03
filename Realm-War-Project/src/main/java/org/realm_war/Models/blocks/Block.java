@@ -1,10 +1,13 @@
 package org.realm_war.Models.blocks;
 
 import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.units.Unit;
 
 import java.awt.*;
+import java.util.List;
+
 
 public abstract class Block {
     private Position position;
@@ -12,10 +15,11 @@ public abstract class Block {
     private Structure structure;
     private boolean isAbsorbed;
     private int realmID; // 0 for not absorbed.
+    private Color ownerColor;
     public Block(Position position) {
         this.position = position;
         this.isAbsorbed = false;
-        this.realmID = 0;
+        this.realmID =0;
     }
 
     public abstract boolean canBuildStructure();
@@ -25,7 +29,18 @@ public abstract class Block {
 
     public Position getPosition() { return position; }
     public boolean isAbsorbed() { return isAbsorbed; }
-    public int getRealmID() { return realmID; }
+
+    public Realm getRealmID(List<Realm> realms) {
+        if (realmID == -1) return null; // or some invalid ID
+
+        for (Realm realm : realms) {
+            if (realm.getID() == realmID) {
+                return realm;
+            }
+        }
+        return null;
+    }
+
 
     public void setAbsorbed(boolean isAbsorbed, int realmName) {
         this.isAbsorbed = isAbsorbed;
@@ -58,5 +73,14 @@ public abstract class Block {
 
     public boolean isOccupied() {
         return unit != null || structure != null;
+    }
+
+    public void setOwnerID (int id){ this.realmID = id; }
+
+    public void setOwnerColor(Color color) {
+        this.ownerColor = color;
+    }
+    public Color getOwnerColor() {
+        return ownerColor;
     }
 }

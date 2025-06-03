@@ -131,8 +131,6 @@ public class GameState {
     }
 
     public void initializeTownHalls() {
-        Random rand = new Random();
-
         Position[] positions = {
                 new Position(1, 1),
                 new Position(gridSize - 2, gridSize - 2),
@@ -149,10 +147,11 @@ public class GameState {
             int maxLevel = 5;
             int durability = 100;
             int maintenance = 2;
-            int kingdomId = HelperMethods.idGenerator();
+            int kingdomId = realm.getID();
 
-            Block baseBlock = new EmptyBlock(pos); // or StructureBlock
-            baseBlock.setStructure(null); // optionally null first
+            // Create base block and town hall structure
+            Block baseBlock = new EmptyBlock(pos);
+            baseBlock.setStructure(null);
 
             TownHall townHall = new TownHall(
                     goldProduction, foodProduction,
@@ -160,17 +159,27 @@ public class GameState {
                     pos, baseBlock, kingdomId
             );
 
+            // Set structure and owner info on base block
             baseBlock.setStructure(townHall);
             baseBlock.setOwnerID(kingdomId);
+            baseBlock.setOwnerColor(realm.getRealmColor());
+
             mapGrid[pos.getX()][pos.getY()] = baseBlock;
 
-            // Claim surrounding territory
+            // Claim surrounding territory within radius 2 (circle)
             for (int dx = -2; dx <= 2; dx++) {
                 for (int dy = -2; dy <= 2; dy++) {
                     int nx = pos.getX() + dx;
                     int ny = pos.getY() + dy;
+
+                    // Check boundaries
                     if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
-                        mapGrid[nx][ny].setOwnerID(kingdomId);
+                        // Euclidean distance to keep circular territory
+                        double distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance <= 2) {
+                            mapGrid[nx][ny].setOwnerID(kingdomId);
+                            mapGrid[nx][ny].setOwnerColor(realm.getRealmColor());
+                        }
                     }
                 }
             }
@@ -179,6 +188,7 @@ public class GameState {
             realm.getStructures().add(townHall);
         }
     }
+
 
 
     public void setupGame() {
@@ -191,8 +201,12 @@ public class GameState {
         // Create Realms for each Player and add them to the realm list
         realms.clear();  // Clear any previous realms if restarting
         for (Player player : players) {
-            Realm realm = new Realm(HelperMethods.idGenerator(), );
+            Realm realm = new Realm(HelperMethods.idGenerator());
             addRealm(realm);
+        }
+        for (int i = 0; i < realms.size() ;i++){
+            Realm realm = realms.get(i);
+            realm.setRealmColor(realmColors[i%realms.size()]);
         }
 
         // Place two Town Halls (one per realm)
