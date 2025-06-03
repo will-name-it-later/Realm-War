@@ -12,6 +12,7 @@ import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
+import org.realm_war.Utilities.HelperMethods;
 
 import static java.lang.Integer.parseInt;
 
@@ -141,7 +142,7 @@ public class GameState {
             int maxLevel = 5;
             int durability = 100;
             int maintenance = 2;
-            int kingdomId = rand.nextInt(1000);
+            int kingdomId = HelperMethods.idGenerator();
 
             Block baseBlock = new EmptyBlock(pos);
             TownHall townHall = new TownHall(
@@ -263,5 +264,4 @@ public class GameState {
     public boolean isOccupied(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
-
 }

@@ -6,6 +6,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
+import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +35,8 @@ public class ActionPanel extends JPanel implements ActionListener {
         attackBtn = createMainButton("attack");
         setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setSize(800, 100);
+        setSize(900, 100);
+
         add(nextTurnBtn);
         add(recruitBtn);
         add(buildBtn);
@@ -186,6 +188,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 Position pos = gamePanel.getSelectedPosition();
                 String name = gamePanel.getSelectedRealmName();
                 updateUnit(new Spearman(pos, name));
+
             }
             case "swordsman" -> {
                 Position pos = gamePanel.getSelectedPosition();
@@ -214,16 +217,19 @@ public class ActionPanel extends JPanel implements ActionListener {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1003;
+                GameFrame.getGuidanceLabel().setText("Tower");
                 gamePanel.updateStructure(new Tower(pos, block, realmID));
             }
             case "market" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = gameState.getBlockAt(pos);
                 int realmID = 1004;
+                GameFrame.getGuidanceLabel().setText("Market");
                 gamePanel.updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
             }
             case "move" -> {
                 Position pos = gamePanel.getSelectedPosition();
+                GameFrame.getGuidanceLabel().setText("Move");
                 moveUnit(pos);
             }
             case "attack" -> {
