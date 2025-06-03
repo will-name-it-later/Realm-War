@@ -4,6 +4,8 @@ import org.realm_war.Models.Position;
 
 import java.awt.*;
 
+import static java.awt.Color.LIGHT_GRAY;
+
 public class EmptyBlock extends Block {
     public EmptyBlock(Position position) {
         super(position);
@@ -38,6 +40,6 @@ public class EmptyBlock extends Block {
     }
     @Override
     public Color getColor() {
-        return new Color(251, 255, 145);
+        return LIGHT_GRAY;
     }
 }
