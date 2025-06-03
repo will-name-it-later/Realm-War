@@ -3,8 +3,8 @@ package org.realm_war.Models.units;
 import org.realm_war.Models.Position;
 
 public class Knight extends Unit {
-    public Knight(Position position, String realm) {
-        super(125, 3, 32, 1, 15, 5, 2, position, realm);
+    public Knight(Position position, int realmID) {
+        super(125, 3, 32, 1, 15, 5, 2, position, realmID);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class Barrack extends Structure{
         Position spawnPosition = this.getPosition(); // could improve to find nearby valid tile
         int kingdomId = getKingdomId(); // or from Realm if needed
 
-        return new Spearman(spawnPosition, String.valueOf(kingdomId));
+        return new Spearman(spawnPosition, kingdomId);
     }
 
 

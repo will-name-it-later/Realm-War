@@ -11,11 +11,11 @@ public abstract class Block {
     private Unit unit;
     private Structure structure;
     private boolean isAbsorbed;
-    private String realmName; // P for not absorbed.
+    private int realmID; // 0 for not absorbed.
     public Block(Position position) {
         this.position = position;
         this.isAbsorbed = false;
-        this.realmName = "P";
+        this.realmID = 0;
     }
 
     public abstract boolean canBuildStructure();
@@ -25,11 +25,11 @@ public abstract class Block {
 
     public Position getPosition() { return position; }
     public boolean isAbsorbed() { return isAbsorbed; }
-    public String getRealmName() { return realmName; }
+    public int getRealmID() { return realmID; }
 
-    public void setAbsorbed(boolean isAbsorbed, String realmName) {
+    public void setAbsorbed(boolean isAbsorbed, int realmName) {
         this.isAbsorbed = isAbsorbed;
-        this.realmName = realmName;
+        this.realmID = realmID;
     }
 
     public Structure getStructure() {

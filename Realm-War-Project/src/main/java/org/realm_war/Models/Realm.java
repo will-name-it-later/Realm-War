@@ -10,7 +10,7 @@ import org.realm_war.Models.units.Unit;
 
 public class Realm {
     private int gold;
-    private final String name;
+    private final int ID;
     private TownHall townHall;
     private int food;
     private List<Structure> structures;
@@ -19,8 +19,8 @@ public class Realm {
     private int allUnitSpace;
     private int usedUnitSpace;
 
-    public Realm(String name) {
-        this.name = name;
+    public Realm(int ID) {
+        this.ID = ID;
         structures = new ArrayList<>();
         units = new ArrayList<>();
         possessedBlocks = new ArrayList<>();
@@ -78,7 +78,7 @@ public class Realm {
 
 
     public void PossessBlock(Block b){
-        b.setAbsorbed(true, this.name);
+        b.setAbsorbed(true, this.ID);
         possessedBlocks.add(b);
     }
 
@@ -102,8 +102,8 @@ public class Realm {
         this.food += amount;
     }
 
-    public String getName() {
-        return name;
+    public int getID() {
+        return ID;
     }
 
     public List<Structure> getStructures() {

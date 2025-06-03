@@ -1,6 +1,11 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.GameCtrl;
+import org.realm_war.Controllers.PlayerCtrl;
+import org.realm_war.Controllers.StructureCtrl;
+import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
+import org.realm_war.Models.Player;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
@@ -16,18 +21,19 @@ public class GamePanel extends JPanel {
     private int rows;
     private int cols;
     private GameState gameState;
+    private  InfoPanel infoPanel;
     private JButton[][] btnGrid;
     private Block[][] mapGrid;
     private final Dimension blockSize = new Dimension(45, 45);
     private Position selectedPos;
-    private Realm selectedRealm; //todo : get selected Realm
 
-    public GamePanel(GameState gameState) {
+    public GamePanel(GameState gameState, InfoPanel infoPanel) {
+        this.gameState = gameState;
+        this.infoPanel = infoPanel;
         this.rows = Constants.getMapSize();
         this.cols = Constants.getMapSize();
         this.btnGrid = new JButton[rows][cols];
         this.gameState = gameState;
-
         mapGrid = GameState.getMapGrid();
 
         setLayout(new GridLayout(rows, cols));
@@ -78,7 +84,8 @@ public class GamePanel extends JPanel {
     }
 
     public void refresh() {
-        this.mapGrid = gameState.getMapGrid(); // reload after setupGame()
+        this.mapGrid = gameState.getMapGrid();// reload after setupGame()
+        infoPanel.updateInfo(gameState);
         removeAll();
         initializeGrid();
         revalidate();
@@ -95,11 +102,11 @@ public class GamePanel extends JPanel {
     }
 
     public Realm getSelectedRealm() {
-        return selectedRealm;
+        return gameState.getCurrentRealm();
     }
 
-    public String getSelectedRealmName() {
-        return selectedRealm.getName();
+    public int getSelectedRealmID() {
+        return gameState.getCurrentRealm().getID();
     }
 
     public GameState getGameState() {

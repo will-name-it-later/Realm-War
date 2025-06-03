@@ -44,7 +44,7 @@ public class Tower extends Structure {
         Position myPosition = this.getPosition();
 
         for (Unit unit : allUnits) {
-            if (!unit.getRealm().equals(GameState.getRealmByRealmID(String.valueOf(this.getKingdomId())))) {
+            if (unit.getRealmID() != this.getKingdomId()){
                 double distance = myPosition.distanceTo(unit.getPosition());
                 if (distance <= attackRange) {
                     unit.takeDamage(attackPower);

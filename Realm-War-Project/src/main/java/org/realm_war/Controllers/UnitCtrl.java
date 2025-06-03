@@ -37,7 +37,7 @@ public class UnitCtrl {
         for (Unit u : units) {
             int X = u.getPosition().getX();
             int Y = u.getPosition().getY();
-            if (X == x && Y == y && !u.getRealm().equals(unit.getRealm())) {
+            if (X == x && Y == y && u.getRealmID() != unit.getRealmID()) {
                 return true;
             }
         }
@@ -49,7 +49,7 @@ public class UnitCtrl {
             for (Unit u : units) {
                 int X = u.getPosition().getX();
                 int Y = u.getPosition().getY();
-                if (X == x && Y == y && !u.getRealm().equals(unit.getRealm())) {
+                if (X == x && Y == y && u.getRealmID() != unit.getRealmID()) {
                     return u;
                 }
             }

@@ -6,7 +6,6 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
-import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +34,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         attackBtn = createMainButton("attack");
         setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setSize(900, 100);
-
+        setSize(800, 100);
         add(nextTurnBtn);
         add(recruitBtn);
         add(buildBtn);
@@ -141,25 +139,36 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
     public void nextTurn() {
-        //todo : implement logic for moving to next player
+        gameState.nextTurn();
+        gamePanel.refresh();
     }
 
     public void updateUnit(Unit unit) {
-        //todo : update the units and the grid at GamePanel
+        Position pos = unit.getPosition();
+        if (gameState.getUnitAt(pos) != null) {
+            Unit temp = gameState.getUnitAt(pos);
+                unit = unit.merge(temp);
+                gameState.getCurrentRealm().addUnit(unit);
+                gameState.getCurrentRealm().getUnits().remove(temp);
+                gamePanel.refresh();
+        }else {
+            gameState.getCurrentRealm().addUnit(unit);
+            gamePanel.refresh();
+        }
     }
 
     public void moveUnit(Position pos) {
-        Unit u = gamePanel.getGameState().getUnitAt(pos);
+        Unit u = gameState.getUnitAt(pos);
         JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
         Position destination = gamePanel.getSelectedPosition();
         u.setPosition(destination);
     }
 
     public void attackUnit(Position pos) {
-        Unit u = gamePanel.getGameState().getUnitAt(pos);
+        Unit u = gameState.getUnitAt(pos);
         JOptionPane.showMessageDialog(frame, "Please select your target");//todo : a label should be indicated beneath the game panel
         Position target = gamePanel.getSelectedPosition();
-        if (u.canAttackUnit(gamePanel.getGameState().getUnitAt(target))) {
+        if (u.canAttackUnit(gameState.getUnitAt(target))) {
             //todo : game control should be implemented in game panel so a unit can be omitted from the map
             //gamePanel.removeUnitAt(target) for example
         }
@@ -181,28 +190,27 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "peasant" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealmName();
-                updateUnit(new Peasant(pos, name));
+                int ID = gamePanel.getSelectedRealmID();
+                updateUnit(new Peasant(pos, ID));
             }
             case "spearman" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealmName();
-                updateUnit(new Spearman(pos, name));
-
+                int ID = gamePanel.getSelectedRealmID();
+                updateUnit(new Spearman(pos, ID));
             }
             case "swordsman" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealmName();
-                updateUnit(new Swordsman(pos, name));
+                int ID = gamePanel.getSelectedRealmID();
+                updateUnit(new Swordsman(pos, ID));
             }
             case "knight" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealmName();
-                updateUnit(new Knight(pos, name));
+                int ID = gamePanel.getSelectedRealmID();
+                updateUnit(new Knight(pos, ID));
             }
             case "farm" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                String name = gamePanel.getSelectedRealmName();
+                int name = gamePanel.getSelectedRealmID();
                 Block block = gameState.getBlockAt(pos);//sample base block
                 int realmID = 1001;//todo : ID XOR  Name should be used
                 gamePanel.updateStructure(new Farm(pos, block, realmID));
@@ -217,19 +225,16 @@ public class ActionPanel extends JPanel implements ActionListener {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = new VoidBlock(pos);
                 int realmID = 1003;
-                GameFrame.getGuidanceLabel().setText("Tower");
                 gamePanel.updateStructure(new Tower(pos, block, realmID));
             }
             case "market" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 Block block = gameState.getBlockAt(pos);
                 int realmID = 1004;
-                GameFrame.getGuidanceLabel().setText("Market");
                 gamePanel.updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
             }
             case "move" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                GameFrame.getGuidanceLabel().setText("Move");
                 moveUnit(pos);
             }
             case "attack" -> {

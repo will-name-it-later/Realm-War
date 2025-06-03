@@ -41,9 +41,9 @@ public class GameState {
         realms.add(realm);
     }
 
-    public static Realm getRealmByRealmID(String RealmID) {
+    public static Realm getRealmByRealmID(int RealmID) {
         for (Realm realm : realms) {
-            if (realm.getName().equals(RealmID)) {
+            if (realm.getID() == RealmID) {
                 return realm;
             }
         }
@@ -169,7 +169,7 @@ public class GameState {
         // Create Realms for each Player and add them to the realm list
         realms.clear();  // Clear any previous realms if restarting
         for (Player player : players) {
-            Realm realm = new Realm(player.getName());
+            Realm realm = new Realm(HelperMethods.idGenerator());
             addRealm(realm);
         }
 
@@ -215,7 +215,7 @@ public class GameState {
         }
         for (int i = 30; i >= 0; i--) {
             int x = rand.nextInt(1, mapGrid.length - 2);
-            int y = rand.nextInt(1, mapGrid[0].length - 1);
+            int y = rand.nextInt(1, mapGrid[0].length - 2);
             mapGrid[x][y] = new VoidBlock(new Position(x, y));
         }
     }

@@ -11,9 +11,9 @@ public abstract class Unit {
     private int RATION;
     private int UNIT_SPACE;
     private Position position;
-    private String realm;
+    private int realmID;
 
-    public Unit(int HIT_POINT, int MOVEMENT_RANGE, int ATTACK_POWER, int ATTACK_RANGE, int PAYMENT, int RATION, int UNIT_SPACE, Position position, String realm) {
+    public Unit(int HIT_POINT, int MOVEMENT_RANGE, int ATTACK_POWER, int ATTACK_RANGE, int PAYMENT, int RATION, int UNIT_SPACE, Position position, int realmID) {
         this.HIT_POINT = HIT_POINT;
         this.MOVEMENT_RANGE = MOVEMENT_RANGE;
         this.ATTACK_POWER = ATTACK_POWER;
@@ -22,7 +22,7 @@ public abstract class Unit {
         this.RATION = RATION;
         this.UNIT_SPACE = UNIT_SPACE;
         this.position = position;
-        this.realm = realm;
+        this.realmID = realmID;
     }
 
     public void takeDamage(int damage) {
@@ -57,8 +57,8 @@ public abstract class Unit {
         return UNIT_SPACE;
     }
 
-    public String getRealm() {
-        return realm;
+    public int getRealmID() {
+        return realmID;
     }
 
     public Position getPosition() {

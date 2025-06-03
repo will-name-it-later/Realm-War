@@ -17,8 +17,8 @@ public class GameFrame extends JFrame {
 
     public GameFrame() {
         gameState = new GameState();
-        gamePanel = new GamePanel(gameState);
         infoPanel = new InfoPanel();
+        gamePanel = new GamePanel(gameState, infoPanel);
         actionPanel = new ActionPanel(this, gamePanel);
         menuPanel = new MenuPanel(gameState, gamePanel);
 
@@ -60,6 +60,7 @@ public class GameFrame extends JFrame {
 
     public void updateSidePanel(JPanel panel) {
         sidePanel.removeAll();
+        infoPanel.updateInfo(gameState);
         sidePanel.add(infoPanel, BorderLayout.NORTH);
         sidePanel.add(panel, BorderLayout.CENTER);
         sidePanel.revalidate();
