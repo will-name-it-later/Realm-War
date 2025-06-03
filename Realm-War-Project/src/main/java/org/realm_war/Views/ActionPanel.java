@@ -143,20 +143,6 @@ public class ActionPanel extends JPanel implements ActionListener {
         gamePanel.refresh();
     }
 
-    public void updateUnit(Unit unit) {
-        Position pos = unit.getPosition();
-        if (gameState.getUnitAt(pos) != null) {
-            Unit temp = gameState.getUnitAt(pos);
-                unit = unit.merge(temp);
-                gameState.getCurrentRealm().addUnit(unit);
-                gameState.getCurrentRealm().getUnits().remove(temp);
-                gamePanel.refresh();
-        }else {
-            gameState.getCurrentRealm().addUnit(unit);
-            gamePanel.refresh();
-        }
-    }
-
     public void moveUnit(Position pos) {
         Unit u = gameState.getUnitAt(pos);
         JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
@@ -191,47 +177,46 @@ public class ActionPanel extends JPanel implements ActionListener {
             case "peasant" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Peasant(pos, ID));
+                gamePanel.updateUnit(new Peasant(pos, ID));
             }
             case "spearman" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Spearman(pos, ID));
+                gamePanel.updateUnit(new Spearman(pos, ID));
             }
             case "swordsman" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Swordsman(pos, ID));
+                gamePanel.updateUnit(new Swordsman(pos, ID));
             }
             case "knight" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Knight(pos, ID));
+                gamePanel.updateUnit(new Knight(pos, ID));
             }
             case "farm" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                int name = gamePanel.getSelectedRealmID();
-                Block block = gameState.getBlockAt(pos);//sample base block
-                int realmID = 1001;//todo : ID XOR  Name should be used
-                gamePanel.updateStructure(new Farm(pos, block, realmID));
+                int ID = gamePanel.getSelectedRealmID();
+                Block block = gameState.getBlockAt(pos);
+                gamePanel.updateStructure(new Farm(pos, block, ID));
             }
             case "barrack" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                Block block = new VoidBlock(pos);
-                int realmID = 1002;
-                gamePanel.updateStructure(new Barrack(pos, block, realmID));
+                int ID = gamePanel.getSelectedRealmID();
+                Block block = gameState.getBlockAt(pos);
+                gamePanel.updateStructure(new Barrack(pos, block, ID));
             }
             case "tower" -> {
                 Position pos = gamePanel.getSelectedPosition();
-                Block block = new VoidBlock(pos);
-                int realmID = 1003;
-                gamePanel.updateStructure(new Tower(pos, block, realmID));
+                int ID = gamePanel.getSelectedRealmID();
+                Block block = gameState.getBlockAt(pos);
+                gamePanel.updateStructure(new Tower(pos, block, ID));
             }
             case "market" -> {
                 Position pos = gamePanel.getSelectedPosition();
+                int ID = gamePanel.getSelectedRealmID();
                 Block block = gameState.getBlockAt(pos);
-                int realmID = 1004;
-                gamePanel.updateStructure(new Market(0, 0, 0, 0, pos, block, realmID));
+                gamePanel.updateStructure(new Market(pos, block, ID));
             }
             case "move" -> {
                 Position pos = gamePanel.getSelectedPosition();

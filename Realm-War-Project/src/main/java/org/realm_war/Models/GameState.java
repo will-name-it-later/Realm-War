@@ -70,6 +70,9 @@ public class GameState {
             turns++;
         }
         this.currentPlayer = players.get(currentTurn);
+        for (Realm realm : realms) {
+            realm.updateResources();
+        }
     }
 
     public Player getCurrentPlayer() {
@@ -298,7 +301,7 @@ public class GameState {
     }
 
     public Block getBlockAt(Position pos) {
-        return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock();
+        return mapGrid[pos.getX()][pos.getY()];
     }
 
     public boolean isOccupied(Position pos) {

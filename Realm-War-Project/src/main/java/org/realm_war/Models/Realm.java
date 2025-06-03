@@ -80,7 +80,7 @@ public class Realm {
     }
 
 
-    public void PossessBlock(Block b){
+    public void possessBlock(Block b){
         b.setAbsorbed(true, this.ID);
         possessedBlocks.add(b);
     }

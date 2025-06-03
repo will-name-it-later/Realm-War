@@ -8,9 +8,9 @@ import org.realm_war.Models.blocks.Block;
 public class Market extends Structure {
     private int goldProduction;
 
-    public Market(int goldProduction, int maxLevel, int initialDurability, int maintenanceCost, Position position, Block baseBlock, int kingdomId) {
-        super(maxLevel, initialDurability, maintenanceCost, position, baseBlock, kingdomId);
-        this.goldProduction = goldProduction;
+    public Market( Position position, Block baseBlock, int kingdomId) {
+        super(3, 30,3, position, baseBlock, kingdomId);
+        this.goldProduction = 8;
     }
 
     public int getGoldProduction() {

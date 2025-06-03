@@ -7,6 +7,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
+import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
@@ -130,6 +131,40 @@ public class GamePanel extends JPanel {
         }
     }
 
+    public void updateUnit(Unit unit) {
+        Position pos = unit.getPosition();
+        int x = pos.getX();
+        int y = pos.getY();
+        if (gameState.getUnitAt(pos) != null) {
+            System.out.println("Unit at (" + x + ", " + y + ")");
+            Unit target = gameState.getUnitAt(pos);
+            if (unit.canMerge(target)) {
+                System.out.println("can merge");
+                unit = unit.merge(target);
+                gameState.getCurrentRealm().addUnit(unit);
+                gameState.getCurrentRealm().getUnits().remove(target);
+                JButton button = btnGrid[x][y];
+                if (button != null) {
+                    button.setBackground(gameState.getRealmColors()[unit.getRealmID()]);
+                    ImageIcon icon = getIconForUnit(unit);
+                    button.setIcon(icon);
+                }
+            }
+        }else if(gameState.getBlockAt(pos).getRealmID(gameState.getRealms()) == null || gameState.getBlockAt(pos).getRealmID(gameState.getRealms()).getID() != unit.getRealmID()) {
+            JOptionPane.showMessageDialog(this, "out of your realm!", null, JOptionPane.ERROR_MESSAGE);
+        }else{
+            gameState.getCurrentRealm().addUnit(unit);
+            JButton button = btnGrid[x][y];
+            if (button != null) {
+                button.setBackground(gameState.getCurrentRealm().getRealmColor());
+                ImageIcon icon = getIconForUnit(unit);
+                button.setIcon(icon);
+            }
+        }
+        gameState.getCurrentRealm().updateResources();
+        infoPanel.updateInfo(gameState);
+    }
+
 
     public ImageIcon getIconForStructure(Structure s) {
         String path = switch (s.getClass().getSimpleName()) {
@@ -146,5 +181,21 @@ public class GamePanel extends JPanel {
         ImageIcon icon = new ImageIcon(getClass().getResource(path));
         Image img = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    public ImageIcon getIconForUnit(Unit unit){
+        String path = switch (unit.getClass().getSimpleName()) {
+            case "Peasant" -> "/org/realm_war/Utilities/Resources/peasant.png";
+            case "Swordsman" -> "/org/realm_war/Utilities/Resources/swordsman.png";
+            case "Spearman" -> "/org/realm_war/Utilities/Resources/spearman.png";
+            case "Knight" -> "/org/realm_war/Utilities/Resources/knight.png";
+            default -> throw new IllegalStateException("Unexpected value: " + unit.getClass().getSimpleName());
+        };
+
+        if (path == null) return null;
+
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
+        return icon;
     }
 }
