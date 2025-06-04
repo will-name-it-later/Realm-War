@@ -112,6 +112,7 @@ public class Realm {
     public int getGold() {
         return gold;
     }
+    public void setGold (int n){ this.gold = n; }
 
     public void addGold(int amount) {
         this.gold += amount;

@@ -7,9 +7,6 @@ import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.*;
-import org.realm_war.Models.units.Peasant;
-import org.realm_war.Models.units.Spearman;
-import org.realm_war.Models.units.Swordsman;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 
@@ -112,54 +109,54 @@ public class GamePanel extends JPanel {
         selectedPos = targetPos = null;
     }
 
-    //public void handleBlockClick(int row, int col) {
-    //    System.out.println("Clicked block at (" + row + ", " + col + ")");
-    //    if (selectedPos == null) {
-    //        System.out.println("selected position for action");
-    //        selectedPos = mapGrid[row][col].getPosition();
-    //       System.out.println(gameState.getUnitAt(selectedPos));
-    //    } else {
-    //        System.out.println("selection position for moving or attacking");
-    //        targetPos = mapGrid[row][col].getPosition();
-    //    }
-    //}
-
     public void handleBlockClick(int row, int col) {
-        Block clickedBlock = mapGrid[row][col];
-        Position clickedPos = clickedBlock.getPosition();
-
+        System.out.println("Clicked block at (" + row + ", " + col + ")");
         if (selectedPos == null) {
-            // First click: select unit
-            Unit selectedUnit = gameState.getUnitAt(clickedPos);
-            if (selectedUnit != null && selectedUnit.getOwner().equals(gameState.getCurrentRealm())) {
-                selectedPos = clickedPos;
-                unitCtrl.setSelectedUnit(selectedUnit);
-                JOptionPane.showMessageDialog(this, "Selected unit at " + selectedPos);
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
-            }
+            System.out.println("selected position for action");
+            selectedPos = mapGrid[row][col].getPosition();
+           System.out.println(gameState.getUnitAt(selectedPos));
         } else {
-            // Second click: select destination
-            targetPos = clickedPos;
-            Block targetBlock = mapGrid[targetPos.getX()][targetPos.getY()];
-            unitCtrl.setTargetBlock(targetBlock);
-
-            // Move the unit
-            try {
-                unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
-                refresh(); // refresh UI after move
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-            // Reset selection
-            selectedPos = null;
-            targetPos = null;
-            unitCtrl.setSelectedUnit(null);
-            unitCtrl.setTargetBlock(null);
+            System.out.println("selection position for moving or attacking");
+            targetPos = mapGrid[row][col].getPosition();
         }
     }
+
+    //public void handleBlockClick(int row, int col) {
+   //    Block clickedBlock = mapGrid[row][col];
+   //    Position clickedPos = clickedBlock.getPosition();
+//
+   //    if (selectedPos == null) {
+   //        // First click: select unit
+   //        Unit selectedUnit = gameState.getUnitAt(clickedPos);
+   //        if (selectedUnit != null && selectedUnit.getOwner().equals(gameState.getCurrentRealm())) {
+   //            selectedPos = clickedPos;
+   //            unitCtrl.setSelectedUnit(selectedUnit);
+   //            JOptionPane.showMessageDialog(this, "Selected unit at " + selectedPos);
+   //        } else {
+   //            JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
+   //        }
+   //    } else {
+   //        // Second click: select destination
+   //        targetPos = clickedPos;
+   //        Block targetBlock = mapGrid[targetPos.getX()][targetPos.getY()];
+   //        unitCtrl.setTargetBlock(targetBlock);
+//
+   //        // Move the unit
+   //        try {
+   //            unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
+   //            refresh(); // refresh UI after move
+   //        } catch (Exception e) {
+   //            JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
+   //            e.printStackTrace();
+   //        }
+//
+   //        // Reset selection
+   //        selectedPos = null;
+   //        targetPos = null;
+   //        unitCtrl.setSelectedUnit(null);
+   //        unitCtrl.setTargetBlock(null);
+   //    }
+   //}
 
     public Position getSelectedPosition() {
         return selectedPos;
@@ -208,14 +205,26 @@ public class GamePanel extends JPanel {
         int x = pos.getX();
         int y = pos.getY();
         JButton button = btnGrid[x][y];
+
+        gameState.getCurrentRealm().updateResources();
+
+        if (gameState.getCurrentRealm().getGold() < unit.getPayment()) {
+            JOptionPane.showMessageDialog(this, "You don't have enough gold", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // 🚨 Prevents placing the unit
+        }
+
+        // Deduct gold
+        gameState.getCurrentRealm().setGold(gameState.getCurrentRealm().getGold() - unit.getPayment());
+
+        infoPanel.updateInfo(gameState);
+        selectedPos = targetPos = null;
+
         if (button != null) {
             button.setBackground(gameState.getCurrentRealm().getRealmColor());
             ImageIcon icon = getIconForUnit(unit);
             button.setIcon(icon);
         }
-        gameState.getCurrentRealm().updateResources();
-        infoPanel.updateInfo(gameState);
-        selectedPos = targetPos = null;
+
     }
 
 

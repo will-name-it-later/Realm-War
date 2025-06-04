@@ -5,7 +5,6 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
-import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
 
@@ -130,14 +129,14 @@ public class ActionPanel extends JPanel implements ActionListener {
         JButton farmBtn = createSideButton("farm");
         JButton barrackBtn = createSideButton("barrack");
         JButton towerBtn = createSideButton("tower");
-        JButton townHallBtn = createSideButton("market");
+        JButton marketBtn = createSideButton("market");
         panel.add(farmBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(barrackBtn);
         panel.add(Box.createVerticalStrut(10));
         panel.add(towerBtn);
         panel.add(Box.createVerticalStrut(10));
-        panel.add(townHallBtn);
+        panel.add(marketBtn);
 
         return panel;
     }
@@ -151,24 +150,6 @@ public class ActionPanel extends JPanel implements ActionListener {
             gamePanel.refresh();
         }
     }
-
-    /* private void handleClick() {
-        GameState gameState = new GameState();
-        Unit unitOnBlock = block.getUnit();
-
-        if (unitOnBlock != null && unitOnBlock.getOwner().equals(gameState.getCurrentPlayer())) {
-            // Player clicked on one of their own units
-            gameState.setSelectedUnit(unitOnBlock);
-            gameState.setTargetBlock(null); // Clear old target
-            System.out.println("Selected unit at: " + block.getPosition().getX() + "," + block.getPosition().getY());
-        } else {
-            // Player clicked on a destination or enemy
-            gameState.setTargetBlock(block);
-            System.out.println("Selected target block at: " + block.getPosition().getX() + "," + block.getPosition().getY());
-        }
-    }
-
-     */
 
     public void updateUnit(Unit u){
         Position pos = u.getPosition();
