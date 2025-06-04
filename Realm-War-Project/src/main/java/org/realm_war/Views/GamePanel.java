@@ -15,6 +15,7 @@ import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class GamePanel extends JPanel {
     private int rows;
@@ -49,34 +50,44 @@ public class GamePanel extends JPanel {
                 JButton blockButton = new JButton();
                 blockButton.setPreferredSize(blockSize);
 
-                // Defensive check in case mapGrid isn't fully initialized
                 Block block = mapGrid[row][col];
+
                 if (block != null) {
-                    blockButton.setBackground(block.getRealmByID(gameState.getRealms()) != null ? block.getRealmByID(gameState.getRealms()).getRealmColor() : block.getColor());
+                    // Set background color based on realm or block color
+                    blockButton.setBackground(
+                            block.getRealmByID(gameState.getRealms()) != null
+                                    ? block.getRealmByID(gameState.getRealms()).getRealmColor()
+                                    : block.getColor()
+                    );
+
+                    // Set icon for structure, if present
                     if (block.getStructure() != null) {
-                        Structure s = block.getStructure();
-                        String name = s instanceof TownHall ? "TownHall" : s instanceof Tower ? "tower" : s instanceof Market ? "market" : s instanceof Farm ? "farm" : "barrack";
-                        String path = "/org/realm_war/Utilities/Resources/" + name + ".png";
-                        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-                        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
-                        blockButton.setIcon(icon);
-                    }else if (block.getUnit() != null) {
-                        Unit u = block.getUnit();
-                        String name = u instanceof Peasant ? "peasant" : u instanceof Spearman ? "spearman" : u instanceof Swordsman ? "swordsman" : "knight";
-                        String path = "/org/realm_war/Utilities/Resources/" + name + ".png";
-                        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-                        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
-                        blockButton.setIcon(icon);
+                        ImageIcon icon = getIconForStructure(block.getStructure());
+                        if (icon != null) {
+                            blockButton.setIcon(icon);
+                        }
+                    }
+                    // Set icon for unit, if present and structure is not set
+                    else if (block.getUnit() != null) {
+                        ImageIcon icon = getIconForUnit(block.getUnit());
+                        if (icon != null) {
+                            blockButton.setIcon(icon);
+                        }
                     }
                 } else {
-                    blockButton.setBackground(Constants.clr_3);  // fallback color
+                    blockButton.setBackground(Constants.clr_3); // fallback color
                 }
 
-
+                // VoidBlock handling
                 if (block instanceof VoidBlock) {
-                    ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/ban.jpg"));
-                    Image scaled = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
-                    blockButton.setIcon(new ImageIcon(scaled));
+                    URL banIconURL = getClass().getResource("/org/realm_war/Utilities/Resources/ban.jpg");
+                    if (banIconURL != null) {
+                        ImageIcon icon = new ImageIcon(banIconURL);
+                        Image scaled = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+                        blockButton.setIcon(new ImageIcon(scaled));
+                    } else {
+                        System.err.println("Missing resource: ban.jpg");
+                    }
                     blockButton.setEnabled(false);
                 } else {
                     int finalRow = row;
@@ -89,6 +100,7 @@ public class GamePanel extends JPanel {
             }
         }
     }
+
 
     public void refresh() {
         this.mapGrid = gameState.getMapGrid();// reload after setupGame()
