@@ -6,8 +6,10 @@ import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.VoidBlock;
-import org.realm_war.Models.structure.classes.Structure;
-import org.realm_war.Models.structure.classes.TownHall;
+import org.realm_war.Models.structure.classes.*;
+import org.realm_war.Models.units.Peasant;
+import org.realm_war.Models.units.Spearman;
+import org.realm_war.Models.units.Swordsman;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 
@@ -51,12 +53,20 @@ public class GamePanel extends JPanel {
                 Block block = mapGrid[row][col];
                 if (block != null) {
                     blockButton.setBackground(block.getRealmByID(gameState.getRealms()) != null ? block.getRealmByID(gameState.getRealms()).getRealmColor() : block.getColor());
-                    if (block.getStructure() instanceof TownHall) {
-                        ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
-                        Image image = icon.getImage(); // Get the Image from the ImageIcon
-                        Image scaledImage = image.getScaledInstance(45, 45, Image.SCALE_SMOOTH); // Resize
-                        ImageIcon resizedIcon = new ImageIcon(scaledImage); // Wrap back into ImageIcon
-                        blockButton.setIcon(resizedIcon);
+                    if (block.getStructure() != null) {
+                        Structure s = block.getStructure();
+                        String name = s instanceof TownHall ? "TownHall" : s instanceof Tower ? "tower" : s instanceof Market ? "market" : s instanceof Farm ? "farm" : "barrack";
+                        String path = "/org/realm_war/Utilities/Resources/" + name + ".png";
+                        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
+                        blockButton.setIcon(icon);
+                    }else if (block.getUnit() != null) {
+                        Unit u = block.getUnit();
+                        String name = u instanceof Peasant ? "peasant" : u instanceof Spearman ? "spearman" : u instanceof Swordsman ? "swordsman" : "knight";
+                        String path = "/org/realm_war/Utilities/Resources/" + name + ".png";
+                        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
+                        blockButton.setIcon(icon);
                     }
                 } else {
                     blockButton.setBackground(Constants.clr_3);  // fallback color
