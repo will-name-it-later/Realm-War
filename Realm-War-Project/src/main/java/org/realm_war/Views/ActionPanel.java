@@ -29,7 +29,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     public ActionPanel(GameFrame frame, GamePanel gamePanel) {
         this.frame = frame;
         this.gamePanel = gamePanel;
-        this.gameState = new GameState();
+        this.gameState = gamePanel.getGameState();
         this.unitCtrl = new UnitCtrl();
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
@@ -143,8 +143,13 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
     public void nextTurn() {
-        gameState.nextTurn();
-        gamePanel.refresh();
+        if (gameState.isGameOver()){
+            gameState.setRunning(false);
+            //todo : update the info label to indicate that game is over
+        }else{
+            gameState.nextTurn();
+            gamePanel.refresh();
+        }
     }
 
     /* private void handleClick() {
@@ -186,6 +191,7 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
         }else {
             JOptionPane.showMessageDialog(frame, "out of yo realm, ye piece o' shit!", "Error", JOptionPane.ERROR_MESSAGE);
+            gamePanel.refresh();
         }
     }
 
@@ -198,20 +204,20 @@ public class ActionPanel extends JPanel implements ActionListener {
         Block targetBlock = unitCtrl.getTargetBlock();
 
         if (selectedUnit == null || targetBlock == null) {
-            JOptionPane.showMessageDialog(this, "Please select both a unit and a destination.");
+            JOptionPane.showMessageDialog(frame, "Please select both a unit and a destination.");
             return;
         }
 
         if (!unitCtrl.isPlayerTurn(selectedUnit.getOwner())) {
-            JOptionPane.showMessageDialog(this, "It's not your turn.");
+            JOptionPane.showMessageDialog(frame, "It's not your turn.");
             return;
         }
 
         if (selectedUnit.canMoveTo(targetBlock)) {
             unitCtrl.moveUnitToBlock(selectedUnit, targetBlock);
-            JOptionPane.showMessageDialog(this, "Unit moved successfully.");
+            JOptionPane.showMessageDialog(frame, "Unit moved successfully.");
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid move: target is out of range or blocked.");
+            JOptionPane.showMessageDialog(frame, "Invalid move: target is out of range or blocked.");
         }
 
         /*

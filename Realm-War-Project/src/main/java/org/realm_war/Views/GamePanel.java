@@ -84,6 +84,7 @@ public class GamePanel extends JPanel {
         initializeGrid();
         revalidate();
         repaint();
+        selectedPos = targetPos = null;
     }
 
     public void handleBlockClick(int row, int col) {

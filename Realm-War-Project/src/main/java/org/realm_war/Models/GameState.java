@@ -67,9 +67,6 @@ public class GameState {
     public void nextTurn() {
         if (players.isEmpty()) return;
         this.currentTurn = (currentTurn + 1) % players.size();
-        if (currentTurn == 0) {
-            turns++;
-        }
         for (Realm realm : realms) {
             realm.updateResources();
         }

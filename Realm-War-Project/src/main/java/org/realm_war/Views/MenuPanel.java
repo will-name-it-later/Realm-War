@@ -89,7 +89,7 @@ public class MenuPanel extends JPanel implements ActionListener {
             return;
         }
         gameState.setupGame(); // Initialize map, forests, town halls etc.
-        gamePanel.refresh();   // <- update the visual grid
+        gamePanel.refresh();// <- update the visual grid
         gameState.setRunning(true);
         setEnabled(false); // disable menu panel during game
     }

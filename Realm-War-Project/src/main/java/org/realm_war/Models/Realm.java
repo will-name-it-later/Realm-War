@@ -68,6 +68,7 @@ public class Realm {
             structures.add(s);
             gold -= s.getMaintenanceCost();
             possessedBlocks.remove(s.getBaseBlock());
+            usedUnitSpace--;
         }else throw new IllegalArgumentException("Can't build structure here!");
     }
 
