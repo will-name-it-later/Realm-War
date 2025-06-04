@@ -12,6 +12,8 @@ import java.util.List;
 
 public class UnitCtrl {
     private final List<Unit> units;
+    private Unit selectedUnit;
+    private Block targetBlock;
 
     private GameState gameState = new GameState();
 
@@ -20,11 +22,16 @@ public class UnitCtrl {
     }
 
     public Unit getSelectedUnit() {
-        return gameState.getSelectedUnit();
+        return selectedUnit;
     }
-
+    public void setSelectedUnit (Unit u){
+        this.selectedUnit = u;
+    }
     public Block getTargetBlock() {
-        return gameState.getTargetBlock();
+        return targetBlock;
+    }
+    public void setTargetBlock (Block b){
+        this.targetBlock = b;
     }
 
     public void addUnit(Unit unit) {

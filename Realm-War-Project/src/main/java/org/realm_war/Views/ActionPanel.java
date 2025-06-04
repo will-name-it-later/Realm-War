@@ -277,56 +277,97 @@ public class ActionPanel extends JPanel implements ActionListener {
         switch (command) {
             case "next" -> nextTurn();
             case "recruit" -> {
-                JPanel panel = createRecruitPanel();
-                frame.updateSidePanel(panel);
+                try{
+                    JPanel panel = createRecruitPanel();
+                    frame.updateSidePanel(panel);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "build" -> {
-                JPanel panel = createBuildPanel();
-                frame.updateSidePanel(panel);
+                try{
+                    JPanel panel = createBuildPanel();
+                    frame.updateSidePanel(panel);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "peasant" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Peasant(pos, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    updateUnit(new Peasant(pos, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "spearman" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Spearman(pos, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    updateUnit(new Spearman(pos, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
+
             }
             case "swordsman" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Swordsman(pos, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    updateUnit(new Swordsman(pos, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "knight" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                updateUnit(new Knight(pos, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    updateUnit(new Knight(pos, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "farm" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                Block block = gameState.getBlockAt(pos);
-                gamePanel.updateStructure(new Farm(pos, block, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    Block block = gameState.getBlockAt(pos);
+                    gamePanel.updateStructure(new Farm(pos, block, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "barrack" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                Block block = gameState.getBlockAt(pos);
-                gamePanel.updateStructure(new Barrack(pos, block, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    Block block = gameState.getBlockAt(pos);
+                    gamePanel.updateStructure(new Barrack(pos, block, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "tower" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                Block block = gameState.getBlockAt(pos);
-                gamePanel.updateStructure(new Tower(pos, block, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    Block block = gameState.getBlockAt(pos);
+                    gamePanel.updateStructure(new Tower(pos, block, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "market" -> {
-                Position pos = gamePanel.getSelectedPosition();
-                int ID = gamePanel.getSelectedRealmID();
-                Block block = gameState.getBlockAt(pos);
-                gamePanel.updateStructure(new Market(pos, block, ID));
+                try{
+                    Position pos = gamePanel.getSelectedPosition();
+                    int ID = gamePanel.getSelectedRealmID();
+                    Block block = gameState.getBlockAt(pos);
+                    gamePanel.updateStructure(new Market(pos, block, ID));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                }
             }
             case "move" -> {
                 //Position pos = gamePanel.getSelectedPosition();

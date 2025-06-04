@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Utilities.Constants;
 
@@ -10,15 +11,17 @@ public class GameFrame extends JFrame {
     private GamePanel gamePanel;
     private GameState gameState;
     private InfoPanel infoPanel;
+    private UnitCtrl unitCtrl;
     private ActionPanel actionPanel;
     private MenuPanel menuPanel;
     private JPanel sidePanel;
     private static JLabel guidanceLabel;
 
     public GameFrame() {
+        unitCtrl = new UnitCtrl();
         gameState = new GameState();
         infoPanel = new InfoPanel();
-        gamePanel = new GamePanel(gameState, infoPanel);
+        gamePanel = new GamePanel(gameState, infoPanel, unitCtrl);
         actionPanel = new ActionPanel(this, gamePanel);
         menuPanel = new MenuPanel(gameState, gamePanel);
 

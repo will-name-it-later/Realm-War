@@ -15,7 +15,6 @@ import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 import org.realm_war.Utilities.HelperMethods;
 
-import static java.lang.Integer.parseInt;
 
 public class GameState {
     //Track game progress

@@ -93,7 +93,9 @@ public class Realm {
 
     public void possessBlock(Block b){
         b.setAbsorbed(true, this.ID);
-        possessedBlocks.add(b);
+        if (!possessedBlocks.contains(b)){
+            possessedBlocks.add(b);
+        }
     }
 
     public Color getRealmColor (){
