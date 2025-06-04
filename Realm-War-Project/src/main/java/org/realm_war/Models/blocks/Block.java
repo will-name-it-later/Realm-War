@@ -19,7 +19,7 @@ public abstract class Block {
     public Block(Position position) {
         this.position = position;
         this.isAbsorbed = false;
-        this.realmID =0;
+        this.realmID = 0;
     }
 
     public abstract boolean canBuildStructure();
@@ -32,7 +32,7 @@ public abstract class Block {
     public int getY() { return position.getY(); }
     public boolean isAbsorbed() { return isAbsorbed; }
 
-    public Realm getRealmID(List<Realm> realms) {
+    public Realm getRealmByID(List<Realm> realms) {
         if (realmID == -1) return null; // or some invalid ID
 
         for (Realm realm : realms) {
@@ -67,6 +67,7 @@ public abstract class Block {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+        realmID = unit.getRealmID();
     }
 
     public boolean isWalkable() {

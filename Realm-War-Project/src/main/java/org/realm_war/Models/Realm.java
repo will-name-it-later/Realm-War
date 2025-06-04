@@ -79,6 +79,16 @@ public class Realm {
         usedUnitSpace += u.getUnitSpace();
     }
 
+    public void mergeUnit(Unit u, Unit target){
+        usedUnitSpace -= target.getUnitSpace();
+        units.remove(target);
+        if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
+            throw new IllegalArgumentException("insufficient space!");
+        }
+        units.add(u);
+        usedUnitSpace += u.getUnitSpace();
+    }
+
 
     public void possessBlock(Block b){
         b.setAbsorbed(true, this.ID);

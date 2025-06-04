@@ -4,7 +4,8 @@ import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.blocks.Block;
-import org.realm_war.Models.blocks.VoidBlock;
+import org.realm_war.Models.blocks.EmptyBlock;
+import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
 
@@ -164,6 +165,34 @@ public class ActionPanel extends JPanel implements ActionListener {
 
      */
 
+    public void updateUnit(Unit u){
+        Position pos = u.getPosition();
+        System.out.println(gameState.getUnitAt(pos));
+        System.out.println(gameState.getBlockAt(pos).getRealmByID(gameState.getRealms()).getID());
+        if (u.getRealmID() == gameState.getBlockAt(pos).getRealmByID(gameState.getRealms()).getID()){
+            if (gameState.getUnitAt(pos) == null){
+                gameState.getCurrentRealm().addUnit(u);
+                gameState.setBlockAt(pos, new EmptyBlock(pos));
+                gameState.getBlockAt(pos).setUnit(u);
+                gamePanel.updateUnit(u);
+            }else if (gameState.getUnitAt(pos).canMerge(u)){
+                u = gameState.getUnitAt(pos).merge(u);
+                gameState.getCurrentRealm().mergeUnit(u, gameState.getUnitAt(pos));
+                gamePanel.updateUnit(u);
+                gameState.setBlockAt(pos, new EmptyBlock(pos));
+                gameState.getBlockAt(pos).setUnit(u);
+            }else{
+                JOptionPane.showMessageDialog(null, "Unable to Merge Units!");
+            }
+        }else {
+            JOptionPane.showMessageDialog(frame, "out of yo realm, ye piece o' shit!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void updateStructure(Structure structure){
+        //todo
+    }
+
     public void moveUnit() {
         Unit selectedUnit = unitCtrl.getSelectedUnit();
         Block targetBlock = unitCtrl.getTargetBlock();
@@ -252,22 +281,22 @@ public class ActionPanel extends JPanel implements ActionListener {
             case "peasant" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                gamePanel.updateUnit(new Peasant(pos, ID));
+                updateUnit(new Peasant(pos, ID));
             }
             case "spearman" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                gamePanel.updateUnit(new Spearman(pos, ID));
+                updateUnit(new Spearman(pos, ID));
             }
             case "swordsman" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                gamePanel.updateUnit(new Swordsman(pos, ID));
+                updateUnit(new Swordsman(pos, ID));
             }
             case "knight" -> {
                 Position pos = gamePanel.getSelectedPosition();
                 int ID = gamePanel.getSelectedRealmID();
-                gamePanel.updateUnit(new Knight(pos, ID));
+                updateUnit(new Knight(pos, ID));
             }
             case "farm" -> {
                 Position pos = gamePanel.getSelectedPosition();

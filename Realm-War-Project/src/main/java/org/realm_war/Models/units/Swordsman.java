@@ -15,7 +15,7 @@ public class Swordsman extends Unit{
 
     @Override
     public Unit merge(Unit otherUnit) {
-        if(canMerge(otherUnit)) {
+        if(!canMerge(otherUnit)) {
             throw new IllegalArgumentException("Unable to Merge Units!");
         }else return new Knight(this.getPosition(), this.getRealmID());
     }

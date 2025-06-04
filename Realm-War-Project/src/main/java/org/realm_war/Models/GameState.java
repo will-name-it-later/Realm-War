@@ -320,6 +320,10 @@ public class GameState {
         return mapGrid[x][y];
     }
 
+    public void setBlockAt(Position pos, Block block) {
+        mapGrid[pos.getX()][pos.getY()] = block;
+    }
+
     public boolean isOccupied(Position pos) {
         return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }

@@ -17,11 +17,12 @@ public class GamePanel extends JPanel {
     private int rows;
     private int cols;
     private GameState gameState;
-    private  InfoPanel infoPanel;
+    private InfoPanel infoPanel;
     private JButton[][] btnGrid;
     private Block[][] mapGrid;
     private final Dimension blockSize = new Dimension(45, 45);
     private Position selectedPos;
+    private Position targetPos;
 
     public GamePanel(GameState gameState, InfoPanel infoPanel) {
         this.gameState = gameState;
@@ -46,7 +47,7 @@ public class GamePanel extends JPanel {
                 // Defensive check in case mapGrid isn't fully initialized
                 Block block = mapGrid[row][col];
                 if (block != null) {
-                    blockButton.setBackground(block.getRealmID(gameState.getRealms()) != null ? block.getRealmID(gameState.getRealms()).getRealmColor() : block.getColor());
+                    blockButton.setBackground(block.getRealmByID(gameState.getRealms()) != null ? block.getRealmByID(gameState.getRealms()).getRealmColor() : block.getColor());
                     if (block.getStructure() instanceof TownHall) {
                         ImageIcon icon = new ImageIcon(getClass().getResource("/org/realm_war/Utilities/Resources/townhall.png"));
                         Image image = icon.getImage(); // Get the Image from the ImageIcon
@@ -67,11 +68,8 @@ public class GamePanel extends JPanel {
                 } else {
                     int finalRow = row;
                     int finalCol = col;
-                    blockButton.addActionListener(e -> {
-                        handleBlockClick(finalRow, finalCol);
-                    });
+                    blockButton.addActionListener(e -> handleBlockClick(finalRow, finalCol));
                 }
-
 
                 btnGrid[row][col] = blockButton;
                 add(blockButton);
@@ -90,11 +88,22 @@ public class GamePanel extends JPanel {
 
     public void handleBlockClick(int row, int col) {
         System.out.println("Clicked block at (" + row + ", " + col + ")");
-        selectedPos = mapGrid[row][col].getPosition();
+        if (selectedPos == null) {
+            System.out.println("selected position for action");
+            selectedPos = mapGrid[row][col].getPosition();
+            System.out.println(gameState.getUnitAt(selectedPos));
+        } else {
+            System.out.println("selection position for moving or attacking");
+            targetPos = mapGrid[row][col].getPosition();
+        }
     }
 
     public Position getSelectedPosition() {
         return selectedPos;
+    }
+
+    public Position getTargetPosition() {
+        return targetPos;
     }
 
     public Realm getSelectedRealm() {
@@ -135,34 +144,15 @@ public class GamePanel extends JPanel {
         Position pos = unit.getPosition();
         int x = pos.getX();
         int y = pos.getY();
-        if (gameState.getUnitAt(pos) != null) {
-            System.out.println("Unit at (" + x + ", " + y + ")");
-            Unit target = gameState.getUnitAt(pos);
-            if (unit.canMerge(target)) {
-                System.out.println("can merge");
-                unit = unit.merge(target);
-                gameState.getCurrentRealm().addUnit(unit);
-                gameState.getCurrentRealm().getUnits().remove(target);
-                JButton button = btnGrid[x][y];
-                if (button != null) {
-                    button.setBackground(gameState.getRealmColors()[unit.getRealmID()]);
-                    ImageIcon icon = getIconForUnit(unit);
-                    button.setIcon(icon);
-                }
-            }
-        }else if(gameState.getBlockAt(pos).getRealmID(gameState.getRealms()) == null || gameState.getBlockAt(pos).getRealmID(gameState.getRealms()).getID() != unit.getRealmID()) {
-            JOptionPane.showMessageDialog(this, "out of your realm!", null, JOptionPane.ERROR_MESSAGE);
-        }else{
-            gameState.getCurrentRealm().addUnit(unit);
-            JButton button = btnGrid[x][y];
-            if (button != null) {
-                button.setBackground(gameState.getCurrentRealm().getRealmColor());
-                ImageIcon icon = getIconForUnit(unit);
-                button.setIcon(icon);
-            }
+        JButton button = btnGrid[x][y];
+        if (button != null) {
+            button.setBackground(gameState.getCurrentRealm().getRealmColor());
+            ImageIcon icon = getIconForUnit(unit);
+            button.setIcon(icon);
         }
         gameState.getCurrentRealm().updateResources();
         infoPanel.updateInfo(gameState);
+        selectedPos = targetPos = null;
     }
 
 
@@ -183,7 +173,7 @@ public class GamePanel extends JPanel {
         return new ImageIcon(img);
     }
 
-    public ImageIcon getIconForUnit(Unit unit){
+    public ImageIcon getIconForUnit(Unit unit) {
         String path = switch (unit.getClass().getSimpleName()) {
             case "Peasant" -> "/org/realm_war/Utilities/Resources/peasant.png";
             case "Swordsman" -> "/org/realm_war/Utilities/Resources/swordsman.png";

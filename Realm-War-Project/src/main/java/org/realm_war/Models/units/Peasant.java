@@ -14,8 +14,8 @@ public class Peasant extends Unit{
 
     @Override
     public Unit merge(Unit otherUnit) {
-        if (canMerge(otherUnit)) {
+        if (!canMerge(otherUnit)) {
             throw new IllegalArgumentException("Unable to Merge Units!");
-        }else return new Swordsman(this.getPosition(), this.getRealmID());
+        }else return new Spearman(this.getPosition(), this.getRealmID());
     }
 }
