@@ -86,8 +86,10 @@ public class GameFrame extends JFrame {
             public void actionPerformed(ActionEvent e){
                if(gameState.getPlayers().size() < 2){
                    menuPanel.addPlayersToList();
-               }else {
+               }else if (!gameState.isRunning()){
                    menuPanel.startGame();
+               }else if(gameState.isRunning()){
+                   actionPanel.nextTurn();
                }
            }
         });

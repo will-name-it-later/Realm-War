@@ -88,6 +88,7 @@ public class MenuPanel extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(null, "Please add two players before starting the game.");
             return;
         }
+        gameState.setRunning(true);
         gameState.setupGame(); // Initialize map, forests, town halls etc.
         gamePanel.refresh();// <- update the visual grid
         gameState.setRunning(true);

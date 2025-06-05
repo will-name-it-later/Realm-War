@@ -150,7 +150,6 @@ public class ActionPanel extends JPanel implements ActionListener {
 
     public void updateUnit(Unit u){
         Position pos = u.getPosition();
-        System.out.println(gameState.getUnitAt(pos));
         if (u.getRealmID() == gameState.getBlockAt(pos).getRealmByID(gameState.getRealms()).getID()){
             if (gameState.getUnitAt(pos) == null){
                 gameState.getCurrentRealm().addUnit(u);
