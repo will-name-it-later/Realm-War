@@ -7,6 +7,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.units.Unit;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,61 +56,37 @@ public class UnitCtrl {
         unit.setPosition(targetBlock.getPosition());
     }
 
-    public void attackUnit(Unit attacker, Unit defender) {
-        int attackPower = attacker.getAttackPower();
+    public void attackUnit(Unit attacker, Block targetBlock) {
+        // Validate input
+        if (attacker == null || targetBlock == null || targetBlock.getUnit() == null) {
+            throw new IllegalArgumentException("Invalid attacker or target.");
+        }
 
-        Block attackerBlock = gameState.getBlockAt(attacker.getPosition());
-        Block defenderBlock = gameState.getBlockAt(defender.getPosition());
+        Unit defender = targetBlock.getUnit();
 
-        if (attackerBlock instanceof ForestBlock) attackPower += 2;
-        if (defenderBlock instanceof ForestBlock) attackPower -= 1;
+        // Check for friendly fire
+        if (attacker.getOwner().equals(defender.getOwner())) {
+            throw new IllegalArgumentException("Cannot attack your own unit.");
+        }
 
-        defender.takeDamage(attackPower);
+        // Check attack range
+        if (attacker.getPosition().distanceTo(defender.getPosition()) > attacker.getAttackRange()) {
+            throw new IllegalArgumentException("Target is out of attack range.");
+        }
+
+        // Perform attack
+        defender.takeDamage(defender.getHitPoint() - attacker.getAttackPower());
+
+        // Check if defender is defeated
+        if (defender.getHitPoint() <= 0) {
+            // Remove defender
+            targetBlock.setUnit(null);
+        }
+        //else {
+            // Optionally: counterattack logic or effects could go here
+        //}
     }
 
-    //todo: We don't need the methods that I commented. They can be deleted.
-
-    /* public void moveUnit(Unit unit, int x, int y) {
-        Position pos = new Position(x, y);
-        if (pos.distanceTo(unit.getPosition()) > unit.getMovementRange()) {
-            throw new IllegalArgumentException("Position is out of range for this unit!");
-        }
-        if (containsEnemyUnit(unit, x, y)){
-            Unit target = getEnemyUnitAt(unit, x, y);
-            if (!unit.canAttackUnit(target)) {
-                throw new IllegalArgumentException("Can't Attack this Unit!");
-            }else{
-                removeUnit(target);
-                unit.setPosition(pos);
-            }
-        }
-    }
-
-    public boolean containsEnemyUnit(Unit unit, int x, int y) {
-        for (Unit u : units) {
-            int X = u.getPosition().getX();
-            int Y = u.getPosition().getY();
-            if (X == x && Y == y && u.getRealmID() != unit.getRealmID()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Unit getEnemyUnitAt(Unit unit, int x, int y){
-        if (containsEnemyUnit(unit, x, y)) {
-            for (Unit u : units) {
-                int X = u.getPosition().getX();
-                int Y = u.getPosition().getY();
-                if (X == x && Y == y && u.getRealmID() != unit.getRealmID()) {
-                    return u;
-                }
-            }
-        }
-        throw new UnsupportedOperationException("Can not get any enemy unit at this position!");
-    }
-
-     */
 
     public void removeUnit(Unit unit) {
         units.remove(unit);
