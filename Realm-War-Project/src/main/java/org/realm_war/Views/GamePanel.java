@@ -111,18 +111,6 @@ public class GamePanel extends JPanel {
         unitCtrl.setTargetBlock(null);
     }
 
-//    public void handleBlockClick(int row, int col) {
-//        System.out.println("Clicked block at (" + row + ", " + col + ")");
-//        if (selectedPos == null) {
-//            System.out.println("selected position for action");
-//            selectedPos = mapGrid[row][col].getPosition();
-//           System.out.println(gameState.getUnitAt(selectedPos));
-//        } else {
-//            System.out.println("selection position for moving or attacking");
-//            targetPos = mapGrid[row][col].getPosition();
-//        }
-//    }
-
     public void handleBlockClick(int row, int col) {
        Block clickedBlock = mapGrid[row][col];
        Position clickedPos = clickedBlock.getPosition();
@@ -130,13 +118,6 @@ public class GamePanel extends JPanel {
        if (selectedPos == null) {
            // First click: select unit
            Unit selectedUnit = gameState.getUnitAt(clickedPos);
-//           if (selectedUnit != null && selectedUnit.getOwner().equals(gameState.getCurrentRealm())) {
-//               selectedPos = clickedPos;
-//               unitCtrl.setSelectedUnit(selectedUnit);
-//               JOptionPane.showMessageDialog(this, "Selected unit at " + selectedPos);
-//           } else {
-//               JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
-//           }
            if (selectedUnit != null) {
                if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()){
                    selectedPos = clickedPos;

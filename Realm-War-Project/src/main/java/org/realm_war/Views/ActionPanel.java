@@ -22,7 +22,6 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton nextTurnBtn;
     private JButton recruitBtn;
     private JButton buildBtn;
-    private JButton moveBtn;
     private JButton attackBtn;
 
     public ActionPanel(GameFrame frame, GamePanel gamePanel) {
@@ -33,7 +32,6 @@ public class ActionPanel extends JPanel implements ActionListener {
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
-        moveBtn = createMainButton("move");
         attackBtn = createMainButton("attack");
         setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -41,7 +39,6 @@ public class ActionPanel extends JPanel implements ActionListener {
         add(nextTurnBtn);
         add(recruitBtn);
         add(buildBtn);
-        add(moveBtn);
         add(attackBtn);
         setVisible(true);
     }
@@ -177,36 +174,6 @@ public class ActionPanel extends JPanel implements ActionListener {
 
     public void updateStructure(Structure structure){
         //todo
-    }
-
-    public void moveUnit() {
-        Unit selectedUnit = unitCtrl.getSelectedUnit();
-        Block targetBlock = unitCtrl.getTargetBlock();
-
-        if (selectedUnit == null || targetBlock == null) {
-            JOptionPane.showMessageDialog(frame, "Please select both a unit and a destination.");
-            return;
-        }
-
-        if (!unitCtrl.isPlayerTurn(selectedUnit.getOwner())) {
-            JOptionPane.showMessageDialog(frame, "It's not your turn.");
-            return;
-        }
-
-        if (selectedUnit.canMoveTo(targetBlock)) {
-            unitCtrl.moveUnitToBlock(selectedUnit, targetBlock);
-            JOptionPane.showMessageDialog(frame, "Unit moved successfully.");
-        } else {
-            JOptionPane.showMessageDialog(frame, "Invalid move: target is out of range or blocked.");
-        }
-
-        /*
-        Unit u = gameState.getUnitAt(pos);
-        JOptionPane.showMessageDialog(frame, "Please select your destination");//todo : a label should be indicated beneath the game panel
-        Position destination = gamePanel.getSelectedPosition();
-        u.setPosition(destination);
-
-         */
     }
 
     public void attackUnit() {
@@ -348,10 +315,6 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
-            }
-            case "move" -> {
-                //Position pos = gamePanel.getSelectedPosition();
-                moveUnit();
             }
             case "attack" -> {
                 //Position pos = gamePanel.getSelectedPosition();
