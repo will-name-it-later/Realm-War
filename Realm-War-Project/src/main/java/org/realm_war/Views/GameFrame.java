@@ -6,6 +6,7 @@ import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class GameFrame extends JFrame {
     private GamePanel gamePanel;
@@ -48,6 +49,8 @@ public class GameFrame extends JFrame {
         add(temp, BorderLayout.SOUTH);
         add(menuPanel, BorderLayout.NORTH);
 
+        setupKeybinding();
+
         JOptionPane.showMessageDialog(null, "Welcome to Realm War!\n" +
                 "Please add players (at least 2) with 'Add player' button.\n" +
                 "After that press 'Start game' button to go through the game.\n" +
@@ -68,6 +71,26 @@ public class GameFrame extends JFrame {
         sidePanel.add(panel, BorderLayout.CENTER);
         sidePanel.revalidate();
         sidePanel.repaint();
+    }
+
+    public void setupKeybinding(){
+        JRootPane rootPane = this.getRootPane();
+
+        KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
+        String actionKey = "menuAction";
+
+        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(enterKey, actionKey);
+
+        rootPane.getActionMap().put(actionKey, new AbstractAction() {
+           @Override
+            public void actionPerformed(ActionEvent e){
+               if(gameState.getPlayers().size() < 2){
+                   menuPanel.addPlayersToList();
+               }else {
+                   menuPanel.startGame();
+               }
+           }
+        });
     }
 
     public void setGamePanel(GamePanel newPanel) {
