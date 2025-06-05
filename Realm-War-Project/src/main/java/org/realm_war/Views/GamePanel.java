@@ -59,14 +59,14 @@ public class GamePanel extends JPanel {
 
                     // Set icon for structure, if present
                     if (block.getStructure() != null) {
-                        ImageIcon icon = getIconForStructure(block.getStructure());
+                        ImageIcon icon = getIconForButton(block.getStructure());
                         if (icon != null) {
                             blockButton.setIcon(icon);
                         }
                     }
                     // Set icon for unit, if present and structure is not set
                     else if (block.getUnit() != null) {
-                        ImageIcon icon = getIconForUnit(block.getUnit());
+                        ImageIcon icon = getIconForButton(block.getUnit());
                         if (icon != null) {
                             blockButton.setIcon(icon);
                         }
@@ -107,56 +107,67 @@ public class GamePanel extends JPanel {
         revalidate();
         repaint();
         selectedPos = targetPos = null;
+        unitCtrl.setSelectedUnit(null);
+        unitCtrl.setTargetBlock(null);
     }
+
+//    public void handleBlockClick(int row, int col) {
+//        System.out.println("Clicked block at (" + row + ", " + col + ")");
+//        if (selectedPos == null) {
+//            System.out.println("selected position for action");
+//            selectedPos = mapGrid[row][col].getPosition();
+//           System.out.println(gameState.getUnitAt(selectedPos));
+//        } else {
+//            System.out.println("selection position for moving or attacking");
+//            targetPos = mapGrid[row][col].getPosition();
+//        }
+//    }
 
     public void handleBlockClick(int row, int col) {
-        System.out.println("Clicked block at (" + row + ", " + col + ")");
-        if (selectedPos == null) {
-            System.out.println("selected position for action");
-            selectedPos = mapGrid[row][col].getPosition();
-           System.out.println(gameState.getUnitAt(selectedPos));
-        } else {
-            System.out.println("selection position for moving or attacking");
-            targetPos = mapGrid[row][col].getPosition();
-        }
-    }
+       Block clickedBlock = mapGrid[row][col];
+       Position clickedPos = clickedBlock.getPosition();
 
-    //public void handleBlockClick(int row, int col) {
-   //    Block clickedBlock = mapGrid[row][col];
-   //    Position clickedPos = clickedBlock.getPosition();
-//
-   //    if (selectedPos == null) {
-   //        // First click: select unit
-   //        Unit selectedUnit = gameState.getUnitAt(clickedPos);
-   //        if (selectedUnit != null && selectedUnit.getOwner().equals(gameState.getCurrentRealm())) {
-   //            selectedPos = clickedPos;
-   //            unitCtrl.setSelectedUnit(selectedUnit);
-   //            JOptionPane.showMessageDialog(this, "Selected unit at " + selectedPos);
-   //        } else {
-   //            JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
-   //        }
-   //    } else {
-   //        // Second click: select destination
-   //        targetPos = clickedPos;
-   //        Block targetBlock = mapGrid[targetPos.getX()][targetPos.getY()];
-   //        unitCtrl.setTargetBlock(targetBlock);
-//
-   //        // Move the unit
-   //        try {
-   //            unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
-   //            refresh(); // refresh UI after move
-   //        } catch (Exception e) {
-   //            JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
-   //            e.printStackTrace();
-   //        }
-//
-   //        // Reset selection
-   //        selectedPos = null;
-   //        targetPos = null;
-   //        unitCtrl.setSelectedUnit(null);
-   //        unitCtrl.setTargetBlock(null);
-   //    }
-   //}
+       if (selectedPos == null) {
+           // First click: select unit
+           Unit selectedUnit = gameState.getUnitAt(clickedPos);
+//           if (selectedUnit != null && selectedUnit.getOwner().equals(gameState.getCurrentRealm())) {
+//               selectedPos = clickedPos;
+//               unitCtrl.setSelectedUnit(selectedUnit);
+//               JOptionPane.showMessageDialog(this, "Selected unit at " + selectedPos);
+//           } else {
+//               JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
+//           }
+           if (selectedUnit != null) {
+               if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()){
+                   selectedPos = clickedPos;
+                   unitCtrl.setSelectedUnit(selectedUnit);
+                   JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected unit at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
+               }else {
+                   JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
+               }
+           }else{
+               selectedPos = clickedPos;
+               JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected pos at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
+           }
+       } else {
+           // Second click: select destination
+           targetPos = clickedPos;
+           Block targetBlock = gameState.getBlockAt(targetPos);
+           unitCtrl.setTargetBlock(targetBlock);
+
+           // Move the unit
+           try {
+               unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
+               refresh(); // refresh UI after move
+           } catch (Exception e) {
+               JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
+               e.printStackTrace();
+               refresh();
+           }
+
+           // Reset selection
+       }
+   }
 
     public Position getSelectedPosition() {
         return selectedPos;
@@ -195,7 +206,7 @@ public class GamePanel extends JPanel {
             button.setBackground(baseBlock.getColor());
 
             // Set appropriate structure icon
-            ImageIcon icon = getIconForStructure(s);
+            ImageIcon icon = getIconForButton(s);
             button.setIcon(icon);
         }
     }
@@ -221,20 +232,23 @@ public class GamePanel extends JPanel {
 
         if (button != null) {
             button.setBackground(gameState.getCurrentRealm().getRealmColor());
-            ImageIcon icon = getIconForUnit(unit);
+            ImageIcon icon = getIconForButton(unit);
             button.setIcon(icon);
         }
-
     }
 
 
-    public ImageIcon getIconForStructure(Structure s) {
-        String path = switch (s.getClass().getSimpleName()) {
+    public ImageIcon getIconForButton(Object obj) {
+        String path = switch (obj.getClass().getSimpleName()) {
             case "TownHall" -> "/org/realm_war/Utilities/Resources/townhall.png";
             case "Barrack" -> "/org/realm_war/Utilities/Resources/barrack.png";
             case "Farm" -> "/org/realm_war/Utilities/Resources/farm.png";
             case "Tower" -> "/org/realm_war/Utilities/Resources/tower.png";
             case "Market" -> "/org/realm_war/Utilities/Resources/market.png";
+            case "Peasant" -> "/org/realm_war/Utilities/Resources/peasant.png";
+            case "Swordsman" -> "/org/realm_war/Utilities/Resources/swordsman.png";
+            case "Spearman" -> "/org/realm_war/Utilities/Resources/spearman.png";
+            case "Knight" -> "/org/realm_war/Utilities/Resources/knight.png";
             default -> "/org/realm_war/Utilities/Resources/empty.png";
         };
 
@@ -243,21 +257,5 @@ public class GamePanel extends JPanel {
         ImageIcon icon = new ImageIcon(getClass().getResource(path));
         Image img = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
-    }
-
-    public ImageIcon getIconForUnit(Unit unit) {
-        String path = switch (unit.getClass().getSimpleName()) {
-            case "Peasant" -> "/org/realm_war/Utilities/Resources/peasant.png";
-            case "Swordsman" -> "/org/realm_war/Utilities/Resources/swordsman.png";
-            case "Spearman" -> "/org/realm_war/Utilities/Resources/spearman.png";
-            case "Knight" -> "/org/realm_war/Utilities/Resources/knight.png";
-            default -> throw new IllegalStateException("Unexpected value: " + unit.getClass().getSimpleName());
-        };
-
-        if (path == null) return null;
-
-        ImageIcon icon = new ImageIcon(getClass().getResource(path));
-        icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
-        return icon;
     }
 }

@@ -43,13 +43,16 @@ public class UnitCtrl {
     }
 
     public void moveUnitToBlock(Unit unit, Block targetBlock) {
+        if (targetBlock.getPosition().distanceTo(unit.getPosition()) > unit.getMovementRange()) {
+            throw new IllegalArgumentException("Target block is out of movement range");
+        }
         Block currentBlock = gameState.getBlockAt(unit.getPosition());
         if (currentBlock != null) {
             currentBlock.setUnit(null);
+            currentBlock.setOwnerID(unit.getRealmID());
         }
         targetBlock.setUnit(unit);
-        unit.setX(targetBlock.getX());
-        unit.setY(targetBlock.getY());
+        unit.setPosition(targetBlock.getPosition());
     }
 
     public void attackUnit(Unit attacker, Unit defender) {

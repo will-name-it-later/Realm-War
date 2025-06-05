@@ -51,6 +51,13 @@ public class Realm {
             gold -= u.getPayment();
             food -= u.getRation();
         }
+
+        if (gold <= 0){
+            gold = 0;
+            units.clear();
+            structures.clear();
+            throw new RuntimeException("you ran out of gold. you lost all your units and structures.");
+        }
     }
 
     public boolean canBuildStructure(Structure s){
@@ -105,6 +112,7 @@ public class Realm {
     public void setTownHall(TownHall t){
         this.townHall = t;
     }
+
     public void setRealmColor(Color c){
         this.realmColor=c;
     }
@@ -112,6 +120,7 @@ public class Realm {
     public int getGold() {
         return gold;
     }
+
     public void setGold (int n){ this.gold = n; }
 
     public void addGold(int amount) {
