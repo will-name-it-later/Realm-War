@@ -122,13 +122,11 @@ public class GamePanel extends JPanel {
                if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()){
                    selectedPos = clickedPos;
                    unitCtrl.setSelectedUnit(selectedUnit);
-                   JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected unit at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
                }else {
                    JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
                }
            }else{
                selectedPos = clickedPos;
-               //JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected pos at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
            }
        } else {
            // Second click: select destination
