@@ -63,11 +63,22 @@ public class UnitCtrl {
         if (targetBlock.getPosition().distanceTo(unit.getPosition()) > unit.getMovementRange()) {
             throw new IllegalArgumentException("Target block is out of movement range");
         }
-        claimBlocks(unit.getPosition(), targetBlock.getPosition(), unit.getRealmID());
-        removeUnit(unit);
-        targetBlock.setUnit(unit);
-        unit.setPosition(targetBlock.getPosition());
-        addUnit(unit);
+        if (!targetBlock.hasUnit()) {
+            claimBlocks(unit.getPosition(), targetBlock.getPosition(), unit.getRealmID());
+            removeUnit(unit);
+            targetBlock.setUnit(unit);
+            unit.setPosition(targetBlock.getPosition());
+            addUnit(unit);
+        }
+        else {
+            if (unit.canMerge(targetBlock.getUnit())) {
+                removeUnit(unit);
+                Unit mergedUnit = unit.merge(targetBlock.getUnit());
+                targetBlock.setUnit(mergedUnit);
+                mergedUnit.setPosition(targetBlock.getPosition());
+                addUnit(mergedUnit);
+            }
+        }
     }
 
     public void attackUnit(Unit attacker, Block targetBlock) {
