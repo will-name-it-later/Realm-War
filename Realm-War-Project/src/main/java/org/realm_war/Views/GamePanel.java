@@ -128,7 +128,7 @@ public class GamePanel extends JPanel {
                }
            }else{
                selectedPos = clickedPos;
-               JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected pos at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
+               //JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Selected pos at " + selectedPos.getX() + ", " + selectedPos.getY() + ".");
            }
        } else {
            // Second click: select destination
