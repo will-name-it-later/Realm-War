@@ -64,11 +64,13 @@ public class UnitCtrl {
             throw new IllegalArgumentException("Target block is out of movement range");
         }
         if (!targetBlock.hasUnit()) {
-            claimBlocks(unit.getPosition(), targetBlock.getPosition(), unit.getRealmID());
-            removeUnit(unit);
-            targetBlock.setUnit(unit);
-            unit.setPosition(targetBlock.getPosition());
-            addUnit(unit);
+            if (!targetBlock.hasStructure()) {
+                claimBlocks(unit.getPosition(), targetBlock.getPosition(), unit.getRealmID());
+                removeUnit(unit);
+                targetBlock.setUnit(unit);
+                unit.setPosition(targetBlock.getPosition());
+                addUnit(unit);
+            }
         }
         else {
             if (unit.canMerge(targetBlock.getUnit())) {

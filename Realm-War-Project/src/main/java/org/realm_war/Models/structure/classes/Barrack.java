@@ -22,7 +22,6 @@ public class Barrack extends Structure{
         this.unitSpace = UNIT_SPACE_BY_LEVEL[0];
     }
 
-
     @Override
     public boolean canLevelUp() {
         return (getMaxLevel() > getLevel());
