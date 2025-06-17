@@ -14,7 +14,6 @@ public abstract class Unit {
     private int UNIT_SPACE;
     private Position position;
     private int realmID;
-    private Player owner;
 
     public Unit(int HIT_POINT, int MOVEMENT_RANGE, int ATTACK_POWER, int ATTACK_RANGE, int PAYMENT, int RATION, int UNIT_SPACE, Position position, int realmID) {
         this.HIT_POINT = HIT_POINT;
@@ -91,10 +90,6 @@ public abstract class Unit {
 
     public void setY(int y) {
         position.setY(y);
-    }
-
-    public Player getOwner() {
-        return owner;
     }
 
     public void setPosition(Position position) {

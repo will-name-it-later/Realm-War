@@ -16,9 +16,9 @@ public class GameLogger {
     private static final String LOG_FILE = "game_log.json";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static synchronized void logAction(int playerId, String actionType, String details) {
+    public static void logAction(int playerID, String actionType, String details) {
         List<LogEntry> logs = readLogsFromFile();
-        logs.add(new LogEntry(playerId, actionType, details));
+        logs.add(new LogEntry(playerID, actionType, details));
         writeLogsToFile(logs);
     }
 

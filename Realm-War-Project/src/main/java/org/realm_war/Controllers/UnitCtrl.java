@@ -8,6 +8,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.units.Unit;
+import org.realm_war.Utilities.GameLogger;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -65,11 +66,17 @@ public class UnitCtrl {
         }
         if (!targetBlock.hasUnit()) {
             if (!targetBlock.hasStructure()) {
+                String unitType = unit.getClass().getSimpleName();
+                String details = String.format("%s moved from (%d, %d) to (%d, %d)", unitType,
+                        unit.getX(), unit.getY(), targetBlock.getX(), targetBlock.getY());
+
                 claimBlocks(unit.getPosition(), targetBlock.getPosition(), unit.getRealmID());
                 removeUnit(unit);
                 targetBlock.setUnit(unit);
                 unit.setPosition(targetBlock.getPosition());
                 addUnit(unit);
+
+                GameLogger.logAction(unit.getRealmID(),"MOVE", details);
             }
         }
         else {
@@ -79,6 +86,12 @@ public class UnitCtrl {
                 targetBlock.setUnit(mergedUnit);
                 mergedUnit.setPosition(targetBlock.getPosition());
                 addUnit(mergedUnit);
+
+                String unitType = unit.getClass().getSimpleName();
+                String mergedUnitType = mergedUnit.getClass().getSimpleName();
+                String details = String.format("%s merged to %s", unitType, mergedUnitType);
+
+                GameLogger.logAction(unit.getRealmID(),"MERGE", details);
             }
         }
     }
@@ -93,7 +106,7 @@ public class UnitCtrl {
         Unit defender = targetBlock.getUnit();
 
         // Check for friendly fire
-        if (attacker.getOwner().equals(defender.getOwner())) {
+        if (attacker.getRealmID() == defender.getRealmID()) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Cannot attack your own unit!", "Attacker or target", JOptionPane.ERROR_MESSAGE);
             throw new IllegalArgumentException("Cannot attack your own unit.");
         }
