@@ -39,8 +39,8 @@ public class Tower extends Structure {
     }
 
     @Override
-    public void performTurnAction(Realm realm) {
-        List<Unit> allUnits = GameState.getAllUnits();
+    public void performTurnAction(Realm realm, GameState gameState) {
+        List<Unit> allUnits = gameState.getAllUnits();
         Position myPosition = this.getPosition();
 
         for (Unit unit : allUnits) {

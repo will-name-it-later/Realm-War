@@ -1,6 +1,7 @@
 package org.realm_war.Models.structure.classes;
 
 
+import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
@@ -11,7 +12,7 @@ public abstract class Structure {
     private int durability;
     protected int maintenanceCost;
     private Position position;
-    private Block baseBlock;
+    private transient Block baseBlock;
     private int kingdomId;
 
     public Structure(int maxLevel, int initialDurability, int maintenanceCost, org.realm_war.Models.Position position2, Block baseBlock, int kingdomId) {
@@ -26,7 +27,7 @@ public abstract class Structure {
 
     public abstract boolean canLevelUp();
     public abstract void levelUp();
-    public abstract void performTurnAction(Realm realm);
+    public abstract void performTurnAction(Realm realm, GameState gameState);
     
     // Getters and setters
     public int getLevel() { return level; }
@@ -40,5 +41,8 @@ public abstract class Structure {
     public int getKingdomId() { return kingdomId; }
     public boolean isDestroyed(){
         return durability <= 0;
+    }
+    public void setBaseBlock(Block block) {
+        this.baseBlock = block;
     }
 }

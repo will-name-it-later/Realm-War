@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.GameCtrl;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Utilities.Constants;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 public class GameFrame extends JFrame {
     private GamePanel gamePanel;
     private GameState gameState;
+    private GameCtrl gameCtrl;
     private InfoPanel infoPanel;
     private UnitCtrl unitCtrl;
     private ActionPanel actionPanel;
@@ -19,12 +21,14 @@ public class GameFrame extends JFrame {
     private static JLabel guidanceLabel;
 
     public GameFrame() {
-        unitCtrl = new UnitCtrl();
         gameState = new GameState();
+        unitCtrl = new UnitCtrl(gameState);
+        gameCtrl = new GameCtrl();
+        gameCtrl.setGameFrame(this);
         infoPanel = new InfoPanel();
         gamePanel = new GamePanel(gameState, infoPanel, unitCtrl);
-        actionPanel = new ActionPanel(this, gamePanel);
-        menuPanel = new MenuPanel(gameState, gamePanel);
+        actionPanel = new ActionPanel(this, gamePanel, unitCtrl);
+        menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl);
 
         guidanceLabel = new JLabel("Please choose an action");
         guidanceLabel.setFont(Constants.setBoldFont(23));
@@ -56,6 +60,30 @@ public class GameFrame extends JFrame {
                 "After that press 'Start game' button to go through the game.\n" +
                 "Good Luck!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
         setVisible(true);
+    }
+
+    public void updateAllViews(GameState newGameState) {
+        this.gameState = newGameState;
+
+        if (gamePanel != null) {
+            gamePanel.setGameState(newGameState);
+        }
+        if (actionPanel != null) {
+            actionPanel.setGameState(newGameState);
+        }
+        if (menuPanel != null) {
+            menuPanel.setGameState(newGameState);
+        }
+        if (unitCtrl != null) {
+            unitCtrl.setGameState(newGameState);
+        }
+
+        if (gamePanel != null) {
+            gamePanel.refresh();
+        }
+
+        this.revalidate();
+        this.repaint();
     }
 
     private void initSidePanel() {

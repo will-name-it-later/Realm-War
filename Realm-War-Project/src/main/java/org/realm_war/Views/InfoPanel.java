@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 import org.realm_war.Models.GameState;
+import org.realm_war.Models.Player;
 import org.realm_war.Models.Realm;
+import org.realm_war.Models.blocks.Block;
 
 public class InfoPanel extends JPanel {
     private JLabel playerLabel;

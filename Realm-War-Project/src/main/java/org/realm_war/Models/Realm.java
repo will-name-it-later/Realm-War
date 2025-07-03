@@ -33,9 +33,9 @@ public class Realm {
         this.food = 25;
     }
 
-    public void updateResources(){
+    public void updateResources(GameState gameState) {
         for (Structure s : structures){
-            s.performTurnAction(this);
+            s.performTurnAction(this, gameState);
         }
 
         for (Structure s : structures){

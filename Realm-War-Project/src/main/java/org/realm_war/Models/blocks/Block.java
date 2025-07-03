@@ -12,8 +12,8 @@ import java.util.Objects;
 
 public abstract class Block {
     private Position position;
-    private Unit unit;
-    private Structure structure;
+    private transient Unit unit;
+    private transient Structure structure;
     private boolean isAbsorbed;
     private int realmID; // 0 for not absorbed.
     private Color ownerColor;

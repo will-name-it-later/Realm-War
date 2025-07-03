@@ -19,10 +19,11 @@ public class UnitCtrl {
     private Unit selectedUnit;
     private Block targetBlock;
 
-    private GameState gameState = new GameState();
+    private GameState gameState;
 
-    public UnitCtrl() {
+    public UnitCtrl(GameState gameState) {
         units = new ArrayList<Unit>();
+        this.gameState = gameState;
     }
 
     public Unit getSelectedUnit() {
@@ -151,5 +152,9 @@ public class UnitCtrl {
 
     public List<Unit> getAllUnits() {
         return units;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }

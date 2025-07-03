@@ -24,11 +24,11 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton buildBtn;
     private JButton attackBtn;
 
-    public ActionPanel(GameFrame frame, GamePanel gamePanel) {
+    public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl) {
         this.frame = frame;
         this.gamePanel = gamePanel;
         this.gameState = gamePanel.getGameState();
-        this.unitCtrl = new UnitCtrl();
+        this.unitCtrl = unitCtrl;
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
@@ -276,6 +276,13 @@ public class ActionPanel extends JPanel implements ActionListener {
             case "attack" -> {
                 //Position pos = gamePanel.getSelectedPosition();
             }
+        }
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+        if (this.unitCtrl != null) {
+            this.unitCtrl.setGameState(gameState);
         }
     }
 }

@@ -33,8 +33,7 @@ public class GamePanel extends JPanel {
         this.rows = Constants.getMapSize();
         this.cols = Constants.getMapSize();
         this.btnGrid = new JButton[rows][cols];
-        this.gameState = gameState;
-        mapGrid = GameState.getMapGrid();
+        mapGrid = gameState.getMapGrid();
 
         setLayout(new GridLayout(rows, cols));
         setPreferredSize(new Dimension(900, 900));
@@ -168,6 +167,10 @@ public class GamePanel extends JPanel {
         return gameState;
     }
 
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
     public void updateStructure(Structure s) {
         Position pos = s.getPosition();
         int x = pos.getX();
@@ -175,7 +178,7 @@ public class GamePanel extends JPanel {
 
         // Update model (game state)
         Block baseBlock = s.getBaseBlock();
-        GameState.getMapGrid()[x][y] = baseBlock;
+        gameState.getMapGrid()[x][y] = baseBlock;
         baseBlock.setStructure(s);
 
         // Update UI
@@ -196,7 +199,7 @@ public class GamePanel extends JPanel {
         int y = pos.getY();
         JButton button = btnGrid[x][y];
 
-        gameState.getCurrentRealm().updateResources();
+        gameState.getCurrentRealm().updateResources(gameState);
 
         if (gameState.getCurrentRealm().getGold() < unit.getPayment()) {
             JOptionPane.showMessageDialog(this, "You don't have enough gold", "Error", JOptionPane.ERROR_MESSAGE);

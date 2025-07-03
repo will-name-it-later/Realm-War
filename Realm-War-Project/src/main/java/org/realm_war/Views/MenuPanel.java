@@ -20,19 +20,26 @@ public class MenuPanel extends JPanel implements ActionListener {
     JButton startGameBtn;
     JButton exitGameBtn;
     JButton playAgainBtn;
+    JButton saveGameBtn;
+    JButton loadGameBtn;
 
-    public MenuPanel(GameState gameState, GamePanel gamePanel) {
+    public MenuPanel(GameState gameState, GamePanel gamePanel, GameCtrl gameCtrl) {
         this.gameState = gameState;
         this.gamePanel = gamePanel;
+        this.gameCtrl = gameCtrl;
         addPlayerBtn = createButton("Add Player");
         startGameBtn = createButton("Start Game");
         startGameBtn.setEnabled(false); // disabled until two players added
+        saveGameBtn = createButton("Save Game");
+        loadGameBtn = createButton("Load Game");
         exitGameBtn = createButton("Exit Game");
         playAgainBtn = createButton("Play Again");
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         add(addPlayerBtn);
         add(startGameBtn);
+        add(saveGameBtn);
+        add(loadGameBtn);
         add(exitGameBtn);
         add(playAgainBtn);
     }
@@ -56,6 +63,8 @@ public class MenuPanel extends JPanel implements ActionListener {
         switch (action) {
             case "Add Player" -> addPlayersToList();
             case "Start Game" -> startGame();
+            case "Save Game" -> saveGame();
+            case "Load Game" -> loadGame();
             case "Exit Game" -> exitGame();
             case "Play Again" -> playAgain();
         }
@@ -93,6 +102,30 @@ public class MenuPanel extends JPanel implements ActionListener {
         gamePanel.refresh();// <- update the visual grid
         gameState.setRunning(true);
         setEnabled(false); // disable menu panel during game
+    }
+
+    public void saveGame() {
+        String saveName = JOptionPane.showInputDialog(null,"Enter Save name for the game:","Save Game",JOptionPane.PLAIN_MESSAGE);
+        if (saveName != null && !saveName.trim().isEmpty()) {
+            gameCtrl.saveGame(saveName, gameState);
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            saveGame();
+        }
+    }
+
+    public void loadGame() {
+        String saveName = JOptionPane.showInputDialog(null, "Enter Save slot name to load:", "Load Game", JOptionPane.PLAIN_MESSAGE);
+        if (saveName != null && !saveName.trim().isEmpty()) {
+            GameState loadedState = gameCtrl.loadGame(saveName);
+            if (loadedState != null) {
+                gameCtrl.setGameState(loadedState);
+                JOptionPane.showMessageDialog(this, "Game '" + saveName + "' loaded successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Could not load game named '" + saveName + "'.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     public void exitGame(){
@@ -137,5 +170,9 @@ public class MenuPanel extends JPanel implements ActionListener {
                     JOptionPane.ERROR_MESSAGE
             );
         }
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }

@@ -1,6 +1,7 @@
 package org.realm_war.Models.structure.classes;
 
 
+import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
@@ -53,7 +54,7 @@ public class Barrack extends Structure{
 
 
     @Override
-    public void performTurnAction(Realm realm) {
+    public void performTurnAction(Realm realm, GameState gameState) {
         if (canProduceUnitThisTurn()) {
             Unit newUnit = produceUnit();
             realm.addUnit(newUnit);

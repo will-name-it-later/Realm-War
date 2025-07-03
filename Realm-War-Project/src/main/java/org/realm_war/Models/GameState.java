@@ -23,8 +23,8 @@ public class GameState {
     private List<Player> players = new ArrayList<>();
     private boolean running;
     private boolean isGameOver;
-    private static int gridSize = Constants.getMapSize();
-    private static Block[][] mapGrid = new Block[gridSize][gridSize];
+    private int gridSize = Constants.getMapSize();
+    private Block[][] mapGrid = new Block[gridSize][gridSize];
     private Unit selectedUnit;
     private Block targetBlock;
 
@@ -35,9 +35,9 @@ public class GameState {
             new Color(85, 107, 47)    // Dark Moss Green
     };
 
-    private static List<Realm> realms = new ArrayList<>();
+    private List<Realm> realms = new ArrayList<>();
 
-    public static List<Unit> getAllUnits() {
+    public List<Unit> getAllUnits() {
         List<Unit> allUnits = new ArrayList<>();
         for (Realm realm : realms) {
             allUnits.addAll(realm.getUnits());
@@ -45,11 +45,11 @@ public class GameState {
         return allUnits;
     }
 
-    public static void addRealm(Realm realm) {
+    public void addRealm(Realm realm) {
         realms.add(realm);
     }
 
-    public static Realm getRealmByRealmID(int RealmID) {
+    public Realm getRealmByRealmID(int RealmID) {
         for (Realm realm : realms) {
             if (realm.getID() == RealmID) {
                 return realm;
@@ -58,7 +58,7 @@ public class GameState {
         return null;
     }
 
-    public static List<Realm> getRealm() {
+    public List<Realm> getRealm() {
         return realms;
     }
 
@@ -67,7 +67,7 @@ public class GameState {
         if (players.isEmpty()) return;
         this.currentTurn = (currentTurn + 1) % players.size();
         for (Realm realm : realms) {
-            realm.updateResources();
+            realm.updateResources(this);
         }
     }
 
@@ -109,23 +109,23 @@ public class GameState {
     }
 
     //Map Management
-    public static void mapInitializer() {
-        mapGrid = new Block[gridSize][gridSize];  // ✅ initialize the array
+    public void mapInitializer() {
+        this.mapGrid = new Block[gridSize][gridSize];  // ✅ initialize the array
 
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                mapGrid[i][j] = new EmptyBlock(new Position(i, j));
+                this.mapGrid[i][j] = new EmptyBlock(new Position(i, j));
             }
         }
 
         // Fill borders with VoidBlocks
         for (int i = 0; i < gridSize; i++) {
-            mapGrid[i][0] = new VoidBlock(new Position(i, 0));
-            mapGrid[i][gridSize - 1] = new VoidBlock(new Position(i, gridSize - 1));
+            this.mapGrid[i][0] = new VoidBlock(new Position(i, 0));
+            this.mapGrid[i][gridSize - 1] = new VoidBlock(new Position(i, gridSize - 1));
         }
         for (int j = 0; j < gridSize; j++) {
-            mapGrid[0][j] = new VoidBlock(new Position(0, j));
-            mapGrid[gridSize - 1][j] = new VoidBlock(new Position(gridSize - 1, j));
+            this.mapGrid[0][j] = new VoidBlock(new Position(0, j));
+            this.mapGrid[gridSize - 1][j] = new VoidBlock(new Position(gridSize - 1, j));
         }
     }
 
@@ -163,7 +163,7 @@ public class GameState {
             baseBlock.setOwnerID(kingdomId);
             baseBlock.setOwnerColor(realm.getRealmColor());
 
-            mapGrid[pos.getX()][pos.getY()] = baseBlock;
+            this.mapGrid[pos.getX()][pos.getY()] = baseBlock;
 
             // Claim surrounding territory within radius 2 (circle)
             for (int dx = -2; dx <= 2; dx++) {
@@ -176,8 +176,8 @@ public class GameState {
                         // Euclidean distance to keep circular territory
                         double distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance <= 2) {
-                            mapGrid[nx][ny].setOwnerID(kingdomId);
-                            mapGrid[nx][ny].setOwnerColor(realm.getRealmColor());
+                            this.mapGrid[nx][ny].setOwnerID(kingdomId);
+                            this.mapGrid[nx][ny].setOwnerColor(realm.getRealmColor());
                         }
                     }
                 }
@@ -219,7 +219,7 @@ public class GameState {
     public void updateMap(List<Realm> realms) {
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                mapGrid[i][j] = new EmptyBlock(new Position(i, j));
+                this.mapGrid[i][j] = new EmptyBlock(new Position(i, j));
             }
         }
         for (Realm realm : realms) {
@@ -228,32 +228,32 @@ public class GameState {
 
             for (Structure s : structures) {
                 Position pos = s.getPosition();
-                mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
+                this.mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
             }
             for (Unit u : units) {
                 Position pos = u.getPosition();
-                mapGrid[pos.getX()][pos.getY()].setUnit(u);
+                this.mapGrid[pos.getX()][pos.getY()].setUnit(u);
             }
         }
     }
 
     //Call this after initializing the grid
-    public static void blockPlacer() {
+    public void blockPlacer() {
         Random rand = new Random();
         for (int i = 80; i >= 0; i--) {
-            int x = rand.nextInt(1, mapGrid.length - 2);
-            int y = rand.nextInt(1, mapGrid[0].length - 2);
-            mapGrid[x][y] = new ForestBlock(new Position(x, y));
+            int x = rand.nextInt(1, this.mapGrid.length - 2);
+            int y = rand.nextInt(1, this.mapGrid[0].length - 2);
+            this.mapGrid[x][y] = new ForestBlock(new Position(x, y));
         }
         for (int i = 30; i >= 0; i--) {
-            int x = rand.nextInt(1, mapGrid.length - 2);
-            int y = rand.nextInt(1, mapGrid[0].length - 2);
-            mapGrid[x][y] = new VoidBlock(new Position(x, y));
+            int x = rand.nextInt(1, this.mapGrid.length - 2);
+            int y = rand.nextInt(1, this.mapGrid[0].length - 2);
+            this.mapGrid[x][y] = new VoidBlock(new Position(x, y));
         }
     }
 
-    public static Block[][] getMapGrid() {
-        return mapGrid;
+    public Block[][] getMapGrid() {
+        return this.mapGrid;
     }
 
     public int getCurrentTurn() {
@@ -298,11 +298,11 @@ public class GameState {
 
     //Interaction Helpers
     public Structure getStructureAt(Position pos) {
-        return mapGrid[pos.getX()][pos.getY()].getStructure();
+        return this.mapGrid[pos.getX()][pos.getY()].getStructure();
     }
 
     public Unit getUnitAt(Position pos) {
-        return mapGrid[pos.getX()][pos.getY()].getUnit();
+        return this.mapGrid[pos.getX()][pos.getY()].getUnit();
     }
 
     public Color[] getRealmColors() {
@@ -312,16 +312,16 @@ public class GameState {
     public Block getBlockAt(Position pos) {
         int x = pos.getX();
         int y = pos.getY();
-        if (x < 0 || y < 0 || x >= mapGrid.length || y >= mapGrid[0].length) return null;
-        return mapGrid[x][y];
+        if (x < 0 || y < 0 || x >= this.mapGrid.length || y >= this.mapGrid[0].length) return null;
+        return this.mapGrid[x][y];
     }
 
     public void setBlockAt(Position pos, Block block) {
-        mapGrid[pos.getX()][pos.getY()] = block;
+        this.mapGrid[pos.getX()][pos.getY()] = block;
     }
 
     public boolean isOccupied(Position pos) {
-        return mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
+        return this.mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
 
 }
