@@ -100,11 +100,13 @@ public class Realm {
         usedUnitSpace -= u.getUnitSpace();
     }
 
-    public void possessBlock(Block b) {
+    public void possessBlock(Block b, boolean grantUnitSpace) {
         b.setAbsorbed(true, this.ID);
         if (!possessedBlocks.contains(b)) {
             possessedBlocks.add(b);
-            allUnitSpace++;
+            if (grantUnitSpace) {
+                allUnitSpace++;
+            }
         }
     }
 

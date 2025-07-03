@@ -171,6 +171,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         }
     }
 
+
     public void updateStructure(Structure structure){
         //todo
     }

@@ -44,7 +44,7 @@ public class UnitCtrl {
 
     public void addUnit(Unit unit) {
         units.add(unit);
-        gameState.getRealms().get(unit.getRealmID() - 1001).possessBlock(gameState.getBlockAt(unit.getPosition()));
+        gameState.getRealms().get(unit.getRealmID() - 1001).possessBlock(gameState.getBlockAt(unit.getPosition()), false);
         gameState.getRealms().get(unit.getRealmID() - 1001).addUnit(unit);
         gameState.getBlockAt(unit.getPosition()).setUnit(unit);
     }
@@ -136,14 +136,14 @@ public class UnitCtrl {
         int dy = end.getY() - start.getY();
         int steps = Math.max(Math.abs(dx), Math.abs(dy));
 
-        for (int i = 1; i < steps; i++) {
+        for (int i = 1; i <= steps; i++) {
             int x = Math.round(start.getX() + i * dx / (float) steps);
             int y = Math.round(start.getY() + i * dy / (float) steps);
             if (x >= 0 && x < gameState.getMapGrid()[0].length && y >= 0 && y < gameState.getMapGrid().length) {
                 Block b = gameState.getMapGrid()[x][y];
                 if (!(b instanceof VoidBlock)){
                     b.setOwnerID(ID);
-                    gameState.getRealms().get(ID - 1001).possessBlock(b);
+                    gameState.getRealms().get(ID - 1001).possessBlock(b, true);
                 }
             }
         }

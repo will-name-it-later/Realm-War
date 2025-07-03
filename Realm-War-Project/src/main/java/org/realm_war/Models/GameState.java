@@ -66,6 +66,9 @@ public class GameState {
     public void nextTurn() {
         if (players.isEmpty()) return;
         this.currentTurn = (currentTurn + 1) % players.size();
+        if (this.currentTurn == 0) {
+            this.turns++;
+        }
         for (Realm realm : realms) {
             realm.updateResources(this);
         }
@@ -176,8 +179,10 @@ public class GameState {
                         // Euclidean distance to keep circular territory
                         double distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance <= 2) {
-                            this.mapGrid[nx][ny].setOwnerID(kingdomId);
-                            this.mapGrid[nx][ny].setOwnerColor(realm.getRealmColor());
+                            Block claimedBlock = this.mapGrid[nx][ny];
+                            claimedBlock.setOwnerID(kingdomId);
+                            claimedBlock.setOwnerColor(realm.getRealmColor());
+                            realm.possessBlock(claimedBlock, false);
                         }
                     }
                 }
