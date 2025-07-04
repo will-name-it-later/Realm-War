@@ -130,6 +130,12 @@ public class GamePanel extends JPanel {
        } else {
            // Second click: select destination
            targetPos = clickedPos;
+           if (targetPos.getX() == selectedPos.getX() && targetPos.getY() == selectedPos.getY()) {
+               selectedPos = null;
+               unitCtrl.setSelectedUnit(null);
+               return;
+           }
+
            Block targetBlock = gameState.getBlockAt(targetPos);
            unitCtrl.setTargetBlock(targetBlock);
 

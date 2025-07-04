@@ -62,6 +62,9 @@ public class UnitCtrl {
     }
 
     public void moveUnitToBlock(Unit unit, Block targetBlock) {
+        if (unit.getPosition().getX() == targetBlock.getX() && unit.getPosition().getY() == targetBlock.getY()) {
+            return;
+        }
         if (targetBlock.getPosition().distanceTo(unit.getPosition()) > unit.getMovementRange()) {
             throw new IllegalArgumentException("Target block is out of movement range");
         }
