@@ -7,6 +7,7 @@ import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.*;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
+import org.realm_war.Utilities.GameLogger;
 import org.realm_war.Utilities.PolymorphicTypeAdapterFactory;
 import org.realm_war.Utilities.ColorTypeAdapter;
 import org.realm_war.Utilities.DatabaseManager;
@@ -115,12 +116,15 @@ public class GameCtrl {
         String gameStateJson = gson.toJson(currentGameState);
         String sql = "INSERT INTO saved_games (save_name, game_state_json) VALUES (?, ?::jsonb) " +
                 "ON CONFLICT (save_name) DO UPDATE SET game_state_json = EXCLUDED.game_state_json;";
+        String details = "The game " + saveName + " has been saved to the database.";
 
         try (Connection conn = DatabaseManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, saveName);
             pstmt.setString(2, gameStateJson);
             pstmt.executeUpdate();
+
+            GameLogger.logAction(1000, "SAVE", details);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,6 +132,7 @@ public class GameCtrl {
 
     public GameState loadGame(String saveName) {
         String sql = "SELECT game_state_json FROM saved_games WHERE save_name = ?";
+        String details = "The game " + saveName + " has been loaded from the database.";
         try (Connection conn = DatabaseManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, saveName);
@@ -137,6 +142,7 @@ public class GameCtrl {
                 GameState loadedState = gson.fromJson(gameStateJson, GameState.class);
                 rehydrateGameState(loadedState);
 
+                GameLogger.logAction(1000, "LOAD", details);
                 return loadedState;
             }
         } catch (Exception e) {

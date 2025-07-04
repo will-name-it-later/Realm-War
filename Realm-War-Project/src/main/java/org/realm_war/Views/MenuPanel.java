@@ -107,7 +107,13 @@ public class MenuPanel extends JPanel implements ActionListener {
     public void saveGame() {
         String saveName = JOptionPane.showInputDialog(null,"Enter Save name for the game:","Save Game",JOptionPane.PLAIN_MESSAGE);
         if (saveName != null && !saveName.trim().isEmpty()) {
-            gameCtrl.saveGame(saveName, gameState);
+            try {
+                gameCtrl.saveGame(saveName, gameState);
+                JOptionPane.showMessageDialog(null, "Game " + saveName + " Saved successfully.");
+            } catch(Exception e) {
+                JOptionPane.showMessageDialog(null, "Save failed.", "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
         }
         else {
             JOptionPane.showMessageDialog(null, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
