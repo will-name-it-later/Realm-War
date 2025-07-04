@@ -133,63 +133,52 @@ public class GameState {
     }
 
     public void initializeTownHalls() {
-        Position[] positions = {
-                new Position(1, 1),
-                new Position(gridSize - 2, gridSize - 2),
-                new Position(1, gridSize - 2),
-                new Position(gridSize - 2, 1),
+        int gridSize = Constants.getMapSize();
+
+        Position[][] startingZones = {
+                // Player 1 (Top-Left)
+                new Position[]{ new Position(1, 1),
+                        new Position(1, 2), new Position(2, 1), new Position(2, 2), new Position(1, 3), new Position(3, 1) },
+                // Player 2 (Bottom-Right)
+                new Position[]{ new Position(gridSize - 2, gridSize - 2), new Position(gridSize - 2, gridSize - 3), new Position(gridSize - 3, gridSize - 2), new Position(gridSize - 3, gridSize - 3), new Position(gridSize - 2, gridSize - 4), new Position(gridSize - 4, gridSize - 2) },
+                // Player 3 (Top-Right)
+                new Position[]{ new Position(1, gridSize - 2), new Position(1, gridSize - 3), new Position(2, gridSize - 2), new Position(2, gridSize - 3), new Position(1, gridSize - 4), new Position(3, gridSize - 2) },
+                // Player 4 (Bottom-Left)
+                new Position[]{ new Position(gridSize - 2, 1), new Position(gridSize - 2, 2), new Position(gridSize - 3, 1), new Position(gridSize - 3, 2), new Position(gridSize - 2, 3), new Position(gridSize - 4, 1) }
         };
 
+        // Clear all starting zones to guarantee they are EmptyBlocks.
+        for (int i = 0; i < players.size(); i++) {
+            for (Position pos : startingZones[i]) {
+                mapGrid[pos.getX()][pos.getY()] = new EmptyBlock(pos);
+            }
+        }
+
+        // Initialize each player in their clean zone.
         for (int i = 0; i < players.size(); i++) {
             Realm realm = realms.get(i);
-            Position pos = positions[i];
+            Position[] playerZone = startingZones[i];
+            Position townHallPos = playerZone[0]; // The first block is the Town Hall.
 
-            int goldProduction = 10;
-            int foodProduction = 5;
-            int maxLevel = 5;
-            int durability = 100;
-            int maintenance = 2;
-            int kingdomId = realm.getID();
-
-            // Create base block and town hall structure
-            Block baseBlock = new EmptyBlock(pos);
-            baseBlock.setStructure(null);
-
-            TownHall townHall = new TownHall(
-                    goldProduction, foodProduction,
-                    maxLevel, durability, maintenance,
-                    pos, baseBlock, kingdomId
-            );
-
-            // Set structure and owner info on base block
-            baseBlock.setStructure(townHall);
-            baseBlock.setOwnerID(kingdomId);
-            baseBlock.setOwnerColor(realm.getRealmColor());
-
-            this.mapGrid[pos.getX()][pos.getY()] = baseBlock;
-
-            // Claim surrounding territory within radius 2 (circle)
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dy = -2; dy <= 2; dy++) {
-                    int nx = pos.getX() + dx;
-                    int ny = pos.getY() + dy;
-
-                    // Check boundaries
-                    if (nx >= 0 && ny >= 0 && nx < gridSize && ny < gridSize) {
-                        // Euclidean distance to keep circular territory
-                        double distance = Math.sqrt(dx * dx + dy * dy);
-                        if (distance <= 2) {
-                            Block claimedBlock = this.mapGrid[nx][ny];
-                            claimedBlock.setOwnerID(kingdomId);
-                            claimedBlock.setOwnerColor(realm.getRealmColor());
-                            realm.possessBlock(claimedBlock, false);
-                        }
-                    }
-                }
-            }
-
+            // Create the Town Hall object.
+            TownHall townHall = new TownHall(10, 5, 5, 100, 2, townHallPos, mapGrid[townHallPos.getX()][townHallPos.getY()], realm.getID());
             realm.setTownHall(townHall);
             realm.getStructures().add(townHall);
+
+            // Iterate through all 6 blocks in the zone to set them up.
+            for (int j = 0; j < playerZone.length; j++) {
+                Position currentPos = playerZone[j];
+                Block block = mapGrid[currentPos.getX()][currentPos.getY()];
+
+                // Place the structure on the first block.
+                if (j == 0) {
+                    block.setStructure(townHall);
+                }
+
+                block.setOwnerID(realm.getID());
+                block.setOwnerColor(realm.getRealmColor());
+                realm.possessBlock(block, false);
+            }
         }
     }
 
@@ -245,15 +234,24 @@ public class GameState {
     //Call this after initializing the grid
     public void blockPlacer() {
         Random rand = new Random();
-        for (int i = 80; i >= 0; i--) {
+        int forestsToPlace = 80;
+        int voidsToPlace = 30;
+
+        while (forestsToPlace > 0) {
             int x = rand.nextInt(1, this.mapGrid.length - 2);
             int y = rand.nextInt(1, this.mapGrid[0].length - 2);
-            this.mapGrid[x][y] = new ForestBlock(new Position(x, y));
+            if (!this.mapGrid[x][y].hasStructure()) {
+                this.mapGrid[x][y] = new ForestBlock(new Position(x, y));
+                forestsToPlace--;
+            }
         }
-        for (int i = 30; i >= 0; i--) {
+        while (voidsToPlace > 0) {
             int x = rand.nextInt(1, this.mapGrid.length - 2);
             int y = rand.nextInt(1, this.mapGrid[0].length - 2);
-            this.mapGrid[x][y] = new VoidBlock(new Position(x, y));
+            if (!this.mapGrid[x][y].hasStructure()) {
+                this.mapGrid[x][y] = new VoidBlock(new Position(x, y));
+                voidsToPlace--;
+            }
         }
     }
 
