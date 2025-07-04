@@ -82,13 +82,17 @@ public class UnitCtrl {
         }
         else {
             if (unit.canMerge(targetBlock.getUnit())) {
+                String unitType = unit.getClass().getSimpleName();
+                Unit targetUnit = targetBlock.getUnit();
                 removeUnit(unit);
-                Unit mergedUnit = unit.merge(targetBlock.getUnit());
+                removeUnit(targetUnit);
+
+                Unit mergedUnit = unit.merge(targetUnit);
                 targetBlock.setUnit(mergedUnit);
                 mergedUnit.setPosition(targetBlock.getPosition());
                 addUnit(mergedUnit);
 
-                String unitType = unit.getClass().getSimpleName();
+
                 String mergedUnitType = mergedUnit.getClass().getSimpleName();
                 String details = String.format("%s merged to %s", unitType, mergedUnitType);
 
