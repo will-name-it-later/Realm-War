@@ -148,6 +148,21 @@ public class ActionPanel extends JPanel implements ActionListener {
         }
     }
 
+    private void startTurnTimer() {
+        if (autoTurnTimer != null) {
+            autoTurnTimer.stop(); // Stop previous timer
+        }
+
+        autoTurnTimer = new Timer(TIMEOUT, e -> {
+            System.out.println("Auto next turn triggered after 30s");
+            nextTurn(); // Trigger turn manually
+        });
+
+        autoTurnTimer.setRepeats(false); // Only run once
+        autoTurnTimer.start();
+    }
+
+
     public void updateUnit(Unit u){
         Position pos = u.getPosition();
         if (u.getRealmID() == gameState.getBlockAt(pos).getRealmByID(gameState.getRealms()).getID()){
