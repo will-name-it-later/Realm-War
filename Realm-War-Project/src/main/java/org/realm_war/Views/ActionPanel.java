@@ -24,6 +24,9 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton buildBtn;
     private JButton attackBtn;
 
+    private Timer autoTurnTimer;
+    private final int TIMEOUT = 30_000; // 30 seconds
+
     public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl) {
         this.frame = frame;
         this.gamePanel = gamePanel;
@@ -139,12 +142,14 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
     public void nextTurn() {
-        if (gameState.isGameOver()){
+        if (gameState.isGameOver()) {
             gameState.setRunning(false);
-            //todo : update the info label to indicate that game is over
-        }else{
+            // todo : update the info label to indicate that game is over
+            if (autoTurnTimer != null) autoTurnTimer.stop(); // stop timer if game over
+        } else {
             gameState.nextTurn();
             gamePanel.refresh();
+            startTurnTimer(); // reset the timer after each turn
         }
     }
 
