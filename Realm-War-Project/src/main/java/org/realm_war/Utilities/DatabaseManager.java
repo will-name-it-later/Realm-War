@@ -5,11 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:postgresql://localhost:5432/Save_And_Load";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "1234";
+    private static final String BASE_URL = "jdbc:postgresql://localhost:5432/";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getConnection(String DBName, String user, String password) throws SQLException {
+        String fullURL = BASE_URL + DBName;
+        return DriverManager.getConnection(fullURL, user, password);
     }
 }
