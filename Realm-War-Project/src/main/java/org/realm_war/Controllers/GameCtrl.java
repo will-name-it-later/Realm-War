@@ -117,7 +117,7 @@ public class GameCtrl {
         String gameStateJson = gson.toJson(currentGameState);
         String sql = "INSERT INTO saved_games (save_name, game_state_json) VALUES (?, ?::jsonb) " +
                 "ON CONFLICT (save_name) DO UPDATE SET game_state_json = EXCLUDED.game_state_json;";
-        String details = "The game " + saveName + " has been saved to the database.";
+        String details = String.format("The game %s has been saved to database %s of user %s.", saveName, DBName, user);
 
         try (Connection conn = DatabaseManager.getConnectionForSave(DBName, user, password);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -133,7 +133,7 @@ public class GameCtrl {
 
     public GameState loadGame(String saveName, String DBName, String user, String password) throws SQLException {
         String sql = "SELECT game_state_json FROM saved_games WHERE save_name = ?";
-        String details = "The game " + saveName + " has been loaded from the database.";
+        String details = String.format("The game %s has been loaded from database %s of user %s.", saveName, DBName, user);
         try (Connection conn = DatabaseManager.getConnectionForLoad(DBName, user, password);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, saveName);
