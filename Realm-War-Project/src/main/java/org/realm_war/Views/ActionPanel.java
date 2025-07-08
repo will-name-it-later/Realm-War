@@ -3,6 +3,7 @@ package org.realm_war.Views;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
 import org.realm_war.Models.structure.classes.*;
@@ -168,26 +169,45 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
 
-    public void updateUnit(Unit u){
+    public void updateUnit(Unit u) {
         Position pos = u.getPosition();
-        if (u.getRealmID() == gameState.getBlockAt(pos).getRealmByID(gameState.getRealms()).getID()){
-            if (gameState.getUnitAt(pos) == null){
-                gameState.getCurrentRealm().addUnit(u);
-                gameState.setBlockAt(pos, new EmptyBlock(pos));
-                gameState.getBlockAt(pos).setUnit(u);
-                gamePanel.updateUnit(u);
-            }else if (gameState.getUnitAt(pos).canMerge(u)){
-                u = gameState.getUnitAt(pos).merge(u);
-                gameState.getCurrentRealm().mergeUnit(u, gameState.getUnitAt(pos));
-                gamePanel.updateUnit(u);
-                gameState.setBlockAt(pos, new EmptyBlock(pos));
-                gameState.getBlockAt(pos).setUnit(u);
-            }else{
-                JOptionPane.showMessageDialog(null, "Unable to Merge Units!");
-            }
-        }else {
-            JOptionPane.showMessageDialog(frame, "out of yo realm, ye piece o' shit!", "Error", JOptionPane.ERROR_MESSAGE);
+        Realm currentRealm = gameState.getCurrentRealm();
+        Block targetBlock = gameState.getBlockAt(pos);
+
+        if (u.getRealmID() != targetBlock.getRealmID()) {
+            JOptionPane.showMessageDialog(frame, "You can only place units in your own territory!", "Error", JOptionPane.ERROR_MESSAGE);
             gamePanel.refresh();
+            return;
+        }
+        if (currentRealm.getGold() < u.getPayment()) {
+            JOptionPane.showMessageDialog(this, "You don't have enough gold to recruit this unit.", "Error", JOptionPane.ERROR_MESSAGE);
+            gamePanel.refresh();
+            return;
+        }
+        if (targetBlock.hasUnit() && !targetBlock.getUnit().canMerge(u)) {
+            JOptionPane.showMessageDialog(this, "Block is occupied and units cannot be merged.", "Error", JOptionPane.ERROR_MESSAGE);
+            gamePanel.refresh();
+            return;
+        }
+        try {
+            currentRealm.addGold(-u.getPayment()); // Deduct the gold cost first
+            if (targetBlock.getUnit() == null) {
+                currentRealm.addUnit(u);
+                targetBlock.setUnit(u);
+            } else {
+                // Merge logic
+                Unit existingUnit = targetBlock.getUnit();
+                Unit mergedUnit = existingUnit.merge(u);
+                currentRealm.removeUnit(existingUnit);
+                currentRealm.addUnit(mergedUnit);
+                targetBlock.setUnit(mergedUnit);
+            }
+            gamePanel.refresh();
+
+        } catch (IllegalArgumentException e) {
+            // Refunding the gold if unit can't place.
+            currentRealm.addGold(u.getPayment());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Recruitment Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

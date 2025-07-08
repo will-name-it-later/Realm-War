@@ -199,21 +199,11 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void updateUnit(Unit unit) {
+    public void updateUnit (Unit unit) {
         Position pos = unit.getPosition();
         int x = pos.getX();
         int y = pos.getY();
         JButton button = btnGrid[x][y];
-
-        gameState.getCurrentRealm().updateResources(gameState);
-
-        if (gameState.getCurrentRealm().getGold() < unit.getPayment()) {
-            JOptionPane.showMessageDialog(this, "You don't have enough gold", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // 🚨 Prevents placing the unit
-        }
-
-        // Deduct gold
-        gameState.getCurrentRealm().setGold(gameState.getCurrentRealm().getGold() - unit.getPayment());
 
         infoPanel.updateInfo(gameState);
         selectedPos = targetPos = null;
