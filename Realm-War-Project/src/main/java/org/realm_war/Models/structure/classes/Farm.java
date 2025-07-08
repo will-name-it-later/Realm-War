@@ -34,14 +34,19 @@ public class Farm extends Structure {
         this.foodProduction = FOOD_PRODUCTION_BY_LEVEL[getLevel() - 1];
     }
 
-    public int produceFoodPerTurn() {
-        return getLevel() * 10; // Example logic: 10 food per level
+    //public int produceFoodPerTurn() {
+    //    return getLevel() * 10; // Example logic: 10 food per level
+    //}
+
+    public int produceFood() {
+        return 2 * getLevel();  // Example: 2 food per level every 5s
     }
 
     @Override
     public void performTurnAction(Realm realm, GameState gameState) {
-        int foodProduced = foodProduction; // or getFoodProduction() if encapsulated
-        realm.addFood(foodProduced);
+        int food = FOOD_PRODUCTION_BY_LEVEL[getLevel() - 1];
+        realm.addFood(food);
+        System.out.println("Farm at " + getPosition() + " produced " + food + " food.");
     }
     
     public int getFoodProduction() {
