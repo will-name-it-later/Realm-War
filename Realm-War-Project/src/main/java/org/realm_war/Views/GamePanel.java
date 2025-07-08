@@ -5,6 +5,7 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.Unit;
@@ -50,11 +51,22 @@ public class GamePanel extends JPanel {
 
                 if (block != null) {
                     // Set background color based on realm or block color
-                    blockButton.setBackground(
-                            block.getRealmByID(gameState.getRealms()) != null
-                                    ? block.getRealmByID(gameState.getRealms()).getRealmColor()
-                                    : block.getColor()
-                    );
+                    Color backgroundColor;
+                    Realm ownerRealm = block.getRealmByID(gameState.getRealms());
+                    if (ownerRealm != null) {
+                        // So it's owned by a player.
+                        Color realmColor = ownerRealm.getRealmColor();
+                        if (block instanceof ForestBlock) {
+                            // If it's a forest, make the realm color darker.
+                            backgroundColor = realmColor.darker();
+                        } else {
+                            // Otherwise, use the standard realm color.
+                            backgroundColor = realmColor;
+                        }
+                    } else {
+                        backgroundColor = block.getColor();
+                    }
+                    blockButton.setBackground(backgroundColor);
 
                     // Set icon for structure, if present
                     if (block.getStructure() != null) {
@@ -199,21 +211,11 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void updateUnit(Unit unit) {
+    public void updateUnit (Unit unit) {
         Position pos = unit.getPosition();
         int x = pos.getX();
         int y = pos.getY();
         JButton button = btnGrid[x][y];
-
-        gameState.getCurrentRealm().updateResources(gameState);
-
-        if (gameState.getCurrentRealm().getGold() < unit.getPayment()) {
-            JOptionPane.showMessageDialog(this, "You don't have enough gold", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // 🚨 Prevents placing the unit
-        }
-
-        // Deduct gold
-        gameState.getCurrentRealm().setGold(gameState.getCurrentRealm().getGold() - unit.getPayment());
 
         infoPanel.updateInfo(gameState);
         selectedPos = targetPos = null;

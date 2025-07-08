@@ -108,14 +108,37 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void saveGame() {
-        String saveName = JOptionPane.showInputDialog(null,"Enter Save name for the game:","Save Game",JOptionPane.PLAIN_MESSAGE);
-        if (saveName != null && !saveName.trim().isEmpty()) {
+        JTextField DBNameField = new JTextField();
+        JTextField userField = new JTextField();
+        JPasswordField passField = new JPasswordField();
+        JTextField saveNameField = new JTextField();
+
+        JPanel savePanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        savePanel.add(new JLabel("Database Name:"));
+        savePanel.add(DBNameField);
+        savePanel.add(new JLabel("Username:"));
+        savePanel.add(userField);
+        savePanel.add(new JLabel("Password:"));
+        savePanel.add(passField);
+        savePanel.add(new JLabel("Save Name:"));
+        savePanel.add(saveNameField);
+
+        int result = JOptionPane.showConfirmDialog(null, savePanel, "Save Game", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String saveName = saveNameField.getText();
+            String DBName = DBNameField.getText();
+            String user = userField.getText();
+            String pass = new String(passField.getPassword());
+
+            if (saveName == null || saveName.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             try {
-                gameCtrl.saveGame(saveName, gameState);
-                JOptionPane.showMessageDialog(null, "Game " + saveName + " Saved successfully.");
-            } catch(Exception e) {
-                JOptionPane.showMessageDialog(null, "Save failed.", "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+                gameCtrl.saveGame(saveName, gameState, DBName, user, pass);
+                JOptionPane.showMessageDialog(this, "Game " + saveName + " Saved successfully.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error saving game:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         else {
@@ -125,14 +148,41 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void loadGame() {
-        String saveName = JOptionPane.showInputDialog(null, "Enter Save slot name to load:", "Load Game", JOptionPane.PLAIN_MESSAGE);
-        if (saveName != null && !saveName.trim().isEmpty()) {
-            GameState loadedState = gameCtrl.loadGame(saveName);
-            if (loadedState != null) {
-                gameCtrl.setGameState(loadedState);
-                JOptionPane.showMessageDialog(this, "Game '" + saveName + "' loaded successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Error: Could not load game named '" + saveName + "'.", "Error", JOptionPane.ERROR_MESSAGE);
+        JTextField DBNameField = new JTextField();
+        JTextField userField = new JTextField();
+        JPasswordField passField = new JPasswordField();
+        JTextField saveNameField = new JTextField();
+
+        JPanel loadPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        loadPanel.add(new JLabel("Database Name:"));
+        loadPanel.add(DBNameField);
+        loadPanel.add(new JLabel("Username:"));
+        loadPanel.add(userField);
+        loadPanel.add(new JLabel("Password:"));
+        loadPanel.add(passField);
+        loadPanel.add(new JLabel("Save Name:"));
+        loadPanel.add(saveNameField);
+
+        int result = JOptionPane.showConfirmDialog(null, loadPanel, "Load Game", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String saveName = saveNameField.getText();
+            String DBName = DBNameField.getText();
+            String user = userField.getText();
+            String pass = new String(passField.getPassword());
+            if (saveName.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                GameState loadedState = gameCtrl.loadGame(saveName, DBName, user, pass);
+                if (loadedState != null) {
+                    gameCtrl.setGameState(loadedState);
+                    JOptionPane.showMessageDialog(this, "Game '" + saveName + "' loaded successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Could not find a save named '" + saveName + "'.", "Load Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error loading game:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

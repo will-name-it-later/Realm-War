@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class GameCtrl {
     private GameState gameState;
@@ -112,13 +113,13 @@ public class GameCtrl {
     }
 
 
-    public void saveGame(String saveName, GameState currentGameState) {
+    public void saveGame(String saveName, GameState currentGameState, String DBName, String user, String password) throws SQLException {
         String gameStateJson = gson.toJson(currentGameState);
         String sql = "INSERT INTO saved_games (save_name, game_state_json) VALUES (?, ?::jsonb) " +
                 "ON CONFLICT (save_name) DO UPDATE SET game_state_json = EXCLUDED.game_state_json;";
-        String details = "The game " + saveName + " has been saved to the database.";
+        String details = String.format("The game %s has been saved to database %s of user %s.", saveName, DBName, user);
 
-        try (Connection conn = DatabaseManager.getConnection();
+        try (Connection conn = DatabaseManager.getConnectionForSave(DBName, user, password);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, saveName);
             pstmt.setString(2, gameStateJson);
@@ -126,14 +127,14 @@ public class GameCtrl {
 
             GameLogger.logAction(1000, "SAVE", details);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new SQLException("Failed to save game: " + e.getMessage(), e);
         }
     }
 
-    public GameState loadGame(String saveName) {
+    public GameState loadGame(String saveName, String DBName, String user, String password) throws SQLException {
         String sql = "SELECT game_state_json FROM saved_games WHERE save_name = ?";
-        String details = "The game " + saveName + " has been loaded from the database.";
-        try (Connection conn = DatabaseManager.getConnection();
+        String details = String.format("The game %s has been loaded from database %s of user %s.", saveName, DBName, user);
+        try (Connection conn = DatabaseManager.getConnectionForLoad(DBName, user, password);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, saveName);
             ResultSet rs = pstmt.executeQuery();
@@ -146,7 +147,7 @@ public class GameCtrl {
                 return loadedState;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new SQLException("Failed to load game: " + e.getMessage(), e);
         }
         return null;
     }

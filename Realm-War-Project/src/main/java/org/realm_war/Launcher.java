@@ -10,11 +10,11 @@ import java.nio.file.Paths;
 
 public class Launcher {
     public static void main(String[] args) {
-        Path filePath = Paths.get("C:/Users/intel/Realm-War/game_log.json") ;
+        Path filePath = Paths.get("game_log.json") ;
         try {
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.err.println("Could not delete log file: " + e.getMessage());
         }
         SwingUtilities.invokeLater(GameFrame::new);
     }

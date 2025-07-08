@@ -9,6 +9,8 @@ import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 
+import javax.swing.*;
+
 public class Realm {
     private GameState gameState = new GameState();
     private int gold;
@@ -54,10 +56,14 @@ public class Realm {
         }
 
         if (gold <= 0){
+            JOptionPane.showMessageDialog(null,
+                    "You have run out of gold! All your units and structures have been lost.",
+                    "warning",
+                    JOptionPane.WARNING_MESSAGE);
+
             gold = 0;
             units.clear();
             structures.clear();
-            throw new RuntimeException("you ran out of gold. you lost all your units and structures.");
         }
     }
 
