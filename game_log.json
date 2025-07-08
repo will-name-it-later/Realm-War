@@ -316,5 +316,47 @@
     "playerID": 1001,
     "actionType": "MOVE",
     "details": "Spearman moved from (1, 5) to (1, 6)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:34",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (16, 18) to (15, 18)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:36",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (15, 18) to (15, 17)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:37",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (15, 17) to (16, 17)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:39",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (16, 17) to (16, 16)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:40",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (16, 16) to (15, 16)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:44",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (15, 16) to (16, 16)"
+  },
+  {
+    "timestamp": "2025-07-06 23:51:45",
+    "playerID": 1002,
+    "actionType": "MOVE",
+    "details": "Spearman moved from (16, 16) to (17, 16)"
   }
 ]

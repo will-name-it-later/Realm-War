@@ -21,6 +21,7 @@ public class GameState {
     private int currentTurn = 0;
     private int turns = 1;
     private List<Player> players = new ArrayList<>();
+    private List<Realm> realms = new ArrayList<>();
     private boolean running;
     private boolean isGameOver;
     private int gridSize = Constants.getMapSize();
@@ -35,7 +36,6 @@ public class GameState {
             new Color(85, 107, 47)    // Dark Moss Green
     };
 
-    private List<Realm> realms = new ArrayList<>();
 
     public List<Unit> getAllUnits() {
         List<Unit> allUnits = new ArrayList<>();
@@ -68,9 +68,6 @@ public class GameState {
         this.currentTurn = (currentTurn + 1) % players.size();
         if (this.currentTurn == 0) {
             this.turns++;
-        }
-        for (Realm realm : realms) {
-            realm.updateResources(this);
         }
     }
 
@@ -164,6 +161,7 @@ public class GameState {
             TownHall townHall = new TownHall(10, 5, 5, 100, 2, townHallPos, mapGrid[townHallPos.getX()][townHallPos.getY()], realm.getID());
             realm.setTownHall(townHall);
             realm.getStructures().add(townHall);
+            townHall.startStructureLoop(realm, this);
 
             // Iterate through all 6 blocks in the zone to set them up.
             for (int j = 0; j < playerZone.length; j++) {
@@ -304,9 +302,19 @@ public class GameState {
         return this.mapGrid[pos.getX()][pos.getY()].getStructure();
     }
 
+    public List<Structure> getAllStructures() {
+        List<Structure> all = new ArrayList<>();
+        for (Realm r : realms) {
+            all.addAll(r.getStructures());
+        }
+        return all;
+    }
+
+
     public Unit getUnitAt(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getUnit();
     }
+
 
     public Color[] getRealmColors() {
         return realmColors;

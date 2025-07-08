@@ -31,6 +31,7 @@ public class TownHall extends Structure implements UnitSpaceProvider {
     public void performTurnAction(Realm realm, GameState gameState) {
         realm.addGold(produceGoldPerTurn());
         realm.addFood(produceFoodPerTurn());
+        System.out.println("townhall in the produce gold and food");
     }
 
     @Override
