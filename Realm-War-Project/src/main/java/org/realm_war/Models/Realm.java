@@ -10,6 +10,7 @@ import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 
 public class Realm {
+    private GameState gameState = new GameState();
     private int gold;
     private final int ID;
     private TownHall townHall;
@@ -71,10 +72,13 @@ public class Realm {
     }
 
     public void addStructure(Structure s){
-        if (canBuildStructure(s)){
+        if (canBuildStructure(s)) {
             structures.add(s);
             gold -= s.getMaintenanceCost();
-        }else throw new IllegalArgumentException("Can't build structure here!");
+            s.startStructureLoop(this, gameState); // 👈 Start timer here
+        } else {
+            throw new IllegalArgumentException("Can't build structure here!");
+        }
     }
 
     public void addUnit(Unit u){

@@ -78,6 +78,7 @@ public abstract class Structure {
                         }
                     }
                 }
+                System.out.println("\n###################################################################\n");
             }
         }, 0, 5000); // every 5 seconds
     }
