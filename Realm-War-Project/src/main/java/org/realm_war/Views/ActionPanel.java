@@ -3,6 +3,7 @@ package org.realm_war.Views;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
+import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
 import org.realm_war.Models.structure.classes.*;
@@ -255,13 +256,16 @@ public class ActionPanel extends JPanel implements ActionListener {
                 }
             }
             case "farm" -> {
-                try{
+                try {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     Block block = gameState.getBlockAt(pos);
-                    gamePanel.updateStructure(new Farm(pos, block, ID));
+                    Farm farm = new Farm(pos, block, ID);
+                    Realm realm = gameState.getRealmByRealmID(ID);
+                    realm.addStructure(farm); // This should start the timer internally
+                    gamePanel.updateStructure(farm);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Choose a block", "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "barrack" -> {
@@ -269,7 +273,10 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     Block block = gameState.getBlockAt(pos);
-                    gamePanel.updateStructure(new Barrack(pos, block, ID));
+                    Barrack barrack = new Barrack(pos, block, ID);
+                    Realm realm = gameState.getRealmByRealmID(ID);
+                    realm.addStructure(barrack);
+                    gamePanel.updateStructure(barrack);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -279,7 +286,10 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     Block block = gameState.getBlockAt(pos);
-                    gamePanel.updateStructure(new Tower(pos, block, ID));
+                    Tower tower = new Tower(pos, block, ID);
+                    Realm realm = gameState.getRealmByRealmID(ID);
+                    realm.addStructure(tower);
+                    gamePanel.updateStructure(tower);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -289,7 +299,10 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     Block block = gameState.getBlockAt(pos);
-                    gamePanel.updateStructure(new Market(pos, block, ID));
+                    Market market = new Market(pos, block, ID);
+                    Realm realm = gameState.getRealmByRealmID(ID);
+                    realm.addStructure(market);
+                    gamePanel.updateStructure(market);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
