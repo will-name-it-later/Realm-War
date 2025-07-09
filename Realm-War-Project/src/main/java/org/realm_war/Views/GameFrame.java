@@ -26,10 +26,10 @@ public class GameFrame extends JFrame {
         gameCtrl = new GameCtrl();
         gameCtrl.setGameFrame(this);
         infoPanel = new InfoPanel();
-        gamePanel = new GamePanel(gameState, infoPanel, unitCtrl, actionPanel);
+        gamePanel = new GamePanel(gameState, infoPanel, unitCtrl, null);
         actionPanel = new ActionPanel(this, gamePanel, unitCtrl, infoPanel);
         gamePanel.setActionPanel(actionPanel);
-        menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl);
+        menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl, actionPanel);
 
         guidanceLabel = new JLabel("Please choose an action");
         guidanceLabel.setFont(Constants.setBoldFont(23));

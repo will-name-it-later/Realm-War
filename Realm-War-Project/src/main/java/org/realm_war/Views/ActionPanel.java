@@ -28,7 +28,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton attackBtn;
     private boolean isAttacking = false;
 
-    private Timer autoTurnTimer;
+    private transient Timer autoTurnTimer;
     private final int TIMEOUT = 30_000; // 30 seconds
 
     public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl, InfoPanel infoPanel) {
@@ -144,6 +144,10 @@ public class ActionPanel extends JPanel implements ActionListener {
         panel.add(marketBtn);
 
         return panel;
+    }
+
+    public void beginFirstTurn() {
+        startTurnTimer();
     }
 
     public void nextTurn() {

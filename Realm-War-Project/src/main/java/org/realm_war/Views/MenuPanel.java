@@ -16,6 +16,7 @@ public class MenuPanel extends JPanel implements ActionListener {
     GameFrame gameFrame;
     GameState gameState;
     GamePanel gamePanel;
+    ActionPanel actionPanel;
     GameCtrl gameCtrl;
     StructureCtrl structureCtrl;
     JButton addPlayerBtn;
@@ -25,10 +26,11 @@ public class MenuPanel extends JPanel implements ActionListener {
     JButton saveGameBtn;
     JButton loadGameBtn;
 
-    public MenuPanel(GameState gameState, GamePanel gamePanel, GameCtrl gameCtrl) {
+    public MenuPanel(GameState gameState, GamePanel gamePanel, GameCtrl gameCtrl, ActionPanel actionPanel) {
         this.gameState = gameState;
         this.gamePanel = gamePanel;
         this.gameCtrl = gameCtrl;
+        this.actionPanel = actionPanel;
         structureCtrl = new StructureCtrl(gameState.getAllStructures());
         addPlayerBtn = createButton("Add Player");
         startGameBtn = createButton("Start Game");
@@ -102,10 +104,8 @@ public class MenuPanel extends JPanel implements ActionListener {
         }
         gameState.setRunning(true);
         gameState.setupGame(); // Initialize map, forests, town halls etc.
-
         gamePanel.refresh();// <- update the visual grid
-        gameState.setRunning(true);
-
+        actionPanel.beginFirstTurn();
 
         setEnabled(false); // disable menu panel during game
     }
@@ -180,6 +180,7 @@ public class MenuPanel extends JPanel implements ActionListener {
                 GameState loadedState = gameCtrl.loadGame(saveName, DBName, user, pass);
                 if (loadedState != null) {
                     gameCtrl.setGameState(loadedState);
+                    actionPanel.beginFirstTurn();
                     JOptionPane.showMessageDialog(this, "Game '" + saveName + "' loaded successfully!");
                 } else {
                     JOptionPane.showMessageDialog(this, "Could not find a save named '" + saveName + "'.", "Load Error", JOptionPane.ERROR_MESSAGE);

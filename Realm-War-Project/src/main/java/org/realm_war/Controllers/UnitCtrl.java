@@ -145,6 +145,13 @@ public class UnitCtrl {
             if (x >= 0 && x < gameState.getMapGrid()[0].length && y >= 0 && y < gameState.getMapGrid().length) {
                 Block b = gameState.getMapGrid()[x][y];
                 if (!(b instanceof VoidBlock)){
+                    int oldOwnerID = b.getRealmID();
+                    if (oldOwnerID != 0 && oldOwnerID != ID) {
+                        Realm oldRealm = gameState.getRealmByRealmID(oldOwnerID);
+                        if (oldRealm != null) {
+                            oldRealm.getPossessedBlocks().remove(b);
+                        }
+                    }
                     b.setOwnerID(ID);
                     gameState.getRealms().get(ID - 1001).possessBlock(b, true);
                 }

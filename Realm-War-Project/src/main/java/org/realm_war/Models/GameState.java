@@ -260,7 +260,7 @@ public class GameState {
             if (realm != null && realm.getStructures() != null) {
                 for (Structure structure : realm.getStructures()) {
                     // This will create and start a new timer.
-                    structure.startStructureLoop(realm, this);
+                    structureCtrl.startStructureLoop(this);
                 }
             }
         }

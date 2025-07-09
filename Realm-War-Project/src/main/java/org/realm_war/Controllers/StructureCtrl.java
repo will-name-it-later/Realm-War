@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class StructureCtrl {
     private final List<Structure> structures;
-    private Timer structureTimer;
+    private transient Timer structureTimer;
     private static final int STRUCTURE_INTERVAL_MS = 5000; // 5 seconds
 
     public StructureCtrl(List<Structure> structures) {
@@ -81,9 +81,9 @@ public class StructureCtrl {
     /** Upgrade structure if possible */
     public boolean upgradeStructure(Structure structure, Realm realm) {
         int cost = getUpgradeCost(structure);
-        if (structure.canLevelUp() && realm.getGold() >= cost) {
+        if (structure.canLevelUp(structure) && realm.getGold() >= cost) {
             realm.addGold(-cost);
-            structure.levelUp();
+            structure.levelUp(structure);
             return true;
         }
         return false;
