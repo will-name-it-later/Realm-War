@@ -131,7 +131,7 @@ public class UnitCtrl {
         if (attacker.canAttackUnit(defender)) {
             // Remove defender
             removeUnit(defender);
-            addUnit(attacker);
+            moveUnitToBlock(attacker, targetBlock);
         }
         //else {
         // Optionally: counterattack logic or effects could go here

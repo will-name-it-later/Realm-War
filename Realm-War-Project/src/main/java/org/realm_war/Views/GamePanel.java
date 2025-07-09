@@ -13,6 +13,7 @@ import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class GamePanel extends JPanel {
@@ -26,10 +27,12 @@ public class GamePanel extends JPanel {
     private Position selectedPos;
     private Position targetPos;
     private UnitCtrl unitCtrl;
+    private ActionPanel actionPanel;
 
-    public GamePanel(GameState gameState, InfoPanel infoPanel, UnitCtrl unitCtrl) {
+    public GamePanel(GameState gameState, InfoPanel infoPanel, UnitCtrl unitCtrl, ActionPanel actionPanel) {
         this.gameState = gameState;
         this.infoPanel = infoPanel;
+        this.actionPanel = actionPanel;
         this.unitCtrl = unitCtrl;
         this.rows = Constants.getMapSize();
         this.cols = Constants.getMapSize();
@@ -123,70 +126,64 @@ public class GamePanel extends JPanel {
     }
 
     public void handleBlockClick(int row, int col) {
-       Block clickedBlock = mapGrid[row][col];
-       Position clickedPos = clickedBlock.getPosition();
+        Block clickedBlock = mapGrid[row][col];
+        Position clickedPos = clickedBlock.getPosition();
 
-       if (selectedPos == null) {
-           // First click: select unit
-           Unit selectedUnit = gameState.getUnitAt(clickedPos);
-           if (selectedUnit != null) {
-               if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()){
-                   selectedPos = clickedPos;
-                   unitCtrl.setSelectedUnit(selectedUnit);
-               }else {
-                   JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
-               }
-           }else{
-               selectedPos = clickedPos;
-           }
-       } else {
-           // Second click: select destination
-           targetPos = clickedPos;
-           if (targetPos.getX() == selectedPos.getX() && targetPos.getY() == selectedPos.getY()) {
-               selectedPos = null;
-               unitCtrl.setSelectedUnit(null);
-               return;
-           }
+        if (selectedPos == null) {
+            // First click: select unit
+            Unit selectedUnit = gameState.getUnitAt(clickedPos);
+            if (selectedUnit != null) {
+                if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()) {
+                    selectedPos = clickedPos;
+                    unitCtrl.setSelectedUnit(selectedUnit);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
+                }
+            } else {
+                selectedPos = clickedPos;
+            }
+        } else {
 
-           Block targetBlock = gameState.getBlockAt(targetPos);
-           unitCtrl.setTargetBlock(targetBlock);
+            if (actionPanel.isAttacking()) {
+                try {
+                    Unit attacker = unitCtrl.getSelectedUnit();
+                    Block targetBlock = gameState.getBlockAt(clickedPos);
+                    unitCtrl.attackUnit(attacker, targetBlock);
+                    actionPanel.resetAttacking();
+                    refresh();
+                    return;
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Attack failed: " + ex.getMessage(), "Attack Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                    actionPanel.resetAttacking();
+                    refresh();
+                    return;
+                }
+            }
 
-           // Move the unit
-           try {
-               unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
-               refresh(); // refresh UI after move
-           } catch (Exception e) {
-               JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
-               e.printStackTrace();
-               refresh();
-           }
+            // Second click: select destination
+            targetPos = clickedPos;
+            if (targetPos.getX() == selectedPos.getX() && targetPos.getY() == selectedPos.getY()) {
+                selectedPos = null;
+                unitCtrl.setSelectedUnit(null);
+                return;
+            }
 
-           // Reset selection
-       }
-   }
+            Block targetBlock = gameState.getBlockAt(targetPos);
+            unitCtrl.setTargetBlock(targetBlock);
 
-    public Position getSelectedPosition() {
-        return selectedPos;
-    }
+            // Move the unit
+            try {
+                unitCtrl.moveUnitToBlock(unitCtrl.getSelectedUnit(), targetBlock);
+                refresh(); // refresh UI after move
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
+                e.printStackTrace();
+                refresh();
+            }
 
-    public Position getTargetPosition() {
-        return targetPos;
-    }
-
-    public Realm getSelectedRealm() {
-        return gameState.getCurrentRealm();
-    }
-
-    public int getSelectedRealmID() {
-        return gameState.getCurrentRealm().getID();
-    }
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
+            // Reset selection
+        }
     }
 
     public void updateStructure(Structure s) {
@@ -247,5 +244,33 @@ public class GamePanel extends JPanel {
         ImageIcon icon = new ImageIcon(getClass().getResource(path));
         Image img = icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    public Position getSelectedPosition() {
+        return selectedPos;
+    }
+
+    public Position getTargetPosition() {
+        return targetPos;
+    }
+
+    public Realm getSelectedRealm() {
+        return gameState.getCurrentRealm();
+    }
+
+    public int getSelectedRealmID() {
+        return gameState.getCurrentRealm().getID();
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public void setActionPanel(ActionPanel actionPanel) {
+        this.actionPanel = actionPanel;
     }
 }

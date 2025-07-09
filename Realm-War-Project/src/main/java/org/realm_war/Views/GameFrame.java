@@ -26,8 +26,9 @@ public class GameFrame extends JFrame {
         gameCtrl = new GameCtrl();
         gameCtrl.setGameFrame(this);
         infoPanel = new InfoPanel();
-        gamePanel = new GamePanel(gameState, infoPanel, unitCtrl);
+        gamePanel = new GamePanel(gameState, infoPanel, unitCtrl, actionPanel);
         actionPanel = new ActionPanel(this, gamePanel, unitCtrl);
+        gamePanel.setActionPanel(actionPanel);
         menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl);
 
         guidanceLabel = new JLabel("Please choose an action");
