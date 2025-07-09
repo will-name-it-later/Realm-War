@@ -139,7 +139,9 @@ public class GamePanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
                 }
-            } else {
+            } else if (clickedBlock.getRealmID() != gameState.getCurrentRealm().getID()) {
+                JOptionPane.showMessageDialog(this, "you've selected a different realm than your current realm.");
+            }else {
                 selectedPos = clickedPos;
             }
         } else {
@@ -183,28 +185,6 @@ public class GamePanel extends JPanel {
             }
 
             // Reset selection
-        }
-    }
-
-    public void updateStructure(Structure s) {
-        Position pos = s.getPosition();
-        int x = pos.getX();
-        int y = pos.getY();
-
-        // Update model (game state)
-        Block baseBlock = s.getBaseBlock();
-        gameState.getMapGrid()[x][y] = baseBlock;
-        baseBlock.setStructure(s);
-
-        // Update UI
-        JButton button = btnGrid[x][y];
-        if (button != null) {
-            // Update background color based on block (optional)
-            button.setBackground(baseBlock.getColor());
-
-            // Set appropriate structure icon
-            ImageIcon icon = getIconForButton(s);
-            button.setIcon(icon);
         }
     }
 

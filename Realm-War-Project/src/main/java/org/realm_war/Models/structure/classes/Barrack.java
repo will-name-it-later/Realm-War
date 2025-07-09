@@ -24,13 +24,13 @@ public class Barrack extends Structure{
     }
 
     @Override
-    public boolean canLevelUp() {
-        return (getMaxLevel() > getLevel());
+    public boolean canLevelUp(Structure structure) {
+        return getMaxLevel() > getLevel() && structure instanceof Barrack;
     }
 
     @Override
-    public void levelUp() {
-        if (!canLevelUp()){
+    public void levelUp(Structure structure) {
+        if (!canLevelUp(structure)){
             throw new IllegalStateException("Barrack is already at max Level");
         }
         setLevel(getLevel()+1);

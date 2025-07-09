@@ -19,13 +19,13 @@ public class Farm extends Structure {
     }
 
     @Override
-    public boolean canLevelUp() {
-        return getLevel() < getMaxLevel();
+    public boolean canLevelUp(Structure structure) {
+        return getLevel() < getMaxLevel() && structure instanceof Farm;
     }
 
     @Override
-    public void levelUp() {
-        if (!canLevelUp()) {
+    public void levelUp(Structure structure) {
+        if (!canLevelUp(structure)) {
             throw new IllegalStateException("Farm is already at max level");
         }
         

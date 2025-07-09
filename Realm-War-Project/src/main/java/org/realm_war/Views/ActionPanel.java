@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import com.sun.nio.sctp.IllegalReceiveException;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
@@ -17,6 +18,7 @@ import java.net.URL;
 
 public class ActionPanel extends JPanel implements ActionListener {
     private GameFrame frame;
+    private InfoPanel infoPanel;
     private GameState gameState;
     private GamePanel gamePanel;
     private UnitCtrl unitCtrl;
@@ -29,11 +31,12 @@ public class ActionPanel extends JPanel implements ActionListener {
     private Timer autoTurnTimer;
     private final int TIMEOUT = 30_000; // 30 seconds
 
-    public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl) {
+    public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl, InfoPanel infoPanel) {
         this.frame = frame;
         this.gamePanel = gamePanel;
         this.gameState = gamePanel.getGameState();
         this.unitCtrl = unitCtrl;
+        this.infoPanel = infoPanel;
         nextTurnBtn = createMainButton("next");
         recruitBtn = createMainButton("recruit");
         buildBtn = createMainButton("build");
@@ -170,28 +173,27 @@ public class ActionPanel extends JPanel implements ActionListener {
     }
 
 
-    public void updateUnit(Unit u) {
+    public void updateUnit(Unit u) throws IllegalArgumentException {
         Position pos = u.getPosition();
         Realm currentRealm = gameState.getCurrentRealm();
         Block targetBlock = gameState.getBlockAt(pos);
 
         if (u.getRealmID() != targetBlock.getRealmID()) {
-            JOptionPane.showMessageDialog(frame, "You can only place units in your own territory!", "Error", JOptionPane.ERROR_MESSAGE);
             gamePanel.refresh();
-            return;
+            throw new IllegalArgumentException("You can only place units in your own territory!");
         }
         if (currentRealm.getGold() < u.getPayment()) {
-            JOptionPane.showMessageDialog(this, "You don't have enough gold to recruit this unit.", "Error", JOptionPane.ERROR_MESSAGE);
             gamePanel.refresh();
-            return;
+            throw new IllegalArgumentException("You don't have enough gold to recruit this unit.");
         }
         if (targetBlock.hasUnit() && !targetBlock.getUnit().canMerge(u)) {
-            JOptionPane.showMessageDialog(this, "Block is occupied and units cannot be merged.", "Error", JOptionPane.ERROR_MESSAGE);
             gamePanel.refresh();
-            return;
+            throw new IllegalArgumentException("Block is occupied and units cannot be merged.");
         }
         try {
-            currentRealm.addGold(-u.getPayment()); // Deduct the gold cost first
+            // Deduct the gold cost & ration first
+            currentRealm.addGold(-u.getPayment());
+            currentRealm.addFood(-u.getRation());
             if (targetBlock.getUnit() == null) {
                 currentRealm.addUnit(u);
                 targetBlock.setUnit(u);
@@ -204,17 +206,45 @@ public class ActionPanel extends JPanel implements ActionListener {
                 targetBlock.setUnit(mergedUnit);
             }
             gamePanel.refresh();
-
         } catch (IllegalArgumentException e) {
             // Refunding the gold if unit can't place.
             currentRealm.addGold(u.getPayment());
+            currentRealm.addFood(u.getRation());
             JOptionPane.showMessageDialog(this, e.getMessage(), "Recruitment Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    public void updateStructure(Structure s) throws IllegalArgumentException {
+        Position pos = s.getPosition();
+        Realm currentRealm = gameState.getCurrentRealm();
+        Block targetBlock = gameState.getBlockAt(pos);
 
-    public void updateStructure(Structure structure){
-        //todo
+        if (s.getKingdomId() != targetBlock.getRealmID()) {
+            gamePanel.refresh();
+            throw new IllegalArgumentException("You can only place units in your own territory!");
+        }
+        if (currentRealm.getGold() < s.getMaintenanceCost()) {
+            gamePanel.refresh();
+            throw new IllegalArgumentException("You don't have enough gold to Build this structure.");
+        }
+        if(targetBlock.hasStructure() && !targetBlock.getStructure().canLevelUp(s)) {
+            gamePanel.refresh();
+            throw new IllegalArgumentException("this Structure can not be upgraded because it's at max level or structures are different!");
+        }
+
+        try{
+            currentRealm.addGold(-s.getMaintenanceCost());
+            if (targetBlock.getStructure() == null) {
+                currentRealm.addStructure(s);
+                targetBlock.setStructure(s);
+            }else{
+                targetBlock.getStructure().levelUp(s);
+                JOptionPane.showMessageDialog(frame, "Structure level up successful. Now this structure is at level " + targetBlock.getStructure().getLevel());
+            }
+            gamePanel.refresh();
+        }catch(IllegalArgumentException e){
+            currentRealm.addGold(s.getMaintenanceCost());
+        }
     }
 
     @Override
@@ -227,7 +257,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                     JPanel panel = createRecruitPanel();
                     frame.updateSidePanel(panel);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "build" -> {
@@ -235,7 +265,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                     JPanel panel = createBuildPanel();
                     frame.updateSidePanel(panel);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "peasant" -> {
@@ -243,8 +273,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     updateUnit(new Peasant(pos, ID));
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "spearman" -> {
@@ -252,8 +282,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     updateUnit(new Spearman(pos, ID));
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
 
             }
@@ -262,8 +292,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     updateUnit(new Swordsman(pos, ID));
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "knight" -> {
@@ -271,68 +301,52 @@ public class ActionPanel extends JPanel implements ActionListener {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
                     updateUnit(new Knight(pos, ID));
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "farm" -> {
                 try {
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
-                    Block block = gameState.getBlockAt(pos);
-                    Farm farm = new Farm(pos, block, ID);
-                    Realm realm = gameState.getRealmByRealmID(ID);
-                    realm.addStructure(farm); // This should start the timer internally
-                    gamePanel.updateStructure(farm);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "Error", JOptionPane.WARNING_MESSAGE);
+                    updateStructure(new Farm(pos, gameState.getBlockAt(pos), ID));
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "barrack" -> {
                 try{
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
-                    Block block = gameState.getBlockAt(pos);
-                    Barrack barrack = new Barrack(pos, block, ID);
-                    Realm realm = gameState.getRealmByRealmID(ID);
-                    realm.addStructure(barrack);
-                    gamePanel.updateStructure(barrack);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    updateStructure(new Barrack(pos, gameState.getBlockAt(pos), ID));
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "tower" -> {
                 try{
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
-                    Block block = gameState.getBlockAt(pos);
-                    Tower tower = new Tower(pos, block, ID);
-                    Realm realm = gameState.getRealmByRealmID(ID);
-                    realm.addStructure(tower);
-                    gamePanel.updateStructure(tower);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    updateStructure(new Tower(pos, gameState.getBlockAt(pos), ID));
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "market" -> {
                 try{
                     Position pos = gamePanel.getSelectedPosition();
                     int ID = gamePanel.getSelectedRealmID();
-                    Block block = gameState.getBlockAt(pos);
-                    Market market = new Market(pos, block, ID);
-                    Realm realm = gameState.getRealmByRealmID(ID);
-                    realm.addStructure(market);
-                    gamePanel.updateStructure(market);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Choose a block", "error", JOptionPane.WARNING_MESSAGE);
+                    updateStructure(new Market(pos, gameState.getBlockAt(pos), ID));
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "attack" -> {
                 if (unitCtrl.getSelectedUnit() == null) {
-                    JOptionPane.showMessageDialog(this, "Select a unit first.", "No Unit Selected", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Select a unit first.", "No Unit Selected", JOptionPane.WARNING_MESSAGE);
                 } else {
                     isAttacking = true;
-                    JOptionPane.showMessageDialog(this, "Select a target to attack.", "Attack Mode", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Select a target to attack.", "Attack Mode", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         }
