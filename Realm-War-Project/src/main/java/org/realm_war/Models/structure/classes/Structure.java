@@ -18,7 +18,7 @@ public abstract class Structure {
     private transient Block baseBlock;
     private int kingdomId;
 
-    protected Timer actionTimer;
+    protected transient Timer actionTimer;
     protected boolean destroyed = false;
 
 

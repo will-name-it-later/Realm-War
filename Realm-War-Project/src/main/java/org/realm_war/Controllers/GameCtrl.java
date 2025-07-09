@@ -142,6 +142,7 @@ public class GameCtrl {
                 String gameStateJson = rs.getString("game_state_json");
                 GameState loadedState = gson.fromJson(gameStateJson, GameState.class);
                 rehydrateGameState(loadedState);
+                loadedState.restartAllStructureTimers();
 
                 GameLogger.logAction(1000, "LOAD", details);
                 return loadedState;

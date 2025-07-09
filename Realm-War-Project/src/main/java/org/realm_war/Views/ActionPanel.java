@@ -24,6 +24,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton recruitBtn;
     private JButton buildBtn;
     private JButton attackBtn;
+    private boolean isAttacking = false;
 
     private Timer autoTurnTimer;
     private final int TIMEOUT = 30_000; // 30 seconds
@@ -327,7 +328,12 @@ public class ActionPanel extends JPanel implements ActionListener {
                 }
             }
             case "attack" -> {
-                //Position pos = gamePanel.getSelectedPosition();
+                if (unitCtrl.getSelectedUnit() == null) {
+                    JOptionPane.showMessageDialog(this, "Select a unit first.", "No Unit Selected", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    isAttacking = true;
+                    JOptionPane.showMessageDialog(this, "Select a target to attack.", "Attack Mode", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         }
     }
@@ -337,6 +343,14 @@ public class ActionPanel extends JPanel implements ActionListener {
         if (this.unitCtrl != null) {
             this.unitCtrl.setGameState(gameState);
         }
+    }
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    public void resetAttacking() {
+        this.isAttacking = false;
     }
 }
 

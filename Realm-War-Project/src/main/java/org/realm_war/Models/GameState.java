@@ -252,6 +252,17 @@ public class GameState {
         }
     }
 
+    public void restartAllStructureTimers() {
+        for (Realm realm : this.realms) {
+            if (realm != null && realm.getStructures() != null) {
+                for (Structure structure : realm.getStructures()) {
+                    // This will create and start a new timer.
+                    structure.startStructureLoop(realm, this);
+                }
+            }
+        }
+    }
+
     public Block[][] getMapGrid() {
         return this.mapGrid;
     }
