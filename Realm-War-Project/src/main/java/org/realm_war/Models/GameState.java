@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
 import org.realm_war.Models.blocks.ForestBlock;
@@ -25,6 +26,7 @@ public class GameState {
     private boolean running;
     private boolean isGameOver;
     private int gridSize = Constants.getMapSize();
+    private StructureCtrl structureCtrl = new StructureCtrl(getAllStructures());
     private Block[][] mapGrid = new Block[gridSize][gridSize];
     private Unit selectedUnit;
     private Block targetBlock;
@@ -201,6 +203,7 @@ public class GameState {
 
         // Place two Town Halls (one per realm)
         initializeTownHalls();
+        structureCtrl.startStructureLoop(this);
 
         // Set current player and turn info
         currentTurn = 0;
