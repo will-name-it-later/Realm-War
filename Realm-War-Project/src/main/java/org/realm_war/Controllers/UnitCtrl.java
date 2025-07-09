@@ -107,6 +107,9 @@ public class UnitCtrl {
 
     public void attackUnit(Unit attacker, Block targetBlock) {
         Unit target = targetBlock.getUnit();
+        String attackerUnitType = attacker.getClass().getSimpleName();
+        String defenderUnitType = target.getClass().getSimpleName();
+        String details = String.format("%s attacked to %s.", attackerUnitType, defenderUnitType);
         // Validate input
         if (attacker == null || target == null) {
             throw new IllegalArgumentException("Invalid attacker or target.");
@@ -129,6 +132,8 @@ public class UnitCtrl {
             // Remove defender
             removeUnit(target);
             moveUnitToBlock(attacker, targetBlock);
+
+            GameLogger.logAction(attacker.getRealmID(), "ATTACK", details);
         }else{
             throw new IllegalArgumentException("your unit isn't vicious enough to attack this target.");
         }
