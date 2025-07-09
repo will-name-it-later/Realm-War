@@ -5,7 +5,6 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
-import org.realm_war.Models.units.Peasant;
 
 public class Market extends Structure {
     private int goldProduction;

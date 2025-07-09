@@ -161,7 +161,6 @@ public class GameState {
             TownHall townHall = new TownHall(10, 5, 5, 100, 2, townHallPos, mapGrid[townHallPos.getX()][townHallPos.getY()], realm.getID());
             realm.setTownHall(townHall);
             realm.getStructures().add(townHall);
-            townHall.startStructureLoop(realm, this);
 
             // Iterate through all 6 blocks in the zone to set them up.
             for (int j = 0; j < playerZone.length; j++) {

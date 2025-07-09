@@ -81,7 +81,6 @@ public class Realm {
         if (canBuildStructure(s)) {
             structures.add(s);
             gold -= s.getMaintenanceCost();
-            s.startStructureLoop(this, gameState); // 👈 Start timer here
         } else {
             throw new IllegalArgumentException("Can't build structure here!");
         }

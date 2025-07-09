@@ -1,6 +1,7 @@
 package org.realm_war.Views;
 
 import org.realm_war.Controllers.GameCtrl;
+import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Player;
 import org.realm_war.Utilities.Constants;
@@ -16,6 +17,7 @@ public class MenuPanel extends JPanel implements ActionListener {
     GameState gameState;
     GamePanel gamePanel;
     GameCtrl gameCtrl;
+    StructureCtrl structureCtrl;
     JButton addPlayerBtn;
     JButton startGameBtn;
     JButton exitGameBtn;
@@ -27,6 +29,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         this.gameState = gameState;
         this.gamePanel = gamePanel;
         this.gameCtrl = gameCtrl;
+        structureCtrl = new StructureCtrl(gameState.getAllStructures());
         addPlayerBtn = createButton("Add Player");
         startGameBtn = createButton("Start Game");
         startGameBtn.setEnabled(false); // disabled until two players added
@@ -99,6 +102,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         }
         gameState.setRunning(true);
         gameState.setupGame(); // Initialize map, forests, town halls etc.
+        structureCtrl.startStructureLoop(gameState);
 
         gamePanel.refresh();// <- update the visual grid
         gameState.setRunning(true);
