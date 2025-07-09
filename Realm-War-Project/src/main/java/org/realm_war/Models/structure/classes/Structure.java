@@ -32,8 +32,8 @@ public abstract class Structure {
         this.kingdomId = kingdomId;
     }
 
-    public abstract boolean canLevelUp();
-    public abstract void levelUp();
+    public abstract boolean canLevelUp(Structure s);
+    public abstract void levelUp(Structure s);
     public abstract void performTurnAction(Realm realm, GameState gameState);
 
     public void startStructureLoop(Realm realm, GameState gameState) {

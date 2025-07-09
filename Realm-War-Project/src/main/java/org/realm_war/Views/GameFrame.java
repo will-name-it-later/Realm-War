@@ -27,7 +27,7 @@ public class GameFrame extends JFrame {
         gameCtrl.setGameFrame(this);
         infoPanel = new InfoPanel();
         gamePanel = new GamePanel(gameState, infoPanel, unitCtrl, actionPanel);
-        actionPanel = new ActionPanel(this, gamePanel, unitCtrl);
+        actionPanel = new ActionPanel(this, gamePanel, unitCtrl, infoPanel);
         gamePanel.setActionPanel(actionPanel);
         menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl);
 

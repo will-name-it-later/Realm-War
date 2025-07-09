@@ -7,6 +7,7 @@ import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
+import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.GameLogger;
 
@@ -105,37 +106,32 @@ public class UnitCtrl {
     }
 
     public void attackUnit(Unit attacker, Block targetBlock) {
+        Unit target = targetBlock.getUnit();
         // Validate input
-        if (attacker == null || targetBlock == null || targetBlock.getUnit() == null) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "invalid attack or target.", "Attacker or target", JOptionPane.ERROR_MESSAGE);
+        if (attacker == null || target == null) {
             throw new IllegalArgumentException("Invalid attacker or target.");
         }
 
-        Unit defender = targetBlock.getUnit();
-
         // Check for friendly fire
-        if (attacker.getRealmID() == defender.getRealmID()) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Cannot attack your own unit!", "Attacker or target", JOptionPane.ERROR_MESSAGE);
+        if (attacker.getRealmID() == target.getRealmID()) {
             throw new IllegalArgumentException("Cannot attack your own unit.");
         }
 
         // Check attack range
-        if (attacker.getPosition().distanceTo(defender.getPosition()) > attacker.getAttackRange()) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Target is out of attack range", "Attacker or target", JOptionPane.ERROR_MESSAGE);
+        if (attacker.getPosition().distanceTo(target.getPosition()) > attacker.getAttackRange()) {
             throw new IllegalArgumentException("Target is out of attack range.");
         }
 
         // Perform attack
 
         // Check if defender is defeated
-        if (attacker.canAttackUnit(defender)) {
+        if (attacker.canAttackUnit(target)) {
             // Remove defender
-            removeUnit(defender);
+            removeUnit(target);
             moveUnitToBlock(attacker, targetBlock);
+        }else{
+            throw new IllegalArgumentException("your unit isn't vicious enough to attack this target.");
         }
-        //else {
-        // Optionally: counterattack logic or effects could go here
-        //}
     }
 
     public void claimBlocks(Position start, Position end, int ID) {
