@@ -9,6 +9,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
+import org.realm_war.Utilities.GameLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,12 +155,18 @@ public class ActionPanel extends JPanel implements ActionListener {
         if (gameState.isGameOver()) {
             gameState.setRunning(false);
             // todo : update the info label to indicate that game is over
-            if (autoTurnTimer != null) autoTurnTimer.stop(); // stop timer if game over
-        } else {
-            gameState.nextTurn();
-            gamePanel.refresh();
-            startTurnTimer(); // reset the timer after each turn
+            if (autoTurnTimer != null) autoTurnTimer.stop();// stop timer if game over
+            return;
         }
+        String playerName = gameState.getCurrentPlayer().getName();
+        int turnNumber = gameState.getTurnNumber();
+        String details = String.format("Player %s turn %d ended.", playerName, turnNumber);
+
+        GameLogger.logAction(gameState.getCurrentRealm().getID(), "END_TURN", details);
+
+        gameState.nextTurn();
+        gamePanel.refresh();
+        startTurnTimer(); // reset the timer after each turn
     }
 
     private void startTurnTimer() {
