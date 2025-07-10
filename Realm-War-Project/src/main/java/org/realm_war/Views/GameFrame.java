@@ -1,6 +1,7 @@
 package org.realm_war.Views;
 
 import org.realm_war.Controllers.GameCtrl;
+import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Utilities.Constants;

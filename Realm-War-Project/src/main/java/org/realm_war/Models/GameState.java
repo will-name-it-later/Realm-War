@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.google.gson.annotations.Expose;
 import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
@@ -212,27 +213,6 @@ public class GameState {
         turns = 1;
     }
 
-    public void updateMap(List<Realm> realms) {
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                this.mapGrid[i][j] = new EmptyBlock(new Position(i, j));
-            }
-        }
-        for (Realm realm : realms) {
-            List<Structure> structures = realm.getStructures();
-            List<Unit> units = realm.getUnits();
-
-            for (Structure s : structures) {
-                Position pos = s.getPosition();
-                this.mapGrid[pos.getX()][pos.getY()] = s.getBaseBlock();
-            }
-            for (Unit u : units) {
-                Position pos = u.getPosition();
-                this.mapGrid[pos.getX()][pos.getY()].setUnit(u);
-            }
-        }
-    }
-
     //Call this after initializing the grid
     public void blockPlacer() {
         Random rand = new Random();
@@ -325,6 +305,10 @@ public class GameState {
         return all;
     }
 
+    public StructureCtrl getStructureCtrl() {
+        return structureCtrl;
+    }
+
 
     public Unit getUnitAt(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getUnit();
@@ -362,6 +346,10 @@ public class GameState {
 
     public boolean isOccupied(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
+    }
+
+    public StructureCtrl getStructureCtrl() {
+        return structureCtrl;
     }
 
 }

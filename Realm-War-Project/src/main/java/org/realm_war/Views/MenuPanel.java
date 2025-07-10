@@ -111,42 +111,45 @@ public class MenuPanel extends JPanel implements ActionListener {
     }
 
     public void saveGame() {
-        JTextField DBNameField = new JTextField();
-        JTextField userField = new JTextField();
-        JPasswordField passField = new JPasswordField();
-        JTextField saveNameField = new JTextField();
+        actionPanel.pauseAutoTurnTimer();
+        gameState.getStructureCtrl().stopStructureLoop();
+        try {
+            JTextField DBNameField = new JTextField();
+            JTextField userField = new JTextField();
+            JPasswordField passField = new JPasswordField();
+            JTextField saveNameField = new JTextField();
 
-        JPanel savePanel = new JPanel(new GridLayout(0, 2, 5, 5));
-        savePanel.add(new JLabel("Database Name:"));
-        savePanel.add(DBNameField);
-        savePanel.add(new JLabel("Username:"));
-        savePanel.add(userField);
-        savePanel.add(new JLabel("Password:"));
-        savePanel.add(passField);
-        savePanel.add(new JLabel("Save Name:"));
-        savePanel.add(saveNameField);
+            JPanel savePanel = new JPanel(new GridLayout(0, 2, 5, 5));
+            savePanel.add(new JLabel("Database Name:"));
+            savePanel.add(DBNameField);
+            savePanel.add(new JLabel("Username:"));
+            savePanel.add(userField);
+            savePanel.add(new JLabel("Password:"));
+            savePanel.add(passField);
+            savePanel.add(new JLabel("Save Name:"));
+            savePanel.add(saveNameField);
 
-        int result = JOptionPane.showConfirmDialog(null, savePanel, "Save Game", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            String saveName = saveNameField.getText();
-            String DBName = DBNameField.getText();
-            String user = userField.getText();
-            String pass = new String(passField.getPassword());
+            int result = JOptionPane.showConfirmDialog(null, savePanel, "Save Game", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+                String saveName = saveNameField.getText();
+                String DBName = DBNameField.getText();
+                String user = userField.getText();
+                String pass = new String(passField.getPassword());
 
-            if (saveName == null || saveName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                if (saveName == null || saveName.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                try {
+                    gameCtrl.saveGame(saveName, gameState, DBName, user, pass);
+                    JOptionPane.showMessageDialog(this, "Game " + saveName + " Saved successfully.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error saving game:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            try {
-                gameCtrl.saveGame(saveName, gameState, DBName, user, pass);
-                JOptionPane.showMessageDialog(this, "Game " + saveName + " Saved successfully.");
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error saving game:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        else {
-            JOptionPane.showMessageDialog(null, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-            saveGame();
+        } finally {
+            actionPanel.resumeAutoTurnTimer();
+            gameState.getStructureCtrl().startStructureLoop(gameState);
         }
     }
 

@@ -2,6 +2,7 @@ package org.realm_war.Controllers;
 
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Realm;
+import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.structure.classes.Structure;
 
 import java.util.List;
@@ -10,7 +11,10 @@ import java.util.TimerTask;
 
 public class StructureCtrl {
     private final List<Structure> structures;
+    private GameState gameState;
     private transient Timer structureTimer;
+    private Structure selectedStructure;
+    private Block selectedBlock;
     private static final int STRUCTURE_INTERVAL_MS = 5000; // 5 seconds
 
     public StructureCtrl(List<Structure> structures) {
@@ -19,6 +23,9 @@ public class StructureCtrl {
 
     /** Starts the async structure production and maintenance loop */
     public void startStructureLoop(GameState gameState) {
+        if (structureTimer != null) {
+            structureTimer.cancel();
+        }
         structureTimer = new Timer(true); // Daemon thread, won't block exit
 
         structureTimer.scheduleAtFixedRate(new TimerTask() {
@@ -75,6 +82,7 @@ public class StructureCtrl {
     public void stopStructureLoop() {
         if (structureTimer != null) {
             structureTimer.cancel();
+            structureTimer = null;
         }
     }
 
@@ -107,9 +115,29 @@ public class StructureCtrl {
     /** Remove a structure from the global list */
     public void removeStructure(Structure structure) {
         structures.remove(structure);
+        gameState.getRealmByRealmID(structure.getKingdomId()).removeStructure(structure);
+        gameState.getBlockAt(structure.getPosition()).setOwnerID(0);
+        gameState.getBlockAt(structure.getPosition()).setStructure(null);
+        gameState.getBlockAt(structure.getPosition()).setOwnerID(structure.getKingdomId());
     }
 
     public List<Structure> getStructures() {
         return structures;
+    }
+
+    public void setSelectedStructure(Structure structure) {
+        this.selectedStructure = structure;
+    }
+
+    public Structure getSelectedStructure() {
+        return selectedStructure;
+    }
+
+    public void setSelectedBlock(Block block) {
+        this.selectedBlock = block;
+    }
+
+    public Block getSelectedBlock() {
+        return selectedBlock;
     }
 }

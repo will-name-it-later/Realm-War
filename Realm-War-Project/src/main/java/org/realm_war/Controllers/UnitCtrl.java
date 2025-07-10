@@ -5,9 +5,10 @@ import org.realm_war.Models.Player;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
-import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
 import org.realm_war.Models.structure.classes.Structure;
+import org.realm_war.Models.structure.classes.Tower;
+import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.GameLogger;
 
@@ -52,10 +53,12 @@ public class UnitCtrl {
 
     public void removeUnit(Unit unit) {
         units.remove(unit);
-        gameState.getRealms().get(unit.getRealmID() - 1001).removeUnit(unit);
+        gameState.getRealmByRealmID(unit.getRealmID()).removeUnit(unit);
         gameState.getBlockAt(unit.getPosition()).setOwnerID(0);
         gameState.getBlockAt(unit.getPosition()).setUnit(null);
         gameState.getBlockAt(unit.getPosition()).setOwnerID(unit.getRealmID());
+        //update everything
+        gameState.getRealmByRealmID(unit.getRealmID()).updateResources(gameState);
     }
 
     public boolean isPlayerTurn(Player player) {
@@ -105,37 +108,66 @@ public class UnitCtrl {
         }
     }
 
-    public void attackUnit(Unit attacker, Block targetBlock) {
-        Unit target = targetBlock.getUnit();
-        String attackerUnitType = attacker.getClass().getSimpleName();
-        String defenderUnitType = target.getClass().getSimpleName();
-        String details = String.format("%s attacked to %s.", attackerUnitType, defenderUnitType);
-        // Validate input
-        if (attacker == null || target == null) {
-            throw new IllegalArgumentException("Invalid attacker or target.");
+    public void attack(Block attackerBlock, Block targetBlock) {
+        Unit attackerUnit, targetUnit;
+        Structure attackerStructure, targetStructure;
+        String attackerType = attackerBlock.hasUnit() ? attackerBlock.getUnit().getClass().getSimpleName() : attackerBlock.hasStructure() ? attackerBlock.getStructure().getClass().getSimpleName() : "";
+        String defenderType = targetBlock.hasUnit() ? targetBlock.getUnit().getClass().getSimpleName() : targetBlock.hasStructure() ? targetBlock.getStructure().getClass().getSimpleName() : "";
+
+        //check if player is attempting an attack in their own territory
+        if (attackerBlock.getRealmID() == targetBlock.getRealmID()) {
+            throw new IllegalArgumentException("You can't attempt an attack in your own territory!");
         }
 
-        // Check for friendly fire
-        if (attacker.getRealmID() == target.getRealmID()) {
-            throw new IllegalArgumentException("Cannot attack your own unit.");
-        }
-
-        // Check attack range
-        if (attacker.getPosition().distanceTo(target.getPosition()) > attacker.getAttackRange()) {
-            throw new IllegalArgumentException("Target is out of attack range.");
-        }
-
-        // Perform attack
-
-        // Check if defender is defeated
-        if (attacker.canAttackUnit(target)) {
-            // Remove defender
-            removeUnit(target);
-            moveUnitToBlock(attacker, targetBlock);
-
-            GameLogger.logAction(attacker.getRealmID(), "ATTACK", details);
-        }else{
-            throw new IllegalArgumentException("your unit isn't vicious enough to attack this target.");
+        if (attackerBlock.hasUnit()) {
+            attackerUnit = attackerBlock.getUnit();
+            if (targetBlock.hasUnit()){
+                targetUnit = targetBlock.getUnit();
+                if (attackerUnit.canAttackUnit(targetUnit)) {
+                    removeUnit(targetUnit);
+                    moveUnitToBlock(attackerUnit, targetBlock);
+                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                }else if (attackerUnit.getPosition().distanceTo(targetBlock.getPosition()) > attackerUnit.getMovementRange()) {
+                    throw new IllegalArgumentException("Target is out of attack range!");
+                }else{
+                    throw new IllegalArgumentException("Your unit isn't vicious enough to attack this target!");
+                }
+            }else if (targetBlock.hasStructure()) {
+                targetStructure = targetBlock.getStructure();
+                if (attackerUnit.getPosition().distanceTo(targetStructure.getPosition()) <= attackerUnit.getMovementRange()) {
+                    targetStructure.setDurability(targetStructure.getDurability() - attackerUnit.getAttackPower());
+                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                    //todo : add a logger
+                    if (targetStructure.isDestroyed()){
+                        gameState.getStructureCtrl().removeStructure(targetStructure);
+                        moveUnitToBlock(attackerUnit, targetBlock);
+                    }
+                }else {
+                    throw new IllegalArgumentException("Target is out of attack range!");
+                }
+            }else {
+                throw new IllegalArgumentException("nothing to attack!");
+            }
+        }else if (attackerBlock.hasStructure()) {
+            attackerStructure = attackerBlock.getStructure();
+            if (attackerStructure.getPosition().distanceTo(targetBlock.getPosition()) <= 3){
+                if (targetBlock.hasUnit()) {
+                    targetUnit = targetBlock.getUnit();
+                    attackerStructure.performTurnAction(gameState.getCurrentRealm(), gameState);
+                    targetUnit.takeDamage((int)(0.5 * ((Tower)attackerStructure).getAttackPower()));
+                    Realm targetRealm  = gameState.getRealmByRealmID(targetBlock.getRealmID());
+                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                    for (Unit u : targetRealm.getUnits()){
+                        if (u.isDead()) removeUnit(u);
+                    }
+                }else if (targetBlock.hasStructure()){
+                    throw new IllegalArgumentException("you can't attack a structure by a structure!");
+                }else throw new IllegalArgumentException("nothing to attack!");
+            }else {
+                throw new IllegalArgumentException("Targets are out of range!");
+            }
+        }else {
+            throw new IllegalArgumentException("please choose a unit or a tower!");
         }
     }
 
