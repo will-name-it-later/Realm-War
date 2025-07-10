@@ -2,6 +2,7 @@ package org.realm_war.Models.structure.classes;
 
 import java.util.List;
 
+import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
@@ -12,7 +13,7 @@ public class Tower extends Structure {
     private int attackRange = 3;
     private int attackPower;
 
-    private static final int[] ATTACK_POWER_BY_LEVEL = {10, 15, 20};
+    private static final int[] ATTACK_POWER_BY_LEVEL = {55, 58, 60};
     private static final int[] BUILDING_COST_BY_LEVEL = {10, 20, 30};
     private static final int[] DURABILITY_BY_LEVEL = {100, 150, 200};
     
@@ -37,7 +38,6 @@ public class Tower extends Structure {
         setDurability(DURABILITY_BY_LEVEL[getLevel() - 1]);
         this.attackPower = ATTACK_POWER_BY_LEVEL[getLevel() - 1];
     }
-
     @Override
     public void performTurnAction(Realm realm, GameState gameState) {
         List<Unit> allUnits = gameState.getAllUnits();

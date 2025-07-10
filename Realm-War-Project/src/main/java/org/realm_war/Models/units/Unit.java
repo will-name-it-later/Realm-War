@@ -44,6 +44,10 @@ public abstract class Unit {
         return HIT_POINT;
     }
 
+    public boolean isDead(){
+        return HIT_POINT <= 0;
+    }
+
     public int getMovementRange() {
         return MOVEMENT_RANGE;
     }
@@ -101,6 +105,6 @@ public abstract class Unit {
     public abstract Unit merge(Unit otherUnit);
 
     public boolean canAttackUnit(Unit unit){
-        return HIT_POINT > unit.getHitPoint();
+        return HIT_POINT > unit.getHitPoint() && position.distanceTo(unit.getPosition()) <= ATTACK_RANGE;
     };
 }

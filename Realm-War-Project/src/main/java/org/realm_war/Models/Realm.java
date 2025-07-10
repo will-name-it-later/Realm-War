@@ -81,9 +81,15 @@ public class Realm {
         if (canBuildStructure(s)) {
             structures.add(s);
             gold -= s.getMaintenanceCost();
+            allUnitSpace--;
         } else {
             throw new IllegalArgumentException("Can't build structure here!");
         }
+    }
+
+    public void removeStructure(Structure s){
+        structures.remove(s);
+        allUnitSpace++;
     }
 
     public void addUnit(Unit u){
@@ -162,11 +168,11 @@ public class Realm {
     }
 
     public int getUsedUnitSpace() {
-        return usedUnitSpace;
+        return getAllUnitSpace() - units.size();
     }
 
     public int getAllUnitSpace() {
-        return allUnitSpace;
+        return possessedBlocks.size() - structures.size();
     }
 
     public List<Block> getPossessedBlocks() {

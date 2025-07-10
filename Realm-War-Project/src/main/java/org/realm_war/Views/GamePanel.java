@@ -1,5 +1,6 @@
 package org.realm_war.Views;
 
+import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
@@ -7,13 +8,12 @@ import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.ForestBlock;
 import org.realm_war.Models.blocks.VoidBlock;
-import org.realm_war.Models.structure.classes.*;
+import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class GamePanel extends JPanel {
@@ -132,6 +132,7 @@ public class GamePanel extends JPanel {
         if (selectedPos == null) {
             // First click: select unit
             Unit selectedUnit = gameState.getUnitAt(clickedPos);
+            Structure selectedStructure = gameState.getStructureAt(clickedPos);
             if (selectedUnit != null) {
                 if (selectedUnit.getRealmID() == gameState.getCurrentRealm().getID()) {
                     selectedPos = clickedPos;
@@ -139,7 +140,13 @@ public class GamePanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(this, "Please select a valid unit you own.");
                 }
-            } else if (clickedBlock.getRealmID() != gameState.getCurrentRealm().getID()) {
+            }else if (selectedStructure != null) {
+                if (selectedStructure.getKingdomId() == gameState.getCurrentRealm().getID()) {
+                    selectedPos = clickedPos;
+                }
+            }
+
+            else if (clickedBlock.getRealmID() != gameState.getCurrentRealm().getID()) {
                 JOptionPane.showMessageDialog(this, "you've selected a different realm than your current realm.");
             }else {
                 selectedPos = clickedPos;
@@ -148,15 +155,14 @@ public class GamePanel extends JPanel {
 
             if (actionPanel.isAttacking()) {
                 try {
-                    Unit attacker = unitCtrl.getSelectedUnit();
+                    Block attackerBlock = gameState.getBlockAt(selectedPos);
                     Block targetBlock = gameState.getBlockAt(clickedPos);
-                    unitCtrl.attackUnit(attacker, targetBlock);
+                    unitCtrl.attack(attackerBlock, targetBlock);
                     actionPanel.resetAttacking();
                     refresh();
                     return;
-                } catch (Exception ex) {
+                } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(this, "Attack failed: " + ex.getMessage(), "Attack Error", JOptionPane.ERROR_MESSAGE);
-                    ex.printStackTrace();
                     actionPanel.resetAttacking();
                     refresh();
                     return;
@@ -180,7 +186,6 @@ public class GamePanel extends JPanel {
                 refresh(); // refresh UI after move
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Failed to move unit: " + e.getMessage());
-                e.printStackTrace();
                 refresh();
             }
 

@@ -382,12 +382,8 @@ public class ActionPanel extends JPanel implements ActionListener {
                 }
             }
             case "attack" -> {
-                if (unitCtrl.getSelectedUnit() == null) {
-                    JOptionPane.showMessageDialog(frame, "Select a unit first.", "No Unit Selected", JOptionPane.WARNING_MESSAGE);
-                } else {
                     isAttacking = true;
                     JOptionPane.showMessageDialog(frame, "Select a target to attack.", "Attack Mode", JOptionPane.INFORMATION_MESSAGE);
-                }
             }
         }
     }
