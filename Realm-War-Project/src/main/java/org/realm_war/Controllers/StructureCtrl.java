@@ -19,6 +19,9 @@ public class StructureCtrl {
 
     /** Starts the async structure production and maintenance loop */
     public void startStructureLoop(GameState gameState) {
+        if (structureTimer != null) {
+            structureTimer.cancel();
+        }
         structureTimer = new Timer(true); // Daemon thread, won't block exit
 
         structureTimer.scheduleAtFixedRate(new TimerTask() {
@@ -75,6 +78,7 @@ public class StructureCtrl {
     public void stopStructureLoop() {
         if (structureTimer != null) {
             structureTimer.cancel();
+            structureTimer = null;
         }
     }
 

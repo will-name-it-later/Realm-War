@@ -323,6 +323,10 @@ public class GameState {
         return all;
     }
 
+    public StructureCtrl getStructureCtrl() {
+        return structureCtrl;
+    }
+
 
     public Unit getUnitAt(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getUnit();

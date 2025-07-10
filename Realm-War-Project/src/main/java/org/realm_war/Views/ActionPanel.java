@@ -30,6 +30,8 @@ public class ActionPanel extends JPanel implements ActionListener {
     private boolean isAttacking = false;
 
     private transient Timer autoTurnTimer;
+    private long turnStartTime;
+    private int remainingTimeout;
     private final int TIMEOUT = 30_000; // 30 seconds
 
     public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl, InfoPanel infoPanel) {
@@ -151,6 +153,31 @@ public class ActionPanel extends JPanel implements ActionListener {
         startTurnTimer();
     }
 
+    public void pauseAutoTurnTimer() {
+        if (autoTurnTimer != null && autoTurnTimer.isRunning()) {
+            autoTurnTimer.stop();
+            long timeSinceTurnStart = System.currentTimeMillis() - this.turnStartTime;
+            // The remaining time is the total time minus what has passed.
+            this.remainingTimeout = TIMEOUT - (int) timeSinceTurnStart;
+
+            if (this.remainingTimeout < 0) {
+                this.remainingTimeout = 0;
+            }
+        }
+    }
+
+    public void resumeAutoTurnTimer() {
+        if (autoTurnTimer != null && !autoTurnTimer.isRunning()) {
+            autoTurnTimer = new Timer(this.remainingTimeout, e -> {
+                nextTurn();
+            });
+            autoTurnTimer.setRepeats(false);
+            autoTurnTimer.start();
+
+            this.turnStartTime = System.currentTimeMillis();
+        }
+    }
+
     public void nextTurn() {
         if (gameState.isGameOver()) {
             gameState.setRunning(false);
@@ -173,6 +200,8 @@ public class ActionPanel extends JPanel implements ActionListener {
         if (autoTurnTimer != null) {
             autoTurnTimer.stop(); // Stop previous timer
         }
+        // This line added for remembering the exact moment this turn's timer starts.
+        this.turnStartTime = System.currentTimeMillis();
 
         autoTurnTimer = new Timer(TIMEOUT, e -> {
             System.out.println("Auto next turn triggered after 30s");
