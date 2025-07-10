@@ -5,6 +5,7 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
+import org.realm_war.Utilities.Constants;
 
 public class Farm extends Structure {
     private static final int[] FOOD_PRODUCTION_BY_LEVEL = {5, 8, 12};
@@ -12,6 +13,7 @@ public class Farm extends Structure {
     private static final int[] DURABILITY_BY_LEVEL = {50, 75, 100};
     
     private int foodProduction;
+    private int farmCount = 0;
 
     public Farm(Position position, Block baseBlock, int kingdomId) {
         super(3, DURABILITY_BY_LEVEL[0], 5, position, baseBlock, kingdomId);
@@ -42,21 +44,22 @@ public class Farm extends Structure {
         return 2 * getLevel();  // Example: 2 food per level every 5s
     }
 
+
     @Override
     public void performTurnAction(Realm realm, GameState gameState) {
         int food = FOOD_PRODUCTION_BY_LEVEL[getLevel() - 1];
         realm.addFood(food);
         System.out.println("Farm at " + getPosition() + " produced " + food + " food.");
     }
-    
+
     public int getFoodProduction() {
         return foodProduction;
     }
-    
+
     public int getUpgradeCost() {
         return BUILDING_COST_BY_LEVEL[getLevel() - 1];
     }
-    
+
     public static int getBuildingCost(int farmsCount) {
         return 5 + (farmsCount * 5); // Each new farm costs 5 more than the previous
     }

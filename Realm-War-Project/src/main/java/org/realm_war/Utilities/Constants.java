@@ -9,6 +9,9 @@ public class Constants {
     public static final Color clr_2 = new Color(201,196,190);
     public static final Color clr_3 = new Color(207,204,204);
 
+    public static final int MAX_FARM = 3;
+    public static final int MAX_MARKET = 3;
+
     public static int getMapSize(){
         return mapSize;
     }

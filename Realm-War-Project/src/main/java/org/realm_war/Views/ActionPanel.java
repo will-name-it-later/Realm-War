@@ -318,9 +318,12 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "farm" -> {
                 try {
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateStructure(new Farm(pos, gameState.getBlockAt(pos), ID));
+                    if (gameState.canPlaceFarm()){
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateStructure(new Farm(pos, gameState.getBlockAt(pos), ID));
+                        gameState.incrementFarmCount();
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -345,9 +348,12 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "market" -> {
                 try{
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateStructure(new Market(pos, gameState.getBlockAt(pos), ID));
+                    if (gameState.canPlaceMarket()){
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateStructure(new Market(pos, gameState.getBlockAt(pos), ID));
+                        gameState.incrementMarketCount();
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }

@@ -21,6 +21,8 @@ public class GameState {
     //Track game progress
     private int currentTurn = 0;
     private int turns = 1;
+    private int farmCount = 0;
+    private int marketCount = 0;
     private List<Player> players = new ArrayList<>();
     private List<Realm> realms = new ArrayList<>();
     private boolean running;
@@ -338,6 +340,21 @@ public class GameState {
         int y = pos.getY();
         if (x < 0 || y < 0 || x >= this.mapGrid.length || y >= this.mapGrid[0].length) return null;
         return this.mapGrid[x][y];
+    }
+
+
+    public boolean canPlaceFarm(){
+        return farmCount < Constants.MAX_FARM;
+    }
+    public void incrementFarmCount (){
+        farmCount++;
+    }
+
+    public boolean canPlaceMarket(){
+       return marketCount < Constants.MAX_MARKET;
+    }
+    public void incrementMarketCount(){
+        marketCount++;
     }
 
     public void setBlockAt(Position pos, Block block) {
