@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2025-07-10 20:38:46 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player ! turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:39:16 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 234234 turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:39:47 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player ! turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:40:17 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 234234 turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:40:47 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player ! turn 3 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:41:18 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 234234 turn 3 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:41:48 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player ! turn 4 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:42:18 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 234234 turn 4 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:42:49 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player ! turn 5 ended."
+  },
+  {
+    "timestamp": "2025-07-10 20:43:19 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 234234 turn 5 ended."
+  }
+]

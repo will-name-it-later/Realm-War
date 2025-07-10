@@ -9,10 +9,7 @@ import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 
-import javax.swing.*;
-
 public class Realm {
-    private GameState gameState = new GameState();
     private int gold;
     private final int ID;
     private TownHall townHall;
@@ -21,7 +18,7 @@ public class Realm {
     private List<Unit> units;
     private List<Block> possessedBlocks;
     private int allUnitSpace;
-    private int usedUnitSpace;
+    private int availableUnitSpace;
 
     private Color realmColor;
 
@@ -34,37 +31,6 @@ public class Realm {
         this.allUnitSpace = 5;
         this.gold = 25;
         this.food = 25;
-    }
-
-    public void updateResources(GameState gameState) {
-        for (Structure s : structures){
-            s.performTurnAction(this, gameState);
-        }
-
-        for (Structure s : structures){
-            gold -= s.getMaintenanceCost();
-        }
-
-        for (Block b : possessedBlocks){
-            gold += b.getResourceItem("gold");
-            food += b.getResourceItem("food");
-        }
-
-        for (Unit u : units){
-            gold -= u.getPayment();
-            food -= u.getRation();
-        }
-
-        if (gold <= 0){
-            JOptionPane.showMessageDialog(null,
-                    "You have run out of gold! All your units and structures have been lost.",
-                    "warning",
-                    JOptionPane.WARNING_MESSAGE);
-
-            gold = 0;
-            units.clear();
-            structures.clear();
-        }
     }
 
     public boolean canBuildStructure(Structure s){
@@ -86,27 +52,20 @@ public class Realm {
         }
     }
 
-    public void addUnit(Unit u){
-        if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
-            throw new IllegalArgumentException("insufficient space!");
-        }
-        units.add(u);
-        usedUnitSpace += u.getUnitSpace();
-    }
 
     public void mergeUnit(Unit u, Unit target){
-        usedUnitSpace -= target.getUnitSpace();
+        availableUnitSpace -= target.getUnitSpace();
         units.remove(target);
-        if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
+        if (availableUnitSpace + u.getUnitSpace() > allUnitSpace){
             throw new IllegalArgumentException("insufficient space!");
         }
         units.add(u);
-        usedUnitSpace += u.getUnitSpace();
+        availableUnitSpace += u.getUnitSpace();
     }
 
     public void removeUnit(Unit u){
         units.remove(u);
-        usedUnitSpace -= u.getUnitSpace();
+        availableUnitSpace -= u.getUnitSpace();
     }
 
     public void possessBlock(Block b, boolean grantUnitSpace) {
@@ -135,8 +94,6 @@ public class Realm {
         return gold;
     }
 
-    public void setGold (int n){ this.gold = n; }
-
     public void addGold(int amount) {
         this.gold += amount;
     }
@@ -153,6 +110,7 @@ public class Realm {
         return ID;
     }
 
+
     public List<Structure> getStructures() {
         return structures;
     }
@@ -161,8 +119,16 @@ public class Realm {
         return units;
     }
 
-    public int getUsedUnitSpace() {
-        return usedUnitSpace;
+
+    public void setAllUnitSpace(int unitSpace){
+       this.allUnitSpace = unitSpace;
+    }
+    public int getAvailableUnitSpace() {
+        return availableUnitSpace;
+    }
+
+    public void setAvailableUnitSpace(int amount){
+        this.availableUnitSpace += amount;
     }
 
     public int getAllUnitSpace() {

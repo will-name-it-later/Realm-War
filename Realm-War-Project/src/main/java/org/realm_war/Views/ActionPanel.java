@@ -9,6 +9,7 @@ import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.blocks.EmptyBlock;
 import org.realm_war.Models.structure.classes.*;
 import org.realm_war.Models.units.*;
+import org.realm_war.Utilities.Constants;
 import org.realm_war.Utilities.GameLogger;
 
 import javax.swing.*;
@@ -324,6 +325,11 @@ public class ActionPanel extends JPanel implements ActionListener {
                         updateStructure(new Farm(pos, gameState.getBlockAt(pos), ID));
                         gameState.incrementFarmCount();
                     }
+                    if (!gameState.canPlaceFarm()) {
+                        JOptionPane.showMessageDialog(frame, "You can only place " + Constants.MAX_FARM + " farms.",
+                                "Limit Reached", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -353,6 +359,11 @@ public class ActionPanel extends JPanel implements ActionListener {
                         int ID = gamePanel.getSelectedRealmID();
                         updateStructure(new Market(pos, gameState.getBlockAt(pos), ID));
                         gameState.incrementMarketCount();
+                    }
+                    if (!gameState.canPlaceMarket()) {
+                        JOptionPane.showMessageDialog(frame, "You can only place " + Constants.MAX_MARKET + " markets.",
+                                "Limit Reached", JOptionPane.WARNING_MESSAGE);
+                        return;
                     }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);

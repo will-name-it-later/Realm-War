@@ -5,8 +5,6 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
-import org.realm_war.Models.units.Spearman;
-import org.realm_war.Models.units.Unit;
 
 public class Barrack extends Structure{
     private int turnsSinceLastProduction = 0;
@@ -42,23 +40,18 @@ public class Barrack extends Structure{
         return turnsSinceLastProduction >= PRODUCTION_INTERVAL;
     }
 
-    private Unit produceUnit() {
+    private void produceUnitSpace() {
         turnsSinceLastProduction = 0;
-
-        // You may want to generalize this to support different unit types
-        Position spawnPosition = this.getPosition(); // could improve to find nearby valid tile
-        int kingdomId = getKingdomId(); // or from Realm if needed
-
-        return new Spearman(spawnPosition, kingdomId);
     }
 
 
     @Override
     public void performTurnAction(Realm realm, GameState gameState) {
-        if (canProduceUnitThisTurn()) {
-            Unit newUnit = produceUnit();
-            realm.addUnit(newUnit);
-        }
         turnsSinceLastProduction++;
+
+        if (canProduceUnitThisTurn()){
+            turnsSinceLastProduction = 0;
+            realm.setAvailableUnitSpace(1);
+        }
     }
 }

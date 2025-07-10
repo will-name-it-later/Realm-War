@@ -349,11 +349,10 @@ public class GameState {
     public void incrementFarmCount (){
         farmCount++;
     }
-
     public boolean canPlaceMarket(){
        return marketCount < Constants.MAX_MARKET;
     }
-    public void incrementMarketCount(){
+    public void incrementMarketCount (){
         marketCount++;
     }
 
