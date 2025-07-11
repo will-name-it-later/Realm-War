@@ -1,8 +1,0 @@
-[
-  {
-    "timestamp": "2025-07-10 21:16:45 (+03:30)",
-    "playerID": 1000,
-    "actionType": "LOAD",
-    "details": "The game game has been loaded from database db of user postgres."
-  }
-]

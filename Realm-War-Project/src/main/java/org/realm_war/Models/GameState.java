@@ -331,9 +331,4 @@ public class GameState {
     public boolean isOccupied(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
-
-    public StructureCtrl getStructureCtrl() {
-        return structureCtrl;
-    }
-
 }
