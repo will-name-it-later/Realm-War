@@ -49,9 +49,10 @@ public class Barrack extends Structure{
     public void performTurnAction(Realm realm, GameState gameState) {
         turnsSinceLastProduction++;
 
-        if (canProduceUnitThisTurn()){
+        if (canProduceUnitThisTurn() && realm.getAvailableUnitSpace() < realm.getAllUnitSpace()){
             turnsSinceLastProduction = 0;
-            realm.setAvailableUnitSpace(1);
+            //by available i mean units that are ready to use.
+            realm.addAvailableUnitSpace(1);
         }
     }
 }

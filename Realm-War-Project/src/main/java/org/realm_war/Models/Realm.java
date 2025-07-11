@@ -22,6 +22,7 @@ public class Realm {
     private List<Block> possessedBlocks;
     private int allUnitSpace;
     private int usedUnitSpace;
+    private int availableUnitSpace;
 
     private Color realmColor;
 
@@ -32,6 +33,8 @@ public class Realm {
         possessedBlocks = new ArrayList<>();
         this.townHall = null;
         this.allUnitSpace = 5;
+        this.usedUnitSpace = 0;
+        this.availableUnitSpace =0;
         this.gold = 25;
         this.food = 25;
     }
@@ -167,12 +170,19 @@ public class Realm {
         return units;
     }
 
+    public int getAvailableUnitSpace(){
+       return this.availableUnitSpace;
+    }
+    public void addAvailableUnitSpace(int amount){
+       this.availableUnitSpace += amount;
+    }
+
     public int getUsedUnitSpace() {
         return getAllUnitSpace() - units.size();
     }
 
     public int getAllUnitSpace() {
-        return possessedBlocks.size() - structures.size();
+        return possessedBlocks.size();
     }
 
     public List<Block> getPossessedBlocks() {
