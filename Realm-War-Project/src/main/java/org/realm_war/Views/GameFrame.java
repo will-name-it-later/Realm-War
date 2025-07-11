@@ -67,6 +67,7 @@ public class GameFrame extends JFrame {
 
     public void updateAllViews(GameState newGameState) {
         this.gameState = newGameState;
+        this.gameState.setGamePanel(this.gamePanel);
 
         if (gamePanel != null) {
             gamePanel.setGameState(newGameState);

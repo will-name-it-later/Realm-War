@@ -125,7 +125,7 @@ public class UnitCtrl {
             if (targetBlock.hasUnit()){
                 targetUnit = targetBlock.getUnit();
                 if (attackerUnit.canAttackUnit(targetUnit)) {
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                    String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
                     GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK", details);
 
                     removeUnit(targetUnit);
@@ -139,11 +139,11 @@ public class UnitCtrl {
                 targetStructure = targetBlock.getStructure();
                 if (attackerUnit.getPosition().distanceTo(targetStructure.getPosition()) <= attackerUnit.getMovementRange()) {
                     targetStructure.setDurability(targetStructure.getDurability() - attackerUnit.getAttackPower());
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                    String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
                     GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK_TO_STRUCTURE", details);
 
                     if (targetStructure.isDestroyed()){
-                        String destroyDetails = String.format("%s destroyed %s.",attackerType, defenderType);
+                        String destroyDetails = String.format("%s in (%d, %d) destroyed %s that was in (%d, %d).",attackerType, attackerUnit.getX(), attackerUnit.getY(), defenderType, targetBlock.getX(), targetBlock.getY());
                         GameLogger.logAction(attackerUnit.getRealmID(), "DESTROY_STRUCTURE", destroyDetails);
 
                         gameState.getStructureCtrl().removeStructure(targetStructure);

@@ -50,11 +50,11 @@ public class Tower extends Structure {
                 double distance = myPosition.distanceTo(unit.getPosition());
                 if (distance <= attackRange) {
                     String defenderType = unit.getClass().getSimpleName();
-                    String details = String.format("%s attacked %s.", attackerType, defenderType);
+                    String details = String.format("%s attacked %s that is in (%d, %d).", attackerType, defenderType, unit.getX(), unit.getY());
                     GameLogger.logAction(this.getKingdomId(), "TOWER_ATTACK", details);
                     unit.takeDamage(attackPower);
                     if (unit.isDead()) {
-                        String killDetails = String.format("%s killed %s.", attackerType, defenderType);
+                        String killDetails = String.format("%s killed %s that was in (%d, %d).", attackerType, defenderType, unit.getX(), unit.getY());
                         GameLogger.logAction(this.getKingdomId(), "TOWER_KILL", killDetails);
                         gameState.removeUnitFromGame(unit);
                     }
