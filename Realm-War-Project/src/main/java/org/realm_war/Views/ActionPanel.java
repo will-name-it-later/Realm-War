@@ -38,6 +38,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     private long turnStartTime;
     private int remainingTimeout;
     private final int TIMEOUT = 30_000; // 30 seconds
+    private int visualSecondsLeft;
 
     public ActionPanel(GameFrame frame, GamePanel gamePanel, UnitCtrl unitCtrl, InfoPanel infoPanel) {
         this.frame = frame;
@@ -161,12 +162,20 @@ public class ActionPanel extends JPanel implements ActionListener {
     public void pauseAutoTurnTimer() {
         if (autoTurnTimer != null && autoTurnTimer.isRunning()) {
             autoTurnTimer.stop();
+            countdownUpdateTimer.stop();
+
             long timeSinceTurnStart = System.currentTimeMillis() - this.turnStartTime;
             // The remaining time is the total time minus what has passed.
             this.remainingTimeout = TIMEOUT - (int) timeSinceTurnStart;
+            this.visualSecondsLeft = this.remainingTimeout / 1000;
 
             if (this.remainingTimeout < 0) {
                 this.remainingTimeout = 0;
+                this.visualSecondsLeft = 0;
+            }
+
+            if (timerUpdateCallback != null) {
+                timerUpdateCallback.accept(visualSecondsLeft);
             }
         }
     }
@@ -178,6 +187,8 @@ public class ActionPanel extends JPanel implements ActionListener {
             });
             autoTurnTimer.setRepeats(false);
             autoTurnTimer.start();
+
+            countdownUpdateTimer.start();
 
             this.turnStartTime = System.currentTimeMillis();
         }
@@ -213,6 +224,7 @@ public class ActionPanel extends JPanel implements ActionListener {
         if (countdownUpdateTimer != null) countdownUpdateTimer.stop();
         // This line added for remembering the exact moment this turn's timer starts.
         this.turnStartTime = System.currentTimeMillis();
+        this.visualSecondsLeft = TIMEOUT / 1000;
 
         autoTurnTimer = new Timer(TIMEOUT, e -> {
             System.out.println("Auto next turn triggered after 30s");
@@ -224,15 +236,16 @@ public class ActionPanel extends JPanel implements ActionListener {
 
         // UI countdown update timer (1s interval)
         countdownUpdateTimer = new Timer(1000, e -> {
-            long elapsed = System.currentTimeMillis() - turnStartTime;
-            int secondsLeft = (int)((TIMEOUT - elapsed) / 1000);
+            if (visualSecondsLeft > 0) {
+                visualSecondsLeft--;
+            }
 
             // Clamp at 0
-            if (secondsLeft < 0) secondsLeft = 0;
+            if (visualSecondsLeft < 0) visualSecondsLeft = 0;
 
             // Update UI label through callback
             if (timerUpdateCallback != null) {
-                timerUpdateCallback.accept(secondsLeft);
+                timerUpdateCallback.accept(visualSecondsLeft);
             }
         });
         countdownUpdateTimer.setRepeats(true);
