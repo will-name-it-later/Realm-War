@@ -1,7 +1,6 @@
 package org.realm_war.Views;
 
 import org.realm_war.Controllers.GameCtrl;
-import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Utilities.Constants;
@@ -33,16 +32,18 @@ public class GameFrame extends JFrame {
         gamePanel.setActionPanel(actionPanel);
         menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl, actionPanel);
 
-        actionPanel.setTimerUpdateCallback((secondsLeft) -> {
-            SwingUtilities.invokeLater(() -> {
-                guidanceLabel.setText("Time left: " + secondsLeft + "s");
-            });
-        });
+
 
         guidanceLabel = new JLabel("");
         guidanceLabel.setFont(Constants.setBoldFont(23));
         guidanceLabel.setForeground(Constants.clr_1);
         guidanceLabel.setBorder(BorderFactory.createEmptyBorder(0,40,0,0));
+
+        actionPanel.setTimerUpdateCallback((secondsLeft) -> {
+            SwingUtilities.invokeLater(() -> {
+                guidanceLabel.setText("Time left: " + secondsLeft + "s");
+            });
+        });
 
         setSize(1050, 1050);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

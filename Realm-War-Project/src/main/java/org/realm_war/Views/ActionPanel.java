@@ -1,6 +1,5 @@
 package org.realm_war.Views;
 
-import com.sun.nio.sctp.IllegalReceiveException;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Models.Position;
