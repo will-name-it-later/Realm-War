@@ -53,6 +53,7 @@ public class UnitCtrl {
 
     public void removeUnit(Unit unit) {
         units.remove(unit);
+        gameState.removeUnitFromGame(unit);
         gameState.getRealmByRealmID(unit.getRealmID()).removeUnit(unit);
         gameState.getBlockAt(unit.getPosition()).setOwnerID(0);
         gameState.getBlockAt(unit.getPosition()).setUnit(null);
@@ -124,9 +125,11 @@ public class UnitCtrl {
             if (targetBlock.hasUnit()){
                 targetUnit = targetBlock.getUnit();
                 if (attackerUnit.canAttackUnit(targetUnit)) {
+                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
+                    GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK", details);
+
                     removeUnit(targetUnit);
                     moveUnitToBlock(attackerUnit, targetBlock);
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
                 }else if (attackerUnit.getPosition().distanceTo(targetBlock.getPosition()) > attackerUnit.getMovementRange()) {
                     throw new IllegalArgumentException("Target is out of attack range!");
                 }else{
@@ -137,8 +140,12 @@ public class UnitCtrl {
                 if (attackerUnit.getPosition().distanceTo(targetStructure.getPosition()) <= attackerUnit.getMovementRange()) {
                     targetStructure.setDurability(targetStructure.getDurability() - attackerUnit.getAttackPower());
                     String details = String.format("%s attacked to %s.", attackerType, defenderType);
-                    //todo : add a logger
+                    GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK_TO_STRUCTURE", details);
+
                     if (targetStructure.isDestroyed()){
+                        String destroyDetails = String.format("%s destroyed %s.",attackerType, defenderType);
+                        GameLogger.logAction(attackerUnit.getRealmID(), "DESTROY_STRUCTURE", destroyDetails);
+
                         gameState.getStructureCtrl().removeStructure(targetStructure);
                         moveUnitToBlock(attackerUnit, targetBlock);
                     }

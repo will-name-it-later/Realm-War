@@ -68,7 +68,6 @@ public abstract class Block {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
-        realmID = unit == null ? 0 : unit.getRealmID();
     }
 
     public boolean isWalkable() {

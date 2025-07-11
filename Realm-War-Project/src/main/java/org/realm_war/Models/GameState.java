@@ -16,6 +16,9 @@ import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 import org.realm_war.Utilities.HelperMethods;
+import org.realm_war.Views.GamePanel;
+import javax.swing.SwingUtilities;
+import java.time.OffsetDateTime;
 
 
 public class GameState {
@@ -31,6 +34,7 @@ public class GameState {
     private Block[][] mapGrid = new Block[gridSize][gridSize];
     private Unit selectedUnit;
     private Block targetBlock;
+    private transient GamePanel gamePanel;
 
     private Color[] realmColors = new Color[] {
             new Color(183, 65, 14),   // Rust
@@ -39,6 +43,23 @@ public class GameState {
             new Color(85, 107, 47)    // Dark Moss Green
     };
 
+
+    public void removeUnitFromGame(Unit unit) {
+        if (unit == null) return;
+
+        Realm ownerRealm = getRealmByRealmID(unit.getRealmID());
+        if (ownerRealm != null) {
+            ownerRealm.removeUnit(unit);
+        }
+
+        Block block = getBlockAt(unit.getPosition());
+        if (block != null) {
+            block.setUnit(null);
+        }
+        if (gamePanel != null) {
+            SwingUtilities.invokeLater(() -> gamePanel.refresh());
+        }
+    }
 
     public List<Unit> getAllUnits() {
         List<Unit> allUnits = new ArrayList<>();
@@ -290,6 +311,14 @@ public class GameState {
         this.targetBlock = block;
     }
 
+    public GamePanel getGamePanel() {
+        return gamePanel;
+    }
+
+    public void setGamePanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+    }
+
     //Interaction Helpers
     public Structure getStructureAt(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getStructure();
@@ -331,4 +360,5 @@ public class GameState {
     public boolean isOccupied(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
     }
+
 }

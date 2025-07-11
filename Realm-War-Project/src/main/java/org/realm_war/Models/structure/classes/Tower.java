@@ -8,6 +8,7 @@ import org.realm_war.Models.Position;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.units.Unit;
+import org.realm_war.Utilities.GameLogger;
 
 public class Tower extends Structure {
     private int attackRange = 3;
@@ -42,13 +43,21 @@ public class Tower extends Structure {
     public void performTurnAction(Realm realm, GameState gameState) {
         List<Unit> allUnits = gameState.getAllUnits();
         Position myPosition = this.getPosition();
+        String attackerType = this.getClass().getSimpleName();
 
         for (Unit unit : allUnits) {
             if (unit.getRealmID() != this.getKingdomId()){
                 double distance = myPosition.distanceTo(unit.getPosition());
                 if (distance <= attackRange) {
+                    String defenderType = unit.getClass().getSimpleName();
+                    String details = String.format("%s attacked %s.", attackerType, defenderType);
+                    GameLogger.logAction(this.getKingdomId(), "TOWER_ATTACK", details);
                     unit.takeDamage(attackPower);
-                    System.out.println("Tower at " + myPosition + " attacked unit at " + unit.getPosition());
+                    if (unit.isDead()) {
+                        String killDetails = String.format("%s killed %s.", attackerType, defenderType);
+                        GameLogger.logAction(this.getKingdomId(), "TOWER_KILL", killDetails);
+                        gameState.removeUnitFromGame(unit);
+                    }
                     break; // Attack one unit per turn
                 }
             }
