@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.function.Consumer;
 
 public class ActionPanel extends JPanel implements ActionListener {
     private GameFrame frame;
@@ -28,6 +29,10 @@ public class ActionPanel extends JPanel implements ActionListener {
     private JButton recruitBtn;
     private JButton buildBtn;
     private JButton attackBtn;
+
+    private Timer countdownUpdateTimer;
+    private Consumer<Integer> timerUpdateCallback; // Hook for GameFrame
+
     private boolean isAttacking = false;
 
     private transient Timer autoTurnTimer;
@@ -197,10 +202,16 @@ public class ActionPanel extends JPanel implements ActionListener {
         startTurnTimer(); // reset the timer after each turn
     }
 
+    public void setTimerUpdateCallback(Consumer<Integer> callback) {
+        this.timerUpdateCallback = callback;
+    }
+
+
     private void startTurnTimer() {
         if (autoTurnTimer != null) {
             autoTurnTimer.stop(); // Stop previous timer
         }
+        if (countdownUpdateTimer != null) countdownUpdateTimer.stop();
         // This line added for remembering the exact moment this turn's timer starts.
         this.turnStartTime = System.currentTimeMillis();
 
@@ -211,6 +222,22 @@ public class ActionPanel extends JPanel implements ActionListener {
 
         autoTurnTimer.setRepeats(false); // Only run once
         autoTurnTimer.start();
+
+        // UI countdown update timer (1s interval)
+        countdownUpdateTimer = new Timer(1000, e -> {
+            long elapsed = System.currentTimeMillis() - turnStartTime;
+            int secondsLeft = (int)((TIMEOUT - elapsed) / 1000);
+
+            // Clamp at 0
+            if (secondsLeft < 0) secondsLeft = 0;
+
+            // Update UI label through callback
+            if (timerUpdateCallback != null) {
+                timerUpdateCallback.accept(secondsLeft);
+            }
+        });
+        countdownUpdateTimer.setRepeats(true);
+        countdownUpdateTimer.start();
     }
 
 
@@ -311,18 +338,24 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "peasant" -> {
                 try{
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateUnit(new Peasant(pos, ID));
+                    if (gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).getAvailableUnitSpace() >= 1) {
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateUnit(new Peasant(pos, ID));
+                        gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).addAvailableUnitSpace(-1);
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "spearman" -> {
                 try{
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateUnit(new Spearman(pos, ID));
+                    if (gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).getAvailableUnitSpace() >= 1) {
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateUnit(new Spearman(pos, ID));
+                        gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).addAvailableUnitSpace(-1);
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
@@ -330,18 +363,24 @@ public class ActionPanel extends JPanel implements ActionListener {
             }
             case "swordsman" -> {
                 try{
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateUnit(new Swordsman(pos, ID));
+                    if (gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).getAvailableUnitSpace() >= 1){
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateUnit(new Swordsman(pos, ID));
+                        gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).addAvailableUnitSpace(-1);
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case "knight" -> {
                 try{
-                    Position pos = gamePanel.getSelectedPosition();
-                    int ID = gamePanel.getSelectedRealmID();
-                    updateUnit(new Knight(pos, ID));
+                    if (gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).getAvailableUnitSpace() >= 1) {
+                        Position pos = gamePanel.getSelectedPosition();
+                        int ID = gamePanel.getSelectedRealmID();
+                        updateUnit(new Knight(pos, ID));
+                        gameState.getRealmByRealmID(gamePanel.getSelectedRealmID()).addAvailableUnitSpace(-1);
+                    }
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }

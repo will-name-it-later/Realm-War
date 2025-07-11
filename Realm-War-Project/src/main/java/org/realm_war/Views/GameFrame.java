@@ -32,7 +32,13 @@ public class GameFrame extends JFrame {
         gamePanel.setActionPanel(actionPanel);
         menuPanel = new MenuPanel(gameState, gamePanel, gameCtrl, actionPanel);
 
-        guidanceLabel = new JLabel("Please choose an action");
+        actionPanel.setTimerUpdateCallback((secondsLeft) -> {
+            SwingUtilities.invokeLater(() -> {
+                guidanceLabel.setText("Time left: " + secondsLeft + "s");
+            });
+        });
+
+        guidanceLabel = new JLabel("");
         guidanceLabel.setFont(Constants.setBoldFont(23));
         guidanceLabel.setForeground(Constants.clr_1);
         guidanceLabel.setBorder(BorderFactory.createEmptyBorder(0,40,0,0));

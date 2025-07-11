@@ -42,7 +42,7 @@ public class InfoPanel extends JPanel {
         playerLabel.setText("Player: " + gameState.getCurrentPlayer().getName());
         goldLabel.setText("Gold: " + currentRealm.getGold());
         foodLabel.setText("Food: " + currentRealm.getFood());
-        unitSpaceLabel.setText("Unit Space: " + currentRealm.getAvailableUnitSpace() +
+        unitSpaceLabel.setText("Ready units: " + currentRealm.getAvailableUnitSpace() +
                 "/" + currentRealm.getAllUnitSpace());
         turnLabel.setText("Turn: " + gameState.getTurnNumber());
     }

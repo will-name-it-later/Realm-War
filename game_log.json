@@ -1,8 +1,44 @@
 [
   {
-    "timestamp": "2025-07-10 21:16:45 (+03:30)",
-    "playerID": 1000,
-    "actionType": "LOAD",
-    "details": "The game game has been loaded from database db of user postgres."
+    "timestamp": "2025-07-11 16:59:14 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player one turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-11 16:59:15 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player two turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-11 16:59:17 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player one turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-11 16:59:19 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player two turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-11 16:59:35 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Swordsman moved from (2, 2) to (3, 2)"
+  },
+  {
+    "timestamp": "2025-07-11 16:59:37 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Swordsman moved from (3, 2) to (5, 2)"
+  },
+  {
+    "timestamp": "2025-07-11 16:59:38 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Swordsman moved from (5, 2) to (7, 2)"
   }
 ]
