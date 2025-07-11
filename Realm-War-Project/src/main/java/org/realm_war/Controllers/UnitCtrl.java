@@ -53,6 +53,7 @@ public class UnitCtrl {
 
     public void removeUnit(Unit unit) {
         units.remove(unit);
+        gameState.removeUnitFromGame(unit);
         gameState.getRealmByRealmID(unit.getRealmID()).removeUnit(unit);
         gameState.getBlockAt(unit.getPosition()).setOwnerID(0);
         gameState.getBlockAt(unit.getPosition()).setUnit(null);
@@ -124,9 +125,11 @@ public class UnitCtrl {
             if (targetBlock.hasUnit()){
                 targetUnit = targetBlock.getUnit();
                 if (attackerUnit.canAttackUnit(targetUnit)) {
+                    String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
+                    GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK", details);
+
                     removeUnit(targetUnit);
                     moveUnitToBlock(attackerUnit, targetBlock);
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
                 }else if (attackerUnit.getPosition().distanceTo(targetBlock.getPosition()) > attackerUnit.getMovementRange()) {
                     throw new IllegalArgumentException("Target is out of attack range!");
                 }else{
@@ -136,9 +139,13 @@ public class UnitCtrl {
                 targetStructure = targetBlock.getStructure();
                 if (attackerUnit.getPosition().distanceTo(targetStructure.getPosition()) <= attackerUnit.getMovementRange()) {
                     targetStructure.setDurability(targetStructure.getDurability() - attackerUnit.getAttackPower());
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
-                    //todo : add a logger
+                    String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
+                    GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK_TO_STRUCTURE", details);
+
                     if (targetStructure.isDestroyed()){
+                        String destroyDetails = String.format("%s in (%d, %d) destroyed %s that was in (%d, %d).",attackerType, attackerUnit.getX(), attackerUnit.getY(), defenderType, targetBlock.getX(), targetBlock.getY());
+                        GameLogger.logAction(attackerUnit.getRealmID(), "DESTROY_STRUCTURE", destroyDetails);
+
                         gameState.getStructureCtrl().removeStructure(targetStructure);
                         moveUnitToBlock(attackerUnit, targetBlock);
                     }
@@ -148,26 +155,8 @@ public class UnitCtrl {
             }else {
                 throw new IllegalArgumentException("nothing to attack!");
             }
-        }else if (attackerBlock.hasStructure()) {
-            attackerStructure = attackerBlock.getStructure();
-            if (attackerStructure.getPosition().distanceTo(targetBlock.getPosition()) <= 3){
-                if (targetBlock.hasUnit()) {
-                    targetUnit = targetBlock.getUnit();
-                    attackerStructure.performTurnAction(gameState.getCurrentRealm(), gameState);
-                    targetUnit.takeDamage((int)(0.5 * ((Tower)attackerStructure).getAttackPower()));
-                    Realm targetRealm  = gameState.getRealmByRealmID(targetBlock.getRealmID());
-                    String details = String.format("%s attacked to %s.", attackerType, defenderType);
-                    for (Unit u : targetRealm.getUnits()){
-                        if (u.isDead()) removeUnit(u);
-                    }
-                }else if (targetBlock.hasStructure()){
-                    throw new IllegalArgumentException("you can't attack a structure by a structure!");
-                }else throw new IllegalArgumentException("nothing to attack!");
-            }else {
-                throw new IllegalArgumentException("Targets are out of range!");
-            }
-        }else {
-            throw new IllegalArgumentException("please choose a unit or a tower!");
+        } else {
+            throw new IllegalArgumentException("please choose a unit!");
         }
     }
 
