@@ -1,6 +1,7 @@
 package org.realm_war.Views;
 
 import org.realm_war.Controllers.GameCtrl;
+import org.realm_war.Controllers.StructureCtrl;
 import org.realm_war.Controllers.UnitCtrl;
 import org.realm_war.Models.GameState;
 import org.realm_war.Utilities.Constants;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class GameFrame extends JFrame {
+    private StructureCtrl structureCtrl;
     private GamePanel gamePanel;
     private GameState gameState;
     private GameCtrl gameCtrl;
@@ -22,6 +24,7 @@ public class GameFrame extends JFrame {
 
     public GameFrame() {
         gameState = new GameState();
+        structureCtrl = new StructureCtrl(gameState);
         unitCtrl = new UnitCtrl(gameState);
         gameCtrl = new GameCtrl();
         gameCtrl.setGameFrame(this);
@@ -44,6 +47,14 @@ public class GameFrame extends JFrame {
                 guidanceLabel.setText("Time left: " + secondsLeft + "s");
             });
         });
+
+        structureCtrl.setOnRealmRemoved(() -> {
+            SwingUtilities.invokeLater(() -> {
+                gamePanel.refresh();
+                infoPanel.updateInfo(gameState); // Optional, keeps info panel accurate
+            });
+        });
+
 
         setSize(1050, 1050);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,6 +82,7 @@ public class GameFrame extends JFrame {
                 "Good Luck!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
         setVisible(true);
     }
+
 
     public void updateAllViews(GameState newGameState) {
         this.gameState = newGameState;
@@ -103,6 +115,7 @@ public class GameFrame extends JFrame {
         sidePanel.add(infoPanel, BorderLayout.NORTH);
     }
 
+
     public void updateSidePanel(JPanel panel) {
         sidePanel.removeAll();
         infoPanel.updateInfo(gameState);
@@ -132,12 +145,5 @@ public class GameFrame extends JFrame {
                }
            }
         });
-    }
-
-    public void setGamePanel(GamePanel newPanel) {
-        this.gamePanel = newPanel;
-    }
-    public static JLabel getGuidanceLabel(){
-        return guidanceLabel;
     }
 }

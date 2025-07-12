@@ -26,6 +26,15 @@ public abstract class Block {
     public abstract boolean canBuildStructure();
     public abstract int getResourceItem(String resourceType);
 
+    public void clearOwnership() {
+        this.realmID = 0;
+        this.isAbsorbed = false;
+        this.structure = null;
+        this.unit = null;
+        this.ownerColor = null;
+    }
+
+
     public abstract Color getColor();
 
     public Position getPosition() { return position; }
@@ -90,11 +99,6 @@ public abstract class Block {
 
     public void setOwnerColor(Color color) {
         this.ownerColor = color;
-    }
-
-    public Color getOwnerColor() {
-        return ownerColor;
-
     }
 
     @Override

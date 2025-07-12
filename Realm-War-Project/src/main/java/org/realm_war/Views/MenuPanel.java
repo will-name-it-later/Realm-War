@@ -31,7 +31,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         this.gamePanel = gamePanel;
         this.gameCtrl = gameCtrl;
         this.actionPanel = actionPanel;
-        structureCtrl = new StructureCtrl(gameState.getAllStructures());
+        structureCtrl = new StructureCtrl(gameState);
         addPlayerBtn = createButton("Add Player");
         startGameBtn = createButton("Start Game");
         startGameBtn.setEnabled(false); // disabled until two players added

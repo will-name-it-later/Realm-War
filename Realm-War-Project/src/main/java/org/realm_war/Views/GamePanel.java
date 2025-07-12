@@ -193,23 +193,6 @@ public class GamePanel extends JPanel {
         }
     }
 
-    public void updateUnit (Unit unit) {
-        Position pos = unit.getPosition();
-        int x = pos.getX();
-        int y = pos.getY();
-        JButton button = btnGrid[x][y];
-
-        infoPanel.updateInfo(gameState);
-        selectedPos = targetPos = null;
-
-        if (button != null) {
-            button.setBackground(gameState.getCurrentRealm().getRealmColor());
-            ImageIcon icon = getIconForButton(unit);
-            button.setIcon(icon);
-        }
-    }
-
-
     public ImageIcon getIconForButton(Object obj) {
         String path = switch (obj.getClass().getSimpleName()) {
             case "TownHall" -> "/org/realm_war/Utilities/Resources/townhall.png";
@@ -234,27 +217,15 @@ public class GamePanel extends JPanel {
     public Position getSelectedPosition() {
         return selectedPos;
     }
-
-    public Position getTargetPosition() {
-        return targetPos;
-    }
-
-    public Realm getSelectedRealm() {
-        return gameState.getCurrentRealm();
-    }
-
     public int getSelectedRealmID() {
         return gameState.getCurrentRealm().getID();
     }
-
     public GameState getGameState() {
         return gameState;
     }
-
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
-
     public void setActionPanel(ActionPanel actionPanel) {
         this.actionPanel = actionPanel;
     }
