@@ -320,6 +320,11 @@ public class ActionPanel extends JPanel implements ActionListener {
             }else{
                 targetBlock.getStructure().levelUp(s);
                 JOptionPane.showMessageDialog(frame, "Structure level up successful. Now this structure is at level " + targetBlock.getStructure().getLevel());
+
+                String structureType = targetBlock.getStructure().getClass().getSimpleName();
+                int newLevel = targetBlock.getStructure().getLevel();
+                String details = String.format("%s at (%d, %d) was upgraded to level %d.", structureType, pos.getX(), pos.getY(), newLevel);
+                GameLogger.logAction(currentRealm.getID(), "UPGRADE_STRUCTURE", details);
             }
             gamePanel.refresh();
         }catch(IllegalArgumentException e){
