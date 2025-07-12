@@ -89,32 +89,6 @@ public class StructureCtrl {
         }
     }
 
-    /** Upgrade structure if possible */
-    public boolean upgradeStructure(Structure structure, Realm realm) {
-        int cost = getUpgradeCost(structure);
-        if (structure.canLevelUp(structure) && realm.getGold() >= cost) {
-            realm.addGold(-cost);
-            structure.levelUp(structure);
-            return true;
-        }
-        return false;
-    }
-
-    /** Computes the gold cost to level up the structure */
-    public int getUpgradeCost(Structure structure) {
-        return structure.getLevel() * 50;
-    }
-
-    /** Repair a structure for a cost */
-    public boolean repairStructure(Structure structure, Realm realm, int repairAmount, int repairCost) {
-        if (realm.getGold() >= repairCost) {
-            realm.addGold(-repairCost);
-            structure.setDurability(structure.getDurability() + repairAmount);
-            return true;
-        }
-        return false;
-    }
-
     /** Remove a structure from the global list */
     public void removeStructure(Structure structure) {
         structures.remove(structure);
@@ -122,25 +96,5 @@ public class StructureCtrl {
         gameState.getBlockAt(structure.getPosition()).setOwnerID(0);
         gameState.getBlockAt(structure.getPosition()).setStructure(null);
         gameState.getBlockAt(structure.getPosition()).setOwnerID(structure.getKingdomId());
-    }
-
-    public List<Structure> getStructures() {
-        return structures;
-    }
-
-    public void setSelectedStructure(Structure structure) {
-        this.selectedStructure = structure;
-    }
-
-    public Structure getSelectedStructure() {
-        return selectedStructure;
-    }
-
-    public void setSelectedBlock(Block block) {
-        this.selectedBlock = block;
-    }
-
-    public Block getSelectedBlock() {
-        return selectedBlock;
     }
 }
