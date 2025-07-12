@@ -32,7 +32,7 @@ public class GameState {
     private boolean running;
     private boolean isGameOver;
     private int gridSize = Constants.getMapSize();
-    private StructureCtrl structureCtrl = new StructureCtrl(getAllStructures());
+    private StructureCtrl structureCtrl = new StructureCtrl(this);
     private Block[][] mapGrid = new Block[gridSize][gridSize];
     private Unit selectedUnit;
     private Block targetBlock;
@@ -269,12 +269,43 @@ public class GameState {
         }
     }
 
-    public Block[][] getMapGrid() {
-        return this.mapGrid;
+    public void removeRealm(Realm realm) {
+        if (realm == null) return;
+
+        int realmId = realm.getID();
+        Realm currentRealm = getCurrentRealm();
+        int currentRealmIndex = turns % realms.size();
+
+        // 1. Clear all map blocks owned by the realm
+        for (Block[] row : mapGrid) {
+            for (Block block : row) {
+                if (block.getRealmID() == realmId) {
+                    block.clearOwnership();
+                    block.setUnit(null);
+                    block.setStructure(null);
+                }
+            }
+        }
+
+        // 2. Remove the realm from the list
+        realms.remove(realm);
+        System.out.printf("[INFO] Realm %d has been removed from the game.%n", realmId);
+
+        // 3. Update current realm if needed
+        if (currentRealm != null && currentRealm.getID() == realmId) {
+            if (!realms.isEmpty()) {
+                currentRealmIndex = currentRealmIndex % realms.size();
+                currentRealm = realms.get(currentRealmIndex);
+            } else {
+                currentRealm = null;
+                currentRealmIndex = -1;
+            }
+        }
     }
 
-    public int getCurrentTurn() {
-        return currentTurn;
+
+    public Block[][] getMapGrid() {
+        return this.mapGrid;
     }
 
     public List<Realm> getRealms() {
@@ -296,27 +327,6 @@ public class GameState {
     public void addPlayer(Player newPlayer) {
         this.players.add(newPlayer);
     }
-
-    public Unit getSelectedUnit() {
-        return selectedUnit;
-    }
-
-    public Block getTargetBlock() {
-        return targetBlock;
-    }
-
-    public void setSelectedUnit(Unit unit) {
-        this.selectedUnit = unit;
-    }
-
-    public void setTargetBlock(Block block) {
-        this.targetBlock = block;
-    }
-
-    public GamePanel getGamePanel() {
-        return gamePanel;
-    }
-
     public void setGamePanel(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
@@ -337,14 +347,8 @@ public class GameState {
         return all;
     }
 
-
     public Unit getUnitAt(Position pos) {
         return this.mapGrid[pos.getX()][pos.getY()].getUnit();
-    }
-
-
-    public Color[] getRealmColors() {
-        return realmColors;
     }
 
     public Block getBlockAt(Position pos) {
@@ -353,7 +357,6 @@ public class GameState {
         if (x < 0 || y < 0 || x >= this.mapGrid.length || y >= this.mapGrid[0].length) return null;
         return this.mapGrid[x][y];
     }
-
 
     public boolean canPlaceFarm(){
         return farmCount < Constants.MAX_FARM;
@@ -367,13 +370,4 @@ public class GameState {
     public void incrementMarketCount (){
         marketCount++;
     }
-
-    public void setBlockAt(Position pos, Block block) {
-        this.mapGrid[pos.getX()][pos.getY()] = block;
-    }
-
-    public boolean isOccupied(Position pos) {
-        return this.mapGrid[pos.getX()][pos.getY()].getStructure().getBaseBlock().isOccupied();
-    }
-
 }
