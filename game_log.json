@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2025-07-12 22:14:55 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player 111 turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-12 22:14:56 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 222 turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-12 22:14:58 (+03:30)",
+    "playerID": 1003,
+    "actionType": "END_TURN",
+    "details": "Player 33 turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-12 22:15:09 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player 111 turn 2 ended."
+  }
+]
