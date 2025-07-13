@@ -39,7 +39,6 @@ public class InfoPanel extends JPanel {
     public void updateInfo(GameState gameState) {
         Realm currentRealm = gameState.getCurrentRealm();
 
-        System.out.println("InfoPanel: updateInfo called. Current Player Gold: " + currentRealm.getGold());
         playerLabel.setText("Player: " + gameState.getCurrentPlayer().getName());
         goldLabel.setText("Gold: " + currentRealm.getGold());
         foodLabel.setText("Food: " + currentRealm.getFood());

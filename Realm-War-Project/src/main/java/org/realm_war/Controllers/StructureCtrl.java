@@ -62,8 +62,6 @@ public class StructureCtrl {
                     }
                 }
 
-                System.out.println("StructureCtrl: Attempting to schedule InfoPanel refresh.");
-
                 if (infoPanel != null) {
                     SwingUtilities.invokeLater(() -> infoPanel.updateInfo(gameState));
                 }
