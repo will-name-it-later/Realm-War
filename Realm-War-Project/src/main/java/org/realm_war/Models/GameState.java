@@ -27,16 +27,22 @@ public class GameState {
     private int turns = 1;
     private int farmCount = 0;
     private int marketCount = 0;
-    private List<Player> players = new ArrayList<>();
-    private List<Realm> realms = new ArrayList<>();
+    private List<Player> players;
+    private List<Realm> realms;
     private boolean running;
     private boolean isGameOver;
     private int gridSize = Constants.getMapSize();
-    private StructureCtrl structureCtrl = new StructureCtrl(this);
+    private transient StructureCtrl structureCtrl;
     private Block[][] mapGrid = new Block[gridSize][gridSize];
     private Unit selectedUnit;
     private Block targetBlock;
     private transient GamePanel gamePanel;
+
+    public GameState() {
+        this.players = new ArrayList<>();
+        this.realms = new ArrayList<>();
+        this.structureCtrl = new StructureCtrl(this);
+    }
 
     private Color[] realmColors = new Color[] {
             new Color(183, 65, 14),   // Rust
@@ -259,13 +265,8 @@ public class GameState {
     }
 
     public void restartAllStructureTimers() {
-        for (Realm realm : this.realms) {
-            if (realm != null && realm.getStructures() != null) {
-                for (Structure structure : realm.getStructures()) {
-                    // This will create and start a new timer.
-                    structureCtrl.startStructureLoop(this);
-                }
-            }
+        if (structureCtrl != null) {
+            structureCtrl.startStructureLoop(this);
         }
     }
 

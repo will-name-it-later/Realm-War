@@ -24,11 +24,12 @@ public class GameFrame extends JFrame {
 
     public GameFrame() {
         gameState = new GameState();
-        structureCtrl = new StructureCtrl(gameState);
+        structureCtrl = gameState.getStructureCtrl();
         unitCtrl = new UnitCtrl(gameState);
         gameCtrl = new GameCtrl();
         gameCtrl.setGameFrame(this);
         infoPanel = new InfoPanel();
+        structureCtrl.setInfoPanel(infoPanel);
         gamePanel = new GamePanel(gameState, infoPanel, unitCtrl, null);
         gameState.setGamePanel(gamePanel);
         actionPanel = new ActionPanel(this, gamePanel, unitCtrl, infoPanel);
@@ -87,6 +88,8 @@ public class GameFrame extends JFrame {
     public void updateAllViews(GameState newGameState) {
         this.gameState = newGameState;
         this.gameState.setGamePanel(this.gamePanel);
+        this.structureCtrl = this.gameState.getStructureCtrl();
+        this.unitCtrl.setGameState(newGameState);
 
         if (gamePanel != null) {
             gamePanel.setGameState(newGameState);
@@ -99,6 +102,11 @@ public class GameFrame extends JFrame {
         }
         if (unitCtrl != null) {
             unitCtrl.setGameState(newGameState);
+        }
+
+        if (structureCtrl != null) {
+            this.structureCtrl.setInfoPanel(this.infoPanel);
+            structureCtrl.setGameState(newGameState);
         }
 
         if (gamePanel != null) {

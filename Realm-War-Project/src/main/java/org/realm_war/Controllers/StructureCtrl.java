@@ -4,8 +4,8 @@ import org.realm_war.Models.GameState;
 import org.realm_war.Models.Realm;
 import org.realm_war.Models.blocks.Block;
 import org.realm_war.Models.structure.classes.Structure;
-import org.realm_war.Models.Position;
-import org.realm_war.Utilities.GameLogger;
+import org.realm_war.Views.InfoPanel;
+import javax.swing.SwingUtilities;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ public class StructureCtrl {
     private GameState gameState;
     private transient Timer structureTimer;
     private static final int STRUCTURE_INTERVAL_MS = 5000; // 5 seconds
+    private InfoPanel infoPanel;
     private Runnable onRealmRemoved;  // 👈 this is the callback
 
     public StructureCtrl(GameState gameState) {
@@ -59,6 +60,12 @@ public class StructureCtrl {
                             ex.printStackTrace();
                         }
                     }
+                }
+
+                System.out.println("StructureCtrl: Attempting to schedule InfoPanel refresh.");
+
+                if (infoPanel != null) {
+                    SwingUtilities.invokeLater(() -> infoPanel.updateInfo(gameState));
                 }
 
                 for (Realm bankruptRealm : realmsToRemove) {
@@ -121,5 +128,9 @@ public class StructureCtrl {
 
     public void setGameState(GameState gameState){
         this.gameState = gameState;
+    }
+
+    public void setInfoPanel(InfoPanel infoPanel) {
+        this.infoPanel = infoPanel;
     }
 }

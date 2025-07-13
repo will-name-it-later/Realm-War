@@ -179,6 +179,10 @@ public class MenuPanel extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Save name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            actionPanel.pauseAutoTurnTimer();
+            gameState.getStructureCtrl().stopStructureLoop();
+
             try {
                 GameState loadedState = gameCtrl.loadGame(saveName, DBName, user, pass);
                 if (loadedState != null) {
