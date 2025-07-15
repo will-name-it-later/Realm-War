@@ -85,10 +85,9 @@ public class UnitCtrl {
                 unit.setPosition(targetBlock.getPosition());
                 addUnit(unit);
 
-                GameLogger.logAction(unit.getRealmID(),"MOVE", details);
+                GameLogger.logAction(unit.getRealmID(), "MOVE", details);
             }
-        }
-        else {
+        } else {
             if (unit.canMerge(targetBlock.getUnit())) {
                 String unitType = unit.getClass().getSimpleName();
                 Unit targetUnit = targetBlock.getUnit();
@@ -104,7 +103,7 @@ public class UnitCtrl {
                 String mergedUnitType = mergedUnit.getClass().getSimpleName();
                 String details = String.format("%s merged to %s", unitType, mergedUnitType);
 
-                GameLogger.logAction(unit.getRealmID(),"MERGE", details);
+                GameLogger.logAction(unit.getRealmID(), "MERGE", details);
             }
         }
     }
@@ -115,6 +114,11 @@ public class UnitCtrl {
         String attackerType = attackerBlock.hasUnit() ? attackerBlock.getUnit().getClass().getSimpleName() : attackerBlock.hasStructure() ? attackerBlock.getStructure().getClass().getSimpleName() : "";
         String defenderType = targetBlock.hasUnit() ? targetBlock.getUnit().getClass().getSimpleName() : targetBlock.hasStructure() ? targetBlock.getStructure().getClass().getSimpleName() : "";
 
+        //check if the attacker block is empty of any unit
+        if (!attackerBlock.isOccupied()) {
+            throw new IllegalArgumentException("please choose a unit!");
+        }
+
         //check if player is attempting an attack in their own territory
         if (attackerBlock.getRealmID() == targetBlock.getRealmID()) {
             throw new IllegalArgumentException("You can't attempt an attack in your own territory!");
@@ -122,7 +126,7 @@ public class UnitCtrl {
 
         if (attackerBlock.hasUnit()) {
             attackerUnit = attackerBlock.getUnit();
-            if (targetBlock.hasUnit()){
+            if (targetBlock.hasUnit()) {
                 targetUnit = targetBlock.getUnit();
                 if (attackerUnit.canAttackUnit(targetUnit)) {
                     String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
@@ -130,33 +134,36 @@ public class UnitCtrl {
 
                     removeUnit(targetUnit);
                     moveUnitToBlock(attackerUnit, targetBlock);
-                }else if (attackerUnit.getPosition().distanceTo(targetBlock.getPosition()) > attackerUnit.getMovementRange()) {
+                } else if (attackerUnit.getPosition().distanceTo(targetBlock.getPosition()) > attackerUnit.getMovementRange()) {
                     throw new IllegalArgumentException("Target is out of attack range!");
-                }else{
+                } else {
                     throw new IllegalArgumentException("Your unit isn't vicious enough to attack this target!");
                 }
-            }else if (targetBlock.hasStructure()) {
+            } else if (targetBlock.hasStructure()) {
                 targetStructure = targetBlock.getStructure();
                 if (attackerUnit.getPosition().distanceTo(targetStructure.getPosition()) <= attackerUnit.getMovementRange()) {
                     targetStructure.setDurability(targetStructure.getDurability() - attackerUnit.getAttackPower());
                     String details = String.format("%s attacked to %s that is in (%d, %d).", attackerType, defenderType, targetBlock.getX(), targetBlock.getY());
                     GameLogger.logAction(attackerUnit.getRealmID(), "ATTACK_TO_STRUCTURE", details);
 
-                    if (targetStructure.isDestroyed()){
-                        String destroyDetails = String.format("%s in (%d, %d) destroyed %s that was in (%d, %d).",attackerType, attackerUnit.getX(), attackerUnit.getY(), defenderType, targetBlock.getX(), targetBlock.getY());
+                    if (targetStructure.isDestroyed()) {
+                        String destroyDetails = String.format("%s in (%d, %d) destroyed %s that was in (%d, %d).", attackerType, attackerUnit.getX(), attackerUnit.getY(), defenderType, targetBlock.getX(), targetBlock.getY());
                         GameLogger.logAction(attackerUnit.getRealmID(), "DESTROY_STRUCTURE", destroyDetails);
-
-                        gameState.getStructureCtrl().removeStructure(targetStructure);
-                        moveUnitToBlock(attackerUnit, targetBlock);
+                        if (targetStructure instanceof TownHall) {
+                            Realm conqueredRealm = gameState.getRealmByRealmID(targetBlock.getRealmID());
+                            gameState.conquerRealm(conqueredRealm);
+                            moveUnitToBlock(attackerUnit, targetBlock);
+                        }else{
+                            gameState.getStructureCtrl().removeStructure(targetStructure);
+                            moveUnitToBlock(attackerUnit, targetBlock);
+                        }
                     }
-                }else {
+                } else {
                     throw new IllegalArgumentException("Target is out of attack range!");
                 }
-            }else {
+            } else {
                 throw new IllegalArgumentException("nothing to attack!");
             }
-        } else {
-            throw new IllegalArgumentException("please choose a unit!");
         }
     }
 
@@ -170,7 +177,7 @@ public class UnitCtrl {
             int y = Math.round(start.getY() + i * dy / (float) steps);
             if (x >= 0 && x < gameState.getMapGrid()[0].length && y >= 0 && y < gameState.getMapGrid().length) {
                 Block b = gameState.getMapGrid()[x][y];
-                if (!(b instanceof VoidBlock)){
+                if (!(b instanceof VoidBlock)) {
                     int oldOwnerID = b.getRealmID();
                     if (oldOwnerID != 0 && oldOwnerID != ID) {
                         Realm oldRealm = gameState.getRealmByRealmID(oldOwnerID);
@@ -179,7 +186,7 @@ public class UnitCtrl {
                         }
                     }
                     b.setOwnerID(ID);
-                    gameState.getRealms().get(ID - 1001).possessBlock(b, true);
+                    gameState.getRealmByRealmID(ID).possessBlock(b, true);
                 }
             }
         }

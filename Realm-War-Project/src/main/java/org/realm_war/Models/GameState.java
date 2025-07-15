@@ -282,14 +282,13 @@ public class GameState {
             for (Block block : row) {
                 if (block.getRealmID() == realmId) {
                     block.clearOwnership();
-                    block.setUnit(null);
-                    block.setStructure(null);
                 }
             }
         }
 
         // 2. Remove the realm from the list
         realms.remove(realm);
+        players.remove(realmId - 1001);
         System.out.printf("[INFO] Realm %d has been removed from the game.%n", realmId);
 
         // 3. Update current realm if needed
@@ -299,6 +298,38 @@ public class GameState {
                 currentRealm = realms.get(currentRealmIndex);
             } else {
                 currentRealm = null;
+                currentRealmIndex = -1;
+            }
+        }
+    }
+
+    public void conquerRealm(Realm realm) {
+        if (realm == null) return;
+
+        int realmId = realm.getID();
+        Realm conqueror = getCurrentRealm();
+        int currentRealmIndex = turns % realms.size();
+        for (Block[] row : mapGrid) {
+            for (Block block : row) {
+                if (block.getRealmID() == realm.getID()) {
+                    block.clearOwnership();
+                    block.setOwnerID(conqueror.getID());
+                    conqueror.possessBlock(block, false);
+                }
+            }
+        }
+
+        realms.remove(realm);
+        players.remove(realmId - 1001);
+        System.out.printf("[INFO] Realm %d has been removed from the game.%n", realmId);
+
+        // 3. Update current realm if needed
+        if (conqueror != null && conqueror.getID() == realmId) {
+            if (!realms.isEmpty()) {
+                currentRealmIndex = currentRealmIndex % realms.size();
+                conqueror = realms.get(currentRealmIndex);
+            } else {
+                conqueror = null;
                 currentRealmIndex = -1;
             }
         }
