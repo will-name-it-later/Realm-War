@@ -270,37 +270,39 @@ public class GameState {
         }
     }
 
-    public void removeRealm(Realm realm) {
+    public boolean isWithinBounds(Position pos) {
+        if (pos == null) return false;
+
+        int row = pos.getX();
+        int col = pos.getY();
+
+        return row >= 0 && row < mapGrid.length &&
+                col >= 0 && col < mapGrid[0].length;
+    }
+
+
+    public void deactivateRealm(Realm realm) {
         if (realm == null) return;
 
         int realmId = realm.getID();
-        Realm currentRealm = getCurrentRealm();
-        int currentRealmIndex = turns % realms.size();
 
-        // 1. Clear all map blocks owned by the realm
-        for (Block[] row : mapGrid) {
-            for (Block block : row) {
-                if (block.getRealmID() == realmId) {
-                    block.clearOwnership();
-                }
-            }
-        }
+        // Remove all units
+        realm.getUnits().clear();
 
-        // 2. Remove the realm from the list
-        realms.remove(realm);
-        players.remove(realmId - 1001);
-        System.out.printf("[INFO] Realm %d has been removed from the game.%n", realmId);
+        // Remove all structures
+        realm.getStructures().clear();
 
-        // 3. Update current realm if needed
-        if (currentRealm != null && currentRealm.getID() == realmId) {
-            if (!realms.isEmpty()) {
-                currentRealmIndex = currentRealmIndex % realms.size();
-                currentRealm = realms.get(currentRealmIndex);
-            } else {
-                currentRealm = null;
-                currentRealmIndex = -1;
-            }
-        }
+        // Optional: clear ownership of all blocks
+        //for (Block[] row : mapGrid) {
+        //    for (Block block : row) {
+        //        if (block.getRealmID() == realmId) {
+        //            block.clearOwnership();
+        //        }
+        //    }
+        //}
+
+        // Optional: notify the player
+        System.out.printf("[INFO] Realm %d has lost all its assets due to lack of gold.%n", realmId);
     }
 
     public void conquerRealm(Realm realm) {
