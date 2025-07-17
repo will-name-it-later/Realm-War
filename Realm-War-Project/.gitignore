@@ -21,6 +21,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+game_log.json
 
 ### NetBeans ###
 /nbproject/private/

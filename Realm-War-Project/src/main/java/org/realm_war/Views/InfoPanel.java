@@ -11,6 +11,7 @@ public class InfoPanel extends JPanel {
     private JLabel goldLabel;
     private JLabel foodLabel;
     private JLabel unitSpaceLabel;
+    private JLabel incomeLabel;
     private JLabel turnLabel;
 
     public InfoPanel() {
@@ -21,6 +22,7 @@ public class InfoPanel extends JPanel {
         goldLabel = new JLabel("Gold: ");
         foodLabel = new JLabel("Food: ");
         unitSpaceLabel = new JLabel("Unit Space: ");
+        incomeLabel = new JLabel("Income: ");
         turnLabel = new JLabel("Turn: ");
 
         add(playerLabel);
@@ -30,6 +32,8 @@ public class InfoPanel extends JPanel {
         add(foodLabel);
         add(Box.createVerticalStrut(10));
         add(unitSpaceLabel);
+        add(Box.createVerticalStrut(10));
+        add(incomeLabel);
         add(Box.createVerticalStrut(10));
         add(turnLabel);
 
@@ -43,6 +47,7 @@ public class InfoPanel extends JPanel {
         goldLabel.setText("Gold: " + currentRealm.getGold());
         foodLabel.setText("Food: " + currentRealm.getFood());
         unitSpaceLabel.setText("Ready units: " + currentRealm.getAvailableUnitSpace());
+        incomeLabel.setText("Income: " + currentRealm.getIncome());
         turnLabel.setText("Turn: " + gameState.getTurnNumber());
     }
 }

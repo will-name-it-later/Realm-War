@@ -364,6 +364,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "spearman" -> {
                 try{
@@ -376,7 +377,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
-
+                gamePanel.refresh();
             }
             case "swordsman" -> {
                 try{
@@ -389,6 +390,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "knight" -> {
                 try{
@@ -401,6 +403,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "farm" -> {
                 try {
@@ -418,6 +421,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "barrack" -> {
                 try{
@@ -427,6 +431,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "tower" -> {
                 try{
@@ -436,6 +441,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "market" -> {
                 try{
@@ -453,6 +459,7 @@ public class ActionPanel extends JPanel implements ActionListener {
                 } catch (IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "error", JOptionPane.WARNING_MESSAGE);
                 }
+                gamePanel.refresh();
             }
             case "attack" -> {
                     isAttacking = true;

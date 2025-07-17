@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.realm_war.Models.blocks.Block;
+import org.realm_war.Models.blocks.EmptyBlock;
+import org.realm_war.Models.structure.classes.Market;
 import org.realm_war.Models.structure.classes.Structure;
 import org.realm_war.Models.structure.classes.TownHall;
 import org.realm_war.Models.units.Unit;
@@ -23,7 +25,7 @@ public class Realm {
     private int allUnitSpace;
     private int usedUnitSpace;
     private int availableUnitSpace;
-
+    private int income;
     private Color realmColor;
 
     public Realm(int ID) {
@@ -37,6 +39,7 @@ public class Realm {
         this.availableUnitSpace =0;
         this.gold = 25;
         this.food = 25;
+        this.income = 0;
     }
 
     public void updateResources(GameState gameState) {
@@ -96,16 +99,6 @@ public class Realm {
     }
 
     public void addUnit(Unit u){
-        if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
-            throw new IllegalArgumentException("insufficient space!");
-        }
-        units.add(u);
-        usedUnitSpace += u.getUnitSpace();
-    }
-
-    public void mergeUnit(Unit u, Unit target){
-        usedUnitSpace -= target.getUnitSpace();
-        units.remove(target);
         if (usedUnitSpace + u.getUnitSpace() > allUnitSpace){
             throw new IllegalArgumentException("insufficient space!");
         }
@@ -189,4 +182,20 @@ public class Realm {
         return possessedBlocks;
     }
 
+
+    // a quick-to-write method for realm income
+    public int getIncome() {
+        int income = possessedBlocks.stream().mapToInt(b -> b.getResourceItem("gold")).sum();
+        income -= structures.stream().mapToInt(Structure::getMaintenanceCost).sum();
+        income -= units.stream().mapToInt(Unit::getPayment).sum();
+        income +=
+                structures.stream().filter(s -> s instanceof Market || s instanceof TownHall)
+                        .mapToInt(s -> switch (s){
+                            case Market m -> m.getGoldProduction();
+                            case TownHall t -> t.produceGoldPerTurn();
+                            default -> 0;
+                        })
+                        .sum();
+        return income;
+    }
 }
