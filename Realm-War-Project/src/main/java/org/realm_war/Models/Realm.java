@@ -26,6 +26,7 @@ public class Realm {
     private int usedUnitSpace;
     private int availableUnitSpace;
     private int income;
+    private boolean isBankrupt = false;
     private Color realmColor;
 
     public Realm(int ID) {
@@ -119,6 +120,14 @@ public class Realm {
                 allUnitSpace++;
             }
         }
+    }
+
+    public boolean isBankrupt() {
+        return isBankrupt;
+    }
+
+    public void setBankrupt(boolean bankrupt) {
+        this.isBankrupt = bankrupt;
     }
 
     public Color getRealmColor (){

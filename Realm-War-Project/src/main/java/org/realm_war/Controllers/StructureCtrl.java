@@ -10,7 +10,6 @@ import org.realm_war.Models.units.Unit;
 import org.realm_war.Views.InfoPanel;
 import javax.swing.SwingUtilities;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -22,7 +21,7 @@ public class StructureCtrl {
     private transient Timer structureTimer;
     private static final int STRUCTURE_INTERVAL_MS = 5000; // 5 seconds
     private InfoPanel infoPanel;
-    private Runnable onRealmRemoved;  // 👈 this is the callback
+    private Runnable onRealmRemoved;
 
     public StructureCtrl(GameState gameState) {
         this.gameState = gameState;
@@ -34,7 +33,7 @@ public class StructureCtrl {
         if (structureTimer != null) {
             structureTimer.cancel();
         }
-        structureTimer = new Timer(true); // Daemon thread, won't block exit
+        structureTimer = new Timer(true);
 
         structureTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -53,9 +52,10 @@ public class StructureCtrl {
                             int cost = structure.getMaintenanceCost();
                             realm.addGold(-cost);
 
-                            if (realm.getGold() <= 0 && !realmsToClear.contains(realm)) {
+                            if (realm.getGold() <= 0 && !realm.isBankrupt()) {
+                                realm.setBankrupt(true);
                                 realmsToClear.add(realm);
-                                System.out.printf("[BANKRUPTCY] Realm %d is bankrupt and will be removed!%n", realm.getID());
+                                System.out.printf("[BANKRUPTCY] Realm %d is bankrupt and will be stripped of assets!%n", realm.getID());
                             }
 
                         } catch (Exception ex) {
@@ -71,7 +71,6 @@ public class StructureCtrl {
 
                 for (Realm bankruptRealm : realmsToClear) {
                     removeRealmFromMap(bankruptRealm);
-                    gameState.deactivateRealm(bankruptRealm);
                     if (onRealmRemoved != null) {
                         onRealmRemoved.run();
                     }
@@ -80,8 +79,6 @@ public class StructureCtrl {
                 System.out.println("=== END LOOP TICK ===\n");
             }
         }, 0, STRUCTURE_INTERVAL_MS);
-
-
     }
 
     /** Stops the loop */
@@ -101,36 +98,36 @@ public class StructureCtrl {
         gameState.getBlockAt(structure.getPosition()).setOwnerID(structure.getKingdomId());
     }
 
-
-
+    /** Remove all non-TownHall assets from the realm */
     public void removeRealmFromMap(Realm realm) {
         if (realm == null) return;
 
         int realmId = realm.getID();
         Block[][] map = gameState.getMapGrid();
 
-        // 1. Remove all units from realm AND map
+        // Remove all units from map and realm
         for (Unit unit : new ArrayList<>(realm.getUnits())) {
             Position pos = unit.getPosition();
             if (gameState.isWithinBounds(pos)) {
                 Block block = gameState.getBlockAt(pos);
-                block.setUnit(null); // remove from map
+                block.setUnit(null);
             }
         }
         realm.getUnits().clear();
 
-        // 2. Remove all structures from realm AND map
+        // Remove non-TownHall structures from map and realm
         for (Structure structure : new ArrayList<>(realm.getStructures())) {
             if (structure instanceof TownHall) continue;
             Position pos = structure.getPosition();
             if (gameState.isWithinBounds(pos)) {
                 Block block = gameState.getBlockAt(pos);
-                block.setStructure(null); // remove from map
+                block.setStructure(null);
             }
         }
-        realm.getStructures().clear();
+        // Only keep TownHall
+        realm.getStructures().removeIf(s -> !(s instanceof TownHall));
 
-        // 4. Notify UI
+        // Notify UI
         if (onRealmRemoved != null) {
             SwingUtilities.invokeLater(onRealmRemoved);
         }
@@ -138,12 +135,11 @@ public class StructureCtrl {
         System.out.printf("[INFO] Realm %d was stripped of all assets due to lack of gold.%n", realmId);
     }
 
-
     public void setOnRealmRemoved(Runnable callback) {
         this.onRealmRemoved = callback;
     }
 
-    public void setGameState(GameState gameState){
+    public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
 

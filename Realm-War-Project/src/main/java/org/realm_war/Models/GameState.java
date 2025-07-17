@@ -133,11 +133,25 @@ public class GameState {
         for (Realm realm : realms) {
             boolean hasTownHall = realm.getStructures().stream()
                     .anyMatch(s -> s instanceof TownHall && !s.isDestroyed());
+
             if (hasTownHall) {
-                return realm; // Winner
+                //Player player = realm.getPlayer(); // Assuming Realm has a getPlayer() method
+                System.out.println("🏆🏆🏆 GAME OVER 🏆🏆🏆");
+                System.out.println("Winner Details:");
+                System.out.println("--------------------------");
+                //System.out.println("👑 Player Name : " + (player != null ? player.getName() : "Unknown"));
+                System.out.println("🏰 Realm ID    : " + realm.getID());
+                System.out.println("💰 Gold        : " + realm.getGold());
+                System.out.println("🍗 Food        : " + realm.getFood());
+                System.out.println("🏗️ Structures  : " + realm.getStructures().size());
+                System.out.println("🪖 Units       : " + realm.getUnits().size());
+                System.out.println("--------------------------");
+                return realm;
             }
         }
-        return null; // In case all TownHalls are destroyed simultaneously
+
+        System.out.println("[INFO] Game over, but no winner found.");
+        return null;
     }
 
     //Map Management
@@ -280,30 +294,6 @@ public class GameState {
                 col >= 0 && col < mapGrid[0].length;
     }
 
-
-    public void deactivateRealm(Realm realm) {
-        if (realm == null) return;
-
-        int realmId = realm.getID();
-
-        // Remove all units
-        realm.getUnits().clear();
-
-        // Remove all structures
-        realm.getStructures().clear();
-
-        // Optional: clear ownership of all blocks
-        //for (Block[] row : mapGrid) {
-        //    for (Block block : row) {
-        //        if (block.getRealmID() == realmId) {
-        //            block.clearOwnership();
-        //        }
-        //    }
-        //}
-
-        // Optional: notify the player
-        System.out.printf("[INFO] Realm %d has lost all its assets due to lack of gold.%n", realmId);
-    }
 
     public void conquerRealm(Realm realm) {
         if (realm == null) return;
