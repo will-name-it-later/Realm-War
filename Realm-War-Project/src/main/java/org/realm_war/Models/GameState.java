@@ -17,7 +17,8 @@ import org.realm_war.Models.units.Unit;
 import org.realm_war.Utilities.Constants;
 import org.realm_war.Utilities.HelperMethods;
 import org.realm_war.Views.GamePanel;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 import java.time.OffsetDateTime;
 
 
@@ -127,6 +128,7 @@ public class GameState {
         return realmsWithTownHall <= 1;
     }
 
+
     public Realm getWinner() {
         if (!isGameOver()) return null;
 
@@ -135,24 +137,33 @@ public class GameState {
                     .anyMatch(s -> s instanceof TownHall && !s.isDestroyed());
 
             if (hasTownHall) {
-                //Player player = realm.getPlayer(); // Assuming Realm has a getPlayer() method
-                System.out.println("🏆🏆🏆 GAME OVER 🏆🏆🏆");
-                System.out.println("Winner Details:");
-                System.out.println("--------------------------");
-                //System.out.println("👑 Player Name : " + (player != null ? player.getName() : "Unknown"));
-                System.out.println("🏰 Realm ID    : " + realm.getID());
-                System.out.println("💰 Gold        : " + realm.getGold());
-                System.out.println("🍗 Food        : " + realm.getFood());
-                System.out.println("🏗️ Structures  : " + realm.getStructures().size());
-                System.out.println("🪖 Units       : " + realm.getUnits().size());
-                System.out.println("--------------------------");
+
+                String message = String.format(
+                        "🏆🏆🏆 GAME OVER 🏆🏆🏆\n\n" +
+                                "Winner Details:\n" +
+                                "--------------------------\n" +
+                                "🏰 Realm ID    : %d\n" +
+                                "💰 Gold        : %d\n" +
+                                "🍗 Food        : %d\n" +
+                                "🏗️ Structures  : %d\n" +
+                                "🪖 Units       : %d\n" +
+                                "--------------------------",
+                        realm.getID(),
+                        realm.getGold(),
+                        realm.getFood(),
+                        realm.getStructures().size(),
+                        realm.getUnits().size()
+                );
+
+                JOptionPane.showMessageDialog(null, message, "Winner!", JOptionPane.INFORMATION_MESSAGE);
                 return realm;
             }
         }
 
-        System.out.println("[INFO] Game over, but no winner found.");
+        JOptionPane.showMessageDialog(null, "Game over, but no winner found.", "Game Over", JOptionPane.WARNING_MESSAGE);
         return null;
     }
+
 
     //Map Management
     public void mapInitializer() {

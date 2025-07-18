@@ -1,0 +1,140 @@
+[
+  {
+    "timestamp": "2025-07-19 00:22:46 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player a turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-19 00:22:50 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player b turn 1 ended."
+  },
+  {
+    "timestamp": "2025-07-19 00:22:56 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (2, 2) to (3, 2)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:01 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (3, 2) to (3, 5)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:02 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (3, 5) to (3, 8)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:04 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (3, 8) to (5, 8)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:06 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (5, 8) to (5, 10)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:08 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (5, 10) to (8, 10)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:10 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (8, 10) to (8, 13)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:12 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (8, 13) to (8, 16)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:13 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (8, 16) to (8, 18)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:15 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (8, 18) to (10, 18)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:17 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (10, 18) to (13, 18)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:18 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (13, 18) to (16, 18)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:20 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (16, 18) to (17, 18)"
+  },
+  {
+    "timestamp": "2025-07-19 00:23:21 (+03:30)",
+    "playerID": 1001,
+    "actionType": "END_TURN",
+    "details": "Player a turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:23 (+03:30)",
+    "playerID": 1002,
+    "actionType": "END_TURN",
+    "details": "Player b turn 2 ended."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:28 (+03:30)",
+    "playerID": 1001,
+    "actionType": "ATTACK_TO_STRUCTURE",
+    "details": "Knight attacked to TownHall that is in (18, 18)."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:31 (+03:30)",
+    "playerID": 1001,
+    "actionType": "ATTACK_TO_STRUCTURE",
+    "details": "Knight attacked to TownHall that is in (18, 18)."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:34 (+03:30)",
+    "playerID": 1001,
+    "actionType": "ATTACK_TO_STRUCTURE",
+    "details": "Knight attacked to TownHall that is in (18, 18)."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:37 (+03:30)",
+    "playerID": 1001,
+    "actionType": "ATTACK_TO_STRUCTURE",
+    "details": "Knight attacked to TownHall that is in (18, 18)."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:37 (+03:30)",
+    "playerID": 1001,
+    "actionType": "DESTROY_STRUCTURE",
+    "details": "Knight in (17, 18) destroyed TownHall that was in (18, 18)."
+  },
+  {
+    "timestamp": "2025-07-19 00:23:37 (+03:30)",
+    "playerID": 1001,
+    "actionType": "MOVE",
+    "details": "Knight moved from (17, 18) to (18, 18)"
+  }
+]
