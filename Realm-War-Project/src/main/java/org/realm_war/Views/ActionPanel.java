@@ -197,7 +197,7 @@ public class ActionPanel extends JPanel implements ActionListener {
     public void nextTurn() {
         if (gameState.isGameOver()) {
             gameState.setRunning(false);
-            // todo : update the info label to indicate that game is over
+            gameState.getWinner();
             if (autoTurnTimer != null) autoTurnTimer.stop();// stop timer if game over
             return;
         }
