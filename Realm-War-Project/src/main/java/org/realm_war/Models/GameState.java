@@ -164,6 +164,24 @@ public class GameState {
         return null;
     }
 
+    public void clearBoard() {
+        for (Realm realm : realms) {
+            if (realm != null) {
+                realm.getUnits().clear();
+                realm.getStructures().clear();
+                realm.getPossessedBlocks().clear();
+            }
+        }
+
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                if (mapGrid[i][j] != null) {
+                    mapGrid[i][j].clearOwnership();
+                }
+            }
+        }
+    }
+
 
     //Map Management
     public void mapInitializer() {

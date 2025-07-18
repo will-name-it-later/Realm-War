@@ -196,9 +196,14 @@ public class ActionPanel extends JPanel implements ActionListener {
 
     public void nextTurn() {
         if (gameState.isGameOver()) {
+            if (autoTurnTimer != null) autoTurnTimer.stop(); // stop timer if game over
+            if (countdownUpdateTimer != null) countdownUpdateTimer.stop();
+            gameState.getStructureCtrl().stopStructureLoop();
+
             gameState.setRunning(false);
             gameState.getWinner();
-            if (autoTurnTimer != null) autoTurnTimer.stop();// stop timer if game over
+            gameState.clearBoard();
+            gamePanel.refresh();
             return;
         }
         String playerName = gameState.getCurrentPlayer().getName();

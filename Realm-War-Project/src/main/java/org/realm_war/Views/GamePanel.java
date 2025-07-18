@@ -115,6 +115,7 @@ public class GamePanel extends JPanel {
 
     public void refresh() {
         this.mapGrid = gameState.getMapGrid();// reload after setupGame()
+
         infoPanel.updateInfo(gameState);
         removeAll();
         initializeGrid();
